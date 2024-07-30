@@ -30,6 +30,7 @@ android {
         resourceConfigurations.addAll(
             listOf(
                 "en",
+                "es",
                 "fr",
                 "hr",
                 "vi",
