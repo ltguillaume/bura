@@ -38,6 +38,7 @@ android {
                 "ru",
                 "pl",
                 "sv",
+                "nl",
             )
         )
     }
