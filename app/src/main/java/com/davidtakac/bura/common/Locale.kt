@@ -25,6 +25,7 @@ import java.util.Locale
 private val fallbackLocale = Locale.US
 private val supportedLocales = listOf(
     fallbackLocale,
+    Locale.forLanguageTag("es"),
     Locale.forLanguageTag("fr"),
     Locale.forLanguageTag("hr"),
     Locale.forLanguageTag("vi"),

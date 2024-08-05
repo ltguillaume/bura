@@ -109,7 +109,10 @@ fun Bottom(future: FuturePrecipitation) {
                 formatter.format(future.onDay)
             )
 
-            is FuturePrecipitation.None -> "None expected in next ${future.inDays}d."
+            is FuturePrecipitation.None -> stringResource (
+                R.string.precip_value_none_in_next_days,
+                future.inDays
+            )
         }
     )
 }
