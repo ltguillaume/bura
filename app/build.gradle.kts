@@ -23,8 +23,8 @@ android {
         applicationId = "com.davidtakac.bura"
         minSdk = 28
         targetSdk = 34
-        versionCode = 13
-        versionName = "1.5.1"
+        versionCode = 14
+        versionName = "1.6.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         resourceConfigurations.addAll(

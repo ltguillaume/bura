@@ -1,0 +1,6 @@
+### Added
+- Dutch
+- Spanish
+
+### Fixed
+- Polish
