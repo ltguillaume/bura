@@ -24,7 +24,7 @@
     <string name="general_btn_dialog_confirm">Aceptar</string>
     <string name="general_btn_dialog_cancel">Cancelar</string>
 
-    <string name="credit_weather">Datos metereológicos por Open-Meteo.com</string>
+    <string name="credit_weather">Datos meteorológicos por Open-Meteo.com</string>
     <string name="credit_geocoding">Datos de geocodificación por Open-Meteo.com</string>
 
     <string name="place_picker_hint_search">Buscar lugares…</string>
@@ -133,7 +133,7 @@
     <string name="sunset_value_more_than_hours_away">&gt; %s&nbsp;h</string>
 
     <string name="temp_value_degree">%s°</string>
-    <string name="dew_point_value_right_now">El punto de rocío es de %s ahorma mismo.</string>
+    <string name="dew_point_value_right_now">El punto de rocío es de %s ahora mismo.</string>
     <string name="feels_like">Sensación térmica</string>
     <string name="feels_like_value">Sensación térmica de %s</string>
     <string name="feels_like_value_actual">%s reales</string>
@@ -167,8 +167,8 @@
     <string name="vis_description_perfect">Vista perfectamente clara.</string>
     <string name="vis_description_clear">Vista clara.</string>
     <string name="vis_description_fair">Vista bastante clara.</string>
-    <string name="vis_description_low">Vista obstruída.</string>
-    <string name="vis_description_very_low">Vista muy obstruída.</string>
+    <string name="vis_description_low">Vista obstruida.</string>
+    <string name="vis_description_very_low">Vista muy obstruida.</string>
 
     <string name="wind_label">Viento</string>
     <string name="wind_bft_0">En calma</string>
