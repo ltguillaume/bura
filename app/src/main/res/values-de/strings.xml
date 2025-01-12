@@ -12,9 +12,9 @@
 
 <resources>
     <string name="app_name">Bura</string>
-    <string name="general_error_failed_to_download">Der Download der Vorhersage ist fehlgeschlagen. Stellen Sie eine Internetverbindung her und versuchen Sie es erneut.</string>
+    <string name="general_error_failed_to_download">Herunterladen der Vorhersage fehlgeschlagen. Stellen Sie eine Internetverbindung her und versuchen Sie es erneut.</string>
     <string name="general_error_outdated">Ihre Vorhersagedaten sind abgelaufen. Verbinden Sie sich mit dem Internet und versuchen Sie es erneut.</string>
-    <string name="general_error_no_selected_place">Kein ausgewählter Ort.</string>
+    <string name="general_error_no_selected_place">Kein Ort ausgewählt.</string>
     <string name="general_btn_try_again">Erneut versuchen</string>
     <string name="general_btn_select_place">Ort auswählen</string>
     <string name="general_btn_dialog_confirm">OK</string>
@@ -28,9 +28,9 @@
     <string name="place_picker_title_search_results">Suchergebnisse</string>
     <string name="place_picker_error_no_internet">Sie scheinen offline zu sein. Verbinden Sie sich mit dem Internet und versuchen Sie es erneut.</string>
     <string name="place_picker_error_value_no_results_for">Keine Ergebnisse für \"%s\".</string>
-    <string name="place_picker_error_no_saved_places">Keine gespeicherte Orte. </string>
+    <string name="place_picker_error_no_saved_places">Keine gespeicherten Orte.</string>
     <string name="delete_place_value">%s löschen?</string>
-    <string name="delete_place_description">Dabei werden auch die zwischengespeicherten Prognosedaten gelöscht.</string>
+    <string name="delete_place_description">Dabei werden auch die zwischengespeicherten Vorhersagedaten gelöscht.</string>
 
     <string name="cond_screen_title">Bedingungen</string>
     <string name="cond_screen_pop">Niederschlagswahrscheinlichkeit</string>
@@ -58,14 +58,14 @@
     <string name="settings_screen_label_precip_unit_cm">Zentimeter</string>
     <string name="settings_screen_label_precip_unit_in">Zoll</string>
     <string name="settings_screen_title_pressure_unit">Druck</string>
-    <string name="settings_screen_label_pressure_unit_hpa">Hectopascal</string>
-    <string name="settings_screen_label_pressure_unit_inhg">Zoll Quecksilber</string>
-    <string name="settings_screen_label_pressure_unit_mmhg">Millimeter von Quecksilber</string>
-    <string name="settings_screen_title_vis_unit">Sichtbarkeit</string>
+    <string name="settings_screen_label_pressure_unit_hpa">Hektopascal</string>
+    <string name="settings_screen_label_pressure_unit_inhg">Zoll Quecksilbersäule</string>
+    <string name="settings_screen_label_pressure_unit_mmhg">Millimeter Quecksilbersäule</string>
+    <string name="settings_screen_title_vis_unit">Sichtweite</string>
     <string name="settings_screen_label_vis_unit_km">Kilometer</string>
     <string name="settings_screen_label_vis_unit_mi">Meilen</string>
     <string name="settings_screen_label_vis_unit_m">Meter</string>
-    <string name="settings_screen_label_vis_unit_ft">Feet</string>
+    <string name="settings_screen_label_vis_unit_ft">Fuß</string>
     <string name="settings_screen_title_appearance">Erscheinungsbild</string>
     <string name="settings_screen_title_theme">Thema</string>
     <string name="settings_screen_label_dark">Dunkel</string>
@@ -134,9 +134,9 @@
     <string name="feels_like_value">Fühlt sich an wie %s</string>
     <string name="feels_like_value_actual">Tatsächlich %s</string>
     <string name="feels_like_cooler_than_actual">Durch den Wind fühlt es sich kühler an.</string>
-    <string name="feels_like_colder_than_actual">Der Wind lässt es kälter werden.</string>
+    <string name="feels_like_colder_than_actual">Durch den Wind fühlt es sich kälter an.</string>
     <string name="feels_like_warmer_than_actual">Durch die Feuchtigkeit fühlt es sich wärmer an.</string>
-    <string name="feels_like_hotter_than_actual">Durch die Luftfeuchtigkeit fühlt es sich noch heißer an.</string>
+    <string name="feels_like_hotter_than_actual">Durch die Feuchtigkeit fühlt es sich heißer an.</string>
     <string name="feels_like_similar_to_actual">Ähnlich wie die tatsächliche Temperatur.</string>
 
     <string name="uv_index">UV-Index</string>
@@ -151,7 +151,7 @@
     <string name="uv_index_protection_value_until_end_of_day">Benutzen Sie den Rest des Tages Sonnenschutz.</string>
     <string name="uv_index_protection_value_none">Niedrig für den Rest des Tages.</string>
 
-    <string name="vis">Sichbarkeit</string>
+    <string name="vis">Sichtweite</string>
     <string name="vis_unit_m">m</string>
     <string name="vis_value_m">%s m</string>
     <string name="vis_unit_ft">ft</string>
@@ -167,19 +167,19 @@
     <string name="vis_description_very_low">Stark eingeschränkte Sicht.</string>
 
     <string name="wind_label">Wind</string>
-    <string name="wind_bft_0">Ruhig</string>
-    <string name="wind_bft_1">Leichte Luft</string>
+    <string name="wind_bft_0">Windstille</string>
+    <string name="wind_bft_1">Leiser Zug</string>
     <string name="wind_bft_2">Leichte Brise</string>
-    <string name="wind_bft_3">Sanfte Brise</string>
+    <string name="wind_bft_3">Schwache Brise</string>
     <string name="wind_bft_4">Mäßige Brise</string>
     <string name="wind_bft_5">Frische Brise</string>
-    <string name="wind_bft_6">Starke Brise</string>
-    <string name="wind_bft_7">Beinahe-Sturm</string>
-    <string name="wind_bft_8">Frischer Sturm</string>
-    <string name="wind_bft_9">Starker Sturm</string>
-    <string name="wind_bft_10">Ganzer Sturm</string>
-    <string name="wind_bft_11">Gewaltsamer Sturm</string>
-    <string name="wind_bft_12">Wirbelsturm</string>
+    <string name="wind_bft_6">Starker Wind</string>
+    <string name="wind_bft_7">Steifer Wind</string>
+    <string name="wind_bft_8">Stürmischer Wind</string>
+    <string name="wind_bft_9">Sturm</string>
+    <string name="wind_bft_10">Schwerer Sturm</string>
+    <string name="wind_bft_11">Orkanartiger Sturm</string>
+    <string name="wind_bft_12">Orkan</string>
     <string name="wind_value_gusts_at">Böen um %s.</string>
     <string name="wind_unit_mps">m/s</string>
     <string name="wind_value_mps">%s m/s</string>
