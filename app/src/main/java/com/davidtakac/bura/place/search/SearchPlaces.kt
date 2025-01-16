@@ -46,6 +46,9 @@ class SearchPlaces(private val userAgentProvider: UserAgentProvider) {
                         countryName = currResult.getStringOrNull("country"),
                         countryCode = countryCode,
                         admin1 = currResult.getStringOrNull("admin1"),
+                        admin2 = currResult.getStringOrNull("admin2"),
+                        admin3 = currResult.getStringOrNull("admin3"),
+                        admin4 = currResult.getStringOrNull("admin4"),
                         location = Location(
                             timeZone = timeZone,
                             coordinates = Coordinates(
@@ -84,7 +87,7 @@ class SearchPlaces(private val userAgentProvider: UserAgentProvider) {
     private fun openMeteoUrl(query: String, languageCode: String): String =
         "https://geocoding-api.open-meteo.com/v1/search" +
                 "?name=$query" +
-                "&count=30" +
+                "&count=100" +
                 "&language=$languageCode" +
                 "&format=json"
 

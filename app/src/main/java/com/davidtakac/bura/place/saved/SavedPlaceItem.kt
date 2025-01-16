@@ -95,8 +95,9 @@ fun SavedPlaceItem(
             }
         }
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            CountryAndTime(
+            DetailsAndTime(
                 country = state.place.countryName ?: state.place.countryCode,
+                admin1 = state.place.admin1,
                 time = state.time,
                 modifier = Modifier.weight(1f)
             )
@@ -162,8 +163,9 @@ private fun TemperatureAndCondition(
 }
 
 @Composable
-private fun CountryAndTime(
+private fun DetailsAndTime(
     country: String,
+    admin1: String?,
     time: LocalTime,
     modifier: Modifier = Modifier
 ) {
@@ -173,7 +175,7 @@ private fun CountryAndTime(
             horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Text(
-                text = country,
+                text = listOfNotNull(country, admin1).joinToString(", "),
                 style = MaterialTheme.typography.bodyMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -204,9 +206,12 @@ private fun SavedPlaceCardPreview() {
                 state = SavedPlace(
                     place = Place(
                         name = "Osijek",
-                        countryName = "Croatia but very very very very very long long",
+                        countryName = "Croatia",
                         countryCode = "HR",
-                        admin1 = "Osječko-baranjska",
+                        admin1 = "Osijek-Baranja",
+                        admin2 = "",
+                        admin3 = null,
+                        admin4 = "Admin4",
                         location = Location(ZoneOffset.UTC, Coordinates(0.0, 0.0))
                     ),
                     time = LocalTime.parse("08:32"),

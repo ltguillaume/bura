@@ -68,6 +68,9 @@ class FileSavedPlacesRepository(private val root: File) : SavedPlacesRepository 
             Place(
                 name = record.getString("name"),
                 admin1 = record.getStringOrNull("admin1"),
+                admin2 = record.getStringOrNull("admin2"),
+                admin3 = record.getStringOrNull("admin3"),
+                admin4 = record.getStringOrNull("admin4"),
                 countryCode = record.getString("countryCode"),
                 countryName = record.getStringOrNull("countryName"),
                 location = Location(
@@ -85,6 +88,9 @@ class FileSavedPlacesRepository(private val root: File) : SavedPlacesRepository 
             JSONObject().apply {
                 put("name", place.name)
                 put("admin1", place.admin1 ?: JSONObject.NULL)
+                put("admin2", place.admin2 ?: JSONObject.NULL)
+                put("admin3", place.admin3 ?: JSONObject.NULL)
+                put("admin4", place.admin4 ?: JSONObject.NULL)
                 put("countryCode", place.countryCode)
                 put("countryName", place.countryName ?: JSONObject.NULL)
                 put("timeZone", place.location.timeZone.id)

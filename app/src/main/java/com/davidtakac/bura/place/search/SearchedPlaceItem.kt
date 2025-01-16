@@ -15,27 +15,35 @@ package com.davidtakac.bura.place.search
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextOverflow
 import com.davidtakac.bura.place.Place
 
 @Composable
 fun SearchedPlaceItem(state: Place, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    Text(
-        text = "${state.name}, " +
-                (if (state.admin1 != null) "${state.admin1}, " else "") +
-                (state.countryName ?: state.countryCode),
-        maxLines = 2,
-        overflow = TextOverflow.Ellipsis,
-        modifier = Modifier
+    Column(
+        Modifier
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = LocalIndication.current,
                 onClick = onClick
             )
             .then(modifier)
-    )
+    ) {
+        Text(text = "${state.name}, ${state.countryName ?: state.countryCode}")
+        val adminList = remember(state.admin1, state.admin2, state.admin3, state.admin4) {
+            listOfNotNull(state.admin1, state.admin2, state.admin3, state.admin4)
+        }
+        if (adminList.isNotEmpty()) {
+            Text(
+                text = adminList.joinToString(", "),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.secondary
+            )
+        }
+    }
 }
