@@ -56,15 +56,15 @@ fun AppNavHost(theme: Theme, onThemeClick: (Theme) -> Unit) {
         ) { backStackEntry ->
             EssentialGraphsDestination(
                 initialDay = backStackEntry.arguments?.getString("initialDay")?.let(LocalDate::parse),
-                onSelectPlaceClick = controller::popBackStack,
-                onBackClick = controller::popBackStack
+                onSelectPlaceClick = controller::navigateUp,
+                onBackClick = controller::navigateUp
             )
         }
         composable("settings") {
             SettingsDestination(
                 theme = theme,
                 onThemeClick = onThemeClick,
-                onBackClick = controller::popBackStack
+                onBackClick = controller::navigateUp
             )
         }
     }
