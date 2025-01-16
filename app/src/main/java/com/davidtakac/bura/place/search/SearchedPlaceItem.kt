@@ -12,9 +12,9 @@
 
 package com.davidtakac.bura.place.search
 
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -33,7 +33,7 @@ fun SearchedPlaceItem(state: Place, onClick: () -> Unit, modifier: Modifier = Mo
         modifier = Modifier
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(),
+                indication = LocalIndication.current,
                 onClick = onClick
             )
             .then(modifier)
