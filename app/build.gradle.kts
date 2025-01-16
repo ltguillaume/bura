@@ -17,12 +17,12 @@ plugins {
 
 android {
     namespace = "com.davidtakac.bura"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.davidtakac.bura"
         minSdk = 28
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 14
         versionName = "1.6.0"
 
