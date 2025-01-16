@@ -106,7 +106,7 @@
     <string name="pressure_trend_falling">Daalt</string>
     <string name="pressure_trend_steady">Constant</string>
     <string name="pressure_trend_rising">Stijgt</string>
-    <string name="pressure_value_average">Gemiddelde: %s</string>
+    <string name="pressure_value_average">Gemiddeld %s.</string>
     <string name="pressure_unit_hpa">hPa</string>
     <string name="pressure_value_hpa">%s hPa</string>
     <string name="pressure_unit_inhg">inHg</string>
@@ -119,8 +119,8 @@
 
     <string name="sunrise">Zonsopkomst</string>
     <string name="sunset">Zonsondergang</string>
-    <string name="sunrise_value">Zonsopkomst: %s</string>
-    <string name="sunset_value">Zonsondergang: %s</string>
+    <string name="sunrise_value">Zonsopkomst om %s.</string>
+    <string name="sunset_value">Zonsondergang om %s.</string>
     <string name="sunrise_not_today">Vandaag geen zonsopkomst.</string>
     <string name="sunset_not_today">Vandaag geen zonsondergang.</string>
     <string name="sunrise_value_more_than_days_away">&gt; %sd</string>
@@ -129,7 +129,7 @@
     <string name="sunset_value_more_than_hours_away">&gt; %sh</string>
 
     <string name="temp_value_degree">%s°</string>
-    <string name="dew_point_value_right_now">Het dauwpunt is nu %s.</string>
+    <string name="dew_point_value_right_now">Dauwpunt is nu %s.</string>
     <string name="feels_like">Gevoelstemperatuur</string>
     <string name="feels_like_value">Voelt als %s</string>
     <string name="feels_like_value_actual">Werkelijke temperatuur %s</string>
@@ -145,9 +145,9 @@
     <string name="uv_index_risk_high">Hoog</string>
     <string name="uv_index_risk_very_high">Zeer hoog</string>
     <string name="uv_index_risk_extreme">Extreem</string>
-    <string name="uv_index_protection_value_from_until">Gebruik zonbescherming %1$s-%2$s.</string>
-    <string name="uv_index_protection_value_from">Gebruik zonbescherming vanaf %s.</string>
-    <string name="uv_index_protection_value_until">Gebruik zonbescherming tot %s.</string>
+    <string name="uv_index_protection_value_from_until">Gebruik bescherming %1$s-%2$s.</string>
+    <string name="uv_index_protection_value_from">Gebruik bescherming vanaf %s.</string>
+    <string name="uv_index_protection_value_until">Gebruik bescherming tot %s.</string>
     <string name="uv_index_protection_value_until_end_of_day">Gebruik de rest van de dag zonnebescherming.</string>
     <string name="uv_index_protection_value_none">Laag voor de rest van de dag.</string>
 
@@ -160,7 +160,7 @@
     <string name="vis_value_km">%s km</string>
     <string name="vis_unit_mi">mi</string>
     <string name="vis_value_mi">%s mi</string>
-    <string name="vis_description_perfect">Volkomen helder zicht.</string>
+    <string name="vis_description_perfect">Perfect helder zicht.</string>
     <string name="vis_description_clear">Helder zicht.</string>
     <string name="vis_description_fair">Redelijk duidelijk zicht.</string>
     <string name="vis_description_low">Beperkt zicht.</string>
