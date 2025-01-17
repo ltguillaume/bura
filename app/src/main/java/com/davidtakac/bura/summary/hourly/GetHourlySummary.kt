@@ -13,62 +13,50 @@
 package com.davidtakac.bura.summary.hourly
 
 import com.davidtakac.bura.condition.Condition
-import com.davidtakac.bura.condition.ConditionRepository
+import com.davidtakac.bura.condition.ConditionPeriod
 import com.davidtakac.bura.forecast.ForecastResult
-import com.davidtakac.bura.place.Coordinates
 import com.davidtakac.bura.pop.Pop
-import com.davidtakac.bura.pop.PopRepository
+import com.davidtakac.bura.pop.PopPeriod
 import com.davidtakac.bura.sun.SunEvent
-import com.davidtakac.bura.sun.SunRepository
+import com.davidtakac.bura.sun.SunPeriod
 import com.davidtakac.bura.temperature.Temperature
-import com.davidtakac.bura.temperature.TemperatureRepository
-import com.davidtakac.bura.units.Units
+import com.davidtakac.bura.temperature.TemperaturePeriod
 import java.time.LocalDateTime
 
-class GetHourlySummary(
-    private val tempRepo: TemperatureRepository,
-    private val popRepo: PopRepository,
-    private val descRepo: ConditionRepository,
-    private val sunRepo: SunRepository,
-) {
-    suspend operator fun invoke(
-        coords: Coordinates,
-        units: Units,
-        now: LocalDateTime
-    ): ForecastResult<List<HourSummary>> {
-        val tempPeriod = tempRepo.period(coords, units) ?: return ForecastResult.FailedToDownload
-        val popPeriod = popRepo.period(coords, units) ?: return ForecastResult.FailedToDownload
-        val descPeriod = descRepo.period(coords, units) ?: return ForecastResult.FailedToDownload
-        val sunPeriod = sunRepo.period(coords, units)
-
-        val futureTemps = tempPeriod.momentsFrom(now, takeMoments = 24) ?: return ForecastResult.Outdated
-        val futurePops = popPeriod.momentsFrom(now, takeMoments = 24) ?: return ForecastResult.Outdated
-        val futureDesc = descPeriod.momentsFrom(now, takeMoments = 24) ?: return ForecastResult.Outdated
-        val combinedWeatherData = buildList {
-            for (i in futureTemps.indices) {
-                add(
-                    HourSummary.Weather(
-                        time = futureTemps[i].hour,
-                        isNow = i == 0,
-                        temp = futureTemps[i].temperature,
-                        pop = futurePops[i].pop.takeIf { it.value > 0 },
-                        desc = futureDesc[i].condition
-                    )
+fun getHourlySummary(
+    now: LocalDateTime,
+    tempPeriod: TemperaturePeriod,
+    popPeriod: PopPeriod,
+    condPeriod: ConditionPeriod,
+    sunPeriod: SunPeriod?
+): ForecastResult<List<HourSummary>> {
+    val futureTemps = tempPeriod.momentsFrom(now, takeMoments = 24) ?: return ForecastResult.Outdated
+    val futurePops = popPeriod.momentsFrom(now, takeMoments = 24) ?: return ForecastResult.Outdated
+    val futureDesc = condPeriod.momentsFrom(now, takeMoments = 24) ?: return ForecastResult.Outdated
+    val combinedWeatherData = buildList {
+        for (i in futureTemps.indices) {
+            add(
+                HourSummary.Weather(
+                    time = futureTemps[i].hour,
+                    isNow = i == 0,
+                    temp = futureTemps[i].temperature,
+                    pop = futurePops[i].pop.takeIf { it.value > 0 },
+                    desc = futureDesc[i].condition
                 )
-            }
+            )
         }
-        val combinedSunData = sunPeriod
-            ?.momentsFrom(now, takeMomentsUpToHoursInFuture = 24)
-            ?.map {
-                HourSummary.Sun(
-                    time = it.time,
-                    event = it.event
-                )
-            }
-            ?: listOf()
-
-        return ForecastResult.Success((combinedWeatherData + combinedSunData).sortedBy { it.time })
     }
+    val combinedSunData = sunPeriod
+        ?.momentsFrom(now, takeMomentsUpToHoursInFuture = 24)
+        ?.map {
+            HourSummary.Sun(
+                time = it.time,
+                event = it.event
+            )
+        }
+        ?: listOf()
+
+    return ForecastResult.Success((combinedWeatherData + combinedSunData).sortedBy { it.time })
 }
 
 sealed interface HourSummary {

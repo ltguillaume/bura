@@ -25,7 +25,7 @@ import com.davidtakac.bura.summary.daily.getDailySummary
 import com.davidtakac.bura.summary.feelslike.FeelsLikeSummary
 import com.davidtakac.bura.summary.feelslike.GetFeelsLikeSummary
 import com.davidtakac.bura.summary.hourly.HourSummary
-import com.davidtakac.bura.summary.hourly.GetHourlySummary
+import com.davidtakac.bura.summary.hourly.getHourlySummary
 import com.davidtakac.bura.summary.humidity.HumiditySummary
 import com.davidtakac.bura.summary.humidity.GetHumiditySummary
 import com.davidtakac.bura.summary.now.NowSummary
@@ -52,7 +52,6 @@ class SummaryViewModel(
     private val placeRepo: SelectedPlaceRepository,
     private val unitsRepo: SelectedUnitsRepository,
     private val forecastRepo: ForecastRepository,
-    private val getHourlySummary: GetHourlySummary,
     private val precipSummaryUseCase: GetPrecipitationSummary,
     private val getUvIndexSummary: GetUvIndexSummary,
     private val getWindSummary: GetWindSummary,
@@ -93,7 +92,13 @@ class SummaryViewModel(
             is ForecastResult.Success -> Unit
         }
 
-        val hourlySummary = getHourlySummary(coords, units, now)
+        val hourlySummary = getHourlySummary(
+            now = now,
+            tempPeriod = forecast.temperature,
+            popPeriod = forecast.pop,
+            condPeriod = forecast.condition,
+            sunPeriod = forecast.sun
+        )
         when (hourlySummary) {
             ForecastResult.FailedToDownload -> return SummaryState.FailedToDownload
             ForecastResult.Outdated -> return SummaryState.Outdated
@@ -192,7 +197,6 @@ class SummaryViewModel(
                     container.selectedPlaceRepo,
                     container.selectedUnitsRepo,
                     container.forecastRepo,
-                    container.getHourlySummary,
                     container.getPrecipitationSummary,
                     container.getUvIndexSummary,
                     container.getWindSummary,

@@ -46,7 +46,6 @@ import com.davidtakac.bura.precipitation.PrecipitationRepository
 import com.davidtakac.bura.pressure.EagerPressureRepository
 import com.davidtakac.bura.pressure.PressureRepository
 import com.davidtakac.bura.summary.feelslike.GetFeelsLikeSummary
-import com.davidtakac.bura.summary.hourly.GetHourlySummary
 import com.davidtakac.bura.summary.humidity.GetHumiditySummary
 import com.davidtakac.bura.summary.precipitation.GetPrecipitationSummary
 import com.davidtakac.bura.summary.pressure.GetPressureSummary
@@ -104,7 +103,6 @@ class AppContainer(private val appContext: Context) {
     val selectedPlaceRepo: SelectedPlaceRepository by lazy { PrefsSelectedPlaceRepository(prefs, savedPlacesRepo) }
     val selectedUnitsRepo: SelectedUnitsRepository by lazy { PrefsSelectedUnitsRepository(prefs) }
 
-    val getHourlySummary get() = GetHourlySummary(tempRepo, popRepo, conditionRepo, sunRepo)
     val getPrecipitationSummary get() = GetPrecipitationSummary(precipRepo)
     val getUvIndexSummary get() = GetUvIndexSummary(uvIndexRepo)
     val getWindSummary get() = GetWindSummary(windRepo, gustRepo)

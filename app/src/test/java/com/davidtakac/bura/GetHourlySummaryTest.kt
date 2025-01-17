@@ -20,7 +20,7 @@ import com.davidtakac.bura.pop.Pop
 import com.davidtakac.bura.pop.PopMoment
 import com.davidtakac.bura.pop.PopPeriod
 import com.davidtakac.bura.summary.hourly.HourSummary
-import com.davidtakac.bura.summary.hourly.GetHourlySummary
+import com.davidtakac.bura.summary.hourly.getHourlySummary
 import com.davidtakac.bura.sun.SunEvent
 import com.davidtakac.bura.sun.SunMoment
 import com.davidtakac.bura.sun.SunPeriod
@@ -34,8 +34,6 @@ import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 
 class GetHourlySummaryTest {
-    
-
     @Test
     fun `combines weather and sun data and arranges it chronologically`() = runTest {
         val startOfTime = unixEpochStart.plus(5, ChronoUnit.DAYS)
@@ -83,13 +81,7 @@ class GetHourlySummaryTest {
                 SunMoment(sunsetMoment, SunEvent.Sunset)
             )
         )
-        val useCase = GetHourlySummary(
-            tempRepo = FakeTemperatureRepository(temperaturePeriod),
-            popRepo = FakePopRepository(popPeriod),
-            descRepo = FakeConditionRepository(conditionPeriod),
-            sunRepo = FakeSunRepository(sunPeriod),
-        )
-        val summary = useCase(coords, units, now)
+        val summary = getHourlySummary(now, temperaturePeriod, popPeriod, conditionPeriod, sunPeriod)
         assertEquals(
             ForecastResult.Success(
                 listOf(
@@ -156,13 +148,7 @@ class GetHourlySummaryTest {
                 )
             )
         )
-        val useCase = GetHourlySummary(
-            tempRepo = FakeTemperatureRepository(temperaturePeriod),
-            popRepo = FakePopRepository(popPeriod),
-            descRepo = FakeConditionRepository(conditionPeriod),
-            sunRepo = FakeSunRepository(null),
-        )
-        val summary = useCase(coords, units, now)
+        val summary = getHourlySummary(now, temperaturePeriod, popPeriod, conditionPeriod, null)
         assertEquals(ForecastResult.Outdated, summary)
     }
 
@@ -203,13 +189,7 @@ class GetHourlySummaryTest {
                 SunMoment(time = pastSunset, event = SunEvent.Sunset)
             )
         )
-        val useCase = GetHourlySummary(
-            tempRepo = FakeTemperatureRepository(temperaturePeriod),
-            popRepo = FakePopRepository(popPeriod),
-            descRepo = FakeConditionRepository(conditionPeriod),
-            sunRepo = FakeSunRepository(sunPeriod),
-        )
-        val summary = useCase(coords, units, now)
+        val summary = getHourlySummary(now, temperaturePeriod, popPeriod, conditionPeriod, sunPeriod)
         assertEquals(
             ForecastResult.Success(
                 listOf(
