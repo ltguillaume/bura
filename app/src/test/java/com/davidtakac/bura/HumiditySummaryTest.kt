@@ -17,7 +17,7 @@ import com.davidtakac.bura.humidity.Humidity
 import com.davidtakac.bura.humidity.HumidityMoment
 import com.davidtakac.bura.humidity.HumidityPeriod
 import com.davidtakac.bura.summary.humidity.HumiditySummary
-import com.davidtakac.bura.summary.humidity.GetHumiditySummary
+import com.davidtakac.bura.summary.humidity.getHumiditySummary
 import com.davidtakac.bura.temperature.Temperature
 import com.davidtakac.bura.temperature.TemperatureMoment
 import com.davidtakac.bura.temperature.TemperaturePeriod
@@ -27,8 +27,6 @@ import org.junit.Test
 import java.time.temporal.ChronoUnit
 
 class HumiditySummaryTest {
-    
-
     @Test
     fun `gets humidity and dew point of now`() = runTest {
         val firstMoment = unixEpochStart
@@ -42,10 +40,6 @@ class HumiditySummaryTest {
                 )
             )
         )
-        val useCase = GetHumiditySummary(
-            humidityRepo = FakeHumidityRepository(humidityPeriod),
-            dewPointRepo = FakeTemperatureRepository(dewPointPeriod),
-        )
         assertEquals(
             ForecastResult.Success(
                 HumiditySummary(
@@ -53,7 +47,7 @@ class HumiditySummaryTest {
                     dewPointNow = Temperature.fromDegreesCelsius(0.0)
                 )
             ),
-            useCase(coords, units, now)
+            getHumiditySummary(now, humidityPeriod, dewPointPeriod)
         )
     }
 
@@ -70,10 +64,6 @@ class HumiditySummaryTest {
                 )
             )
         )
-        val useCase = GetHumiditySummary(
-            humidityRepo = FakeHumidityRepository(humidityPeriod),
-            dewPointRepo = FakeTemperatureRepository(dewPointPeriod),
-        )
-        assertEquals(ForecastResult.Outdated, useCase(coords, units, now))
+        assertEquals(ForecastResult.Outdated, getHumiditySummary(now, humidityPeriod, dewPointPeriod))
     }
 }

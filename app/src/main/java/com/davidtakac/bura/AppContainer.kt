@@ -46,7 +46,6 @@ import com.davidtakac.bura.precipitation.PrecipitationRepository
 import com.davidtakac.bura.pressure.EagerPressureRepository
 import com.davidtakac.bura.pressure.PressureRepository
 import com.davidtakac.bura.summary.feelslike.GetFeelsLikeSummary
-import com.davidtakac.bura.summary.humidity.GetHumiditySummary
 import com.davidtakac.bura.summary.sun.GetSunSummary
 import com.davidtakac.bura.summary.visibility.GetVisibilitySummary
 import com.davidtakac.bura.sun.EagerSunRepository
@@ -100,7 +99,6 @@ class AppContainer(private val appContext: Context) {
     val selectedUnitsRepo: SelectedUnitsRepository by lazy { PrefsSelectedUnitsRepository(prefs) }
 
     val getSunSummary get() = GetSunSummary(sunRepo, conditionRepo)
-    val getHumiditySummary get() = GetHumiditySummary(humidityRepo, dewPointRepo)
     val getFeelsLikeSummary get() = GetFeelsLikeSummary(tempRepo, feelsRepo)
     val getVisibilitySummary get() = GetVisibilitySummary(visibilityRepo)
 
