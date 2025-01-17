@@ -133,9 +133,9 @@ private fun Pager(
             },
             modifier = Modifier.fillMaxWidth()
         )
+
         var itemIndex by remember { mutableIntStateOf(0) }
         var itemScrollOffset by remember { mutableIntStateOf(0) }
-
         HorizontalPager(state = pagerState) { page ->
             val listState = rememberLazyListState()
             LaunchedEffect(itemIndex, itemScrollOffset, page, pagerPage) {
