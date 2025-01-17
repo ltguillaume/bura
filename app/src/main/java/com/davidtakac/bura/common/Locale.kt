@@ -71,6 +71,12 @@ fun rememberDateTimeHourMinuteFormatter(): DateTimeFormatter = rememberDateTimeF
 )
 
 @Composable
+fun rememberDateTimeDayAndTimeFormatter(): DateTimeFormatter = rememberDateTimeFormatter(
+    if (DateFormat.is24HourFormat(LocalContext.current)) R.string.date_time_pattern_dow_hour_minute
+    else R.string.date_time_pattern_dow_hour_minute_ampm
+)
+
+@Composable
 fun rememberNumberFormat(): NumberFormat {
     val locale = appLocale(LocalContext.current)
     return remember(locale) { NumberFormat.getNumberInstance(locale) }

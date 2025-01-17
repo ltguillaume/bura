@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.davidtakac.bura.R
 import com.davidtakac.bura.common.capitalize
 import com.davidtakac.bura.common.rememberAppLocale
+import com.davidtakac.bura.common.rememberDateTimeDayAndTimeFormatter
 import com.davidtakac.bura.summary.SummaryTile
 import com.davidtakac.bura.common.rememberDateTimeFormatter
 import com.davidtakac.bura.common.rememberDateTimeHourMinuteFormatter
@@ -39,7 +40,7 @@ fun SunSummary(state: SunSummary, modifier: Modifier = Modifier) {
     val locale = rememberAppLocale()
     val dayFormatter = rememberDateTimeFormatter(ofPattern = R.string.date_time_pattern_dow)
     val timeFormatter = rememberDateTimeHourMinuteFormatter()
-    val dayAndTimeFormatter = rememberDateTimeFormatter(ofPattern = R.string.date_time_pattern_dow_hour_minute)
+    val dayAndTimeFormatter = rememberDateTimeDayAndTimeFormatter()
 
     SummaryTile(
         label = { Text(stringResource(if (state is Sunrise) R.string.sunrise else R.string.sunset)) },
