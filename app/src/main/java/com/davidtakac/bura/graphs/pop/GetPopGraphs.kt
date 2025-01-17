@@ -14,56 +14,50 @@ package com.davidtakac.bura.graphs.pop
 
 import com.davidtakac.bura.forecast.ForecastResult
 import com.davidtakac.bura.graphs.common.GraphTime
-import com.davidtakac.bura.place.Coordinates
 import com.davidtakac.bura.pop.Pop
 import com.davidtakac.bura.pop.PopMoment
-import com.davidtakac.bura.pop.PopRepository
-import com.davidtakac.bura.units.Units
+import com.davidtakac.bura.pop.PopPeriod
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-class GetPopGraphs(private val repo: PopRepository) {
-    suspend operator fun invoke(
-        coords: Coordinates,
-        units: Units,
-        now: LocalDateTime
-    ): ForecastResult<List<PopGraph>> {
-        val period = repo.period(coords, units) ?: return ForecastResult.FailedToDownload
-        val days = period.daysFrom(now.toLocalDate()) ?: return ForecastResult.Outdated
-        return ForecastResult.Success(
-            data = days.mapIndexed { idx, currDay ->
-                PopGraph(
-                    day = currDay.first().hour.toLocalDate(),
-                    points = buildList {
-                        val firstPopTomorrow = days.getOrNull(idx + 1)?.first()
-                        val currDayWithFirstMomentOfTomorrow =
-                            if (firstPopTomorrow != null) currDay + firstPopTomorrow else currDay
-                        val max = currDayWithFirstMomentOfTomorrow.maxBy { it.pop }
-                        for (i in currDay.indices) {
-                            val moment = currDay[i]
-                            add(getPoint(now, moment, max))
-                        }
-                        if (firstPopTomorrow != null) {
-                            add(getPoint(now, firstPopTomorrow, max))
-                        }
+fun getPopGraphs(
+    now: LocalDateTime,
+    popPeriod: PopPeriod
+): ForecastResult<List<PopGraph>> {
+    val days = popPeriod.daysFrom(now.toLocalDate()) ?: return ForecastResult.Outdated
+    return ForecastResult.Success(
+        data = days.mapIndexed { idx, currDay ->
+            PopGraph(
+                day = currDay.first().hour.toLocalDate(),
+                points = buildList {
+                    val firstPopTomorrow = days.getOrNull(idx + 1)?.first()
+                    val currDayWithFirstMomentOfTomorrow =
+                        if (firstPopTomorrow != null) currDay + firstPopTomorrow else currDay
+                    val max = currDayWithFirstMomentOfTomorrow.maxBy { it.pop }
+                    for (i in currDay.indices) {
+                        val moment = currDay[i]
+                        add(getPoint(now, moment, max))
                     }
-                )
-            }
-        )
-    }
-
-    private fun getPoint(
-        now: LocalDateTime,
-        moment: PopMoment,
-        maxPopMoment: PopMoment
-    ): PopGraphPoint = PopGraphPoint(
-        time = GraphTime(moment.hour, now),
-        pop = GraphPop(
-            value = moment.pop,
-            meta = if (moment == maxPopMoment) GraphPop.Meta.Maximum else GraphPop.Meta.Regular
-        )
+                    if (firstPopTomorrow != null) {
+                        add(getPoint(now, firstPopTomorrow, max))
+                    }
+                }
+            )
+        }
     )
 }
+
+private fun getPoint(
+    now: LocalDateTime,
+    moment: PopMoment,
+    maxPopMoment: PopMoment
+): PopGraphPoint = PopGraphPoint(
+    time = GraphTime(moment.hour, now),
+    pop = GraphPop(
+        value = moment.pop,
+        meta = if (moment == maxPopMoment) GraphPop.Meta.Maximum else GraphPop.Meta.Regular
+    )
+)
 
 data class PopGraph(
     val day: LocalDate,

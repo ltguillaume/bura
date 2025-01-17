@@ -17,7 +17,7 @@ import com.davidtakac.bura.graphs.common.GraphTime
 import com.davidtakac.bura.graphs.pop.GraphPop
 import com.davidtakac.bura.graphs.pop.PopGraph
 import com.davidtakac.bura.graphs.pop.PopGraphPoint
-import com.davidtakac.bura.graphs.pop.GetPopGraphs
+import com.davidtakac.bura.graphs.pop.getPopGraphs
 import com.davidtakac.bura.pop.Pop
 import com.davidtakac.bura.pop.PopMoment
 import com.davidtakac.bura.pop.PopPeriod
@@ -29,25 +29,20 @@ import java.time.LocalTime
 import java.time.temporal.ChronoUnit
 
 class GetPopGraphsTest {
-    
-
     @Test
     fun `constructs pop graphs`() = runTest {
         val firstMoment = unixEpochStart.plus(22, ChronoUnit.HOURS)
         val secondMoment = firstMoment.plus(1, ChronoUnit.HOURS)
         val thirdMoment = secondMoment.plus(1, ChronoUnit.HOURS)
         val now = secondMoment
-        val popRepo = FakePopRepository(
-            PopPeriod(
-                listOf(
-                    PopMoment(hour = firstMoment, pop = Pop(0.0)),
-                    PopMoment(hour = secondMoment, pop = Pop(0.0)),
-                    PopMoment(hour = thirdMoment, pop = Pop(1.0))
-                )
+        val popPeriod = PopPeriod(
+            listOf(
+                PopMoment(hour = firstMoment, pop = Pop(0.0)),
+                PopMoment(hour = secondMoment, pop = Pop(0.0)),
+                PopMoment(hour = thirdMoment, pop = Pop(1.0))
             )
         )
-        val useCase = GetPopGraphs(popRepo)
-        val graphs = (useCase(coords, units, now) as ForecastResult.Success).data
+        val graphs = (getPopGraphs(now, popPeriod) as ForecastResult.Success).data
         assertEquals(
             listOf(
                 PopGraph(

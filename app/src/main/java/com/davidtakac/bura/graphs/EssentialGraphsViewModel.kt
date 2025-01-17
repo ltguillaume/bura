@@ -20,7 +20,7 @@ import com.davidtakac.bura.App
 import com.davidtakac.bura.forecast.ForecastRepository
 import com.davidtakac.bura.forecast.ForecastResult
 import com.davidtakac.bura.graphs.pop.PopGraph
-import com.davidtakac.bura.graphs.pop.GetPopGraphs
+import com.davidtakac.bura.graphs.pop.getPopGraphs
 import com.davidtakac.bura.graphs.precipitation.GetPrecipitationGraphs
 import com.davidtakac.bura.graphs.precipitation.PrecipitationTotal
 import com.davidtakac.bura.graphs.precipitation.GetPrecipitationTotals
@@ -40,7 +40,6 @@ class EssentialGraphsViewModel(
     private val placeRepo: SelectedPlaceRepository,
     private val unitsRepo: SelectedUnitsRepository,
     private val forecastRepo: ForecastRepository,
-    private val getPopGraphs: GetPopGraphs,
     private val getPrecipGraphs: GetPrecipitationGraphs,
     private val getPrecipTotals: GetPrecipitationTotals
 ) : ViewModel() {
@@ -77,7 +76,7 @@ class EssentialGraphsViewModel(
             is ForecastResult.Success -> Unit
         }
 
-        val popGraphs = getPopGraphs(coords, units, now)
+        val popGraphs = getPopGraphs(now, forecast.pop)
         when (popGraphs) {
             ForecastResult.FailedToDownload -> return EssentialGraphsState.FailedToDownload
             ForecastResult.Outdated -> return EssentialGraphsState.Outdated
@@ -116,7 +115,6 @@ class EssentialGraphsViewModel(
                     container.selectedPlaceRepo,
                     container.selectedUnitsRepo,
                     container.forecastRepo,
-                    container.getPopGraphs,
                     container.getPrecipitationGraphs,
                     container.getPrecipitationTotals
                 ) as T
