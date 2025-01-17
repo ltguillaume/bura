@@ -20,8 +20,8 @@ import com.davidtakac.bura.pop.Pop
 import com.davidtakac.bura.pop.PopMoment
 import com.davidtakac.bura.pop.PopPeriod
 import com.davidtakac.bura.summary.daily.DailySummary
-import com.davidtakac.bura.summary.daily.GetDailySummary
 import com.davidtakac.bura.summary.daily.DaySummary
+import com.davidtakac.bura.summary.daily.getDailySummary
 import com.davidtakac.bura.temperature.Temperature
 import com.davidtakac.bura.temperature.TemperatureMoment
 import com.davidtakac.bura.temperature.TemperaturePeriod
@@ -30,11 +30,8 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
-import kotlin.math.pow
 
 class GetDailySummaryTest {
-    
-
     @Test
     fun `groups moments into days and summarizes them`() = runTest {
         val firstDayFirstMoment = unixEpochStart.plus(21, ChronoUnit.HOURS)
@@ -85,12 +82,7 @@ class GetDailySummaryTest {
                 PopMoment(secondDaySecondMoment, Pop(5.0)),
             )
         )
-        val useCase = GetDailySummary(
-            tempRepo = FakeTemperatureRepository(temperaturePeriod),
-            descRepo = FakeConditionRepository(conditionPeriod),
-            popRepo = FakePopRepository(popPeriod),
-        )
-        val summary = useCase(coords, units, now)
+        val summary = getDailySummary(now, temperaturePeriod, conditionPeriod, popPeriod)
         assertEquals(
             ForecastResult.Success(
                 DailySummary(
@@ -141,12 +133,7 @@ class GetDailySummaryTest {
                 )
             )
         )
-        val useCase = GetDailySummary(
-            tempRepo = FakeTemperatureRepository(temperaturePeriod),
-            descRepo = FakeConditionRepository(conditionPeriod),
-            popRepo = FakePopRepository(popPeriod),
-        )
-        val summary = useCase(coords, units, now)
+        val summary = getDailySummary(now, temperaturePeriod, conditionPeriod, popPeriod)
         assertEquals(ForecastResult.Outdated, summary)
     }
 }

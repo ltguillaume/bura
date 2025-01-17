@@ -20,5 +20,5 @@ import com.davidtakac.bura.units.Units
 class StaticConditionRepository(private val repo: ForecastRepository) :
     ConditionRepository {
     override suspend fun period(coords: Coordinates, units: Units): ConditionPeriod? =
-        repo.forecast(coords, units, UpdatePolicy.Static)?.weatherDescription
+        repo.forecast(coords, units, UpdatePolicy.Static)?.condition
 }

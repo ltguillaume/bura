@@ -110,7 +110,7 @@ class ForecastConverter {
                 pressure = pressure,
                 visibility = visibility,
                 humidity = humidity,
-                weatherDescription = weatherDescription
+                condition = weatherDescription
             )
         }
 }

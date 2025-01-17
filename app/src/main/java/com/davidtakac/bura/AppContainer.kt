@@ -45,7 +45,6 @@ import com.davidtakac.bura.precipitation.EagerPrecipitationRepository
 import com.davidtakac.bura.precipitation.PrecipitationRepository
 import com.davidtakac.bura.pressure.EagerPressureRepository
 import com.davidtakac.bura.pressure.PressureRepository
-import com.davidtakac.bura.summary.daily.GetDailySummary
 import com.davidtakac.bura.summary.feelslike.GetFeelsLikeSummary
 import com.davidtakac.bura.summary.hourly.GetHourlySummary
 import com.davidtakac.bura.summary.humidity.GetHumiditySummary
@@ -78,7 +77,7 @@ class AppContainer(private val appContext: Context) {
     private val userAgentProvider get() = UserAgentProvider(appContext)
 
     private val forecastCacher by lazy { ForecastDataCacher(root) }
-    private val forecastRepo by lazy {
+    val forecastRepo by lazy {
         ForecastRepository(
             cacher = forecastCacher,
             downloader = ForecastDataDownloader(userAgentProvider),
@@ -108,7 +107,6 @@ class AppContainer(private val appContext: Context) {
 
     val getNowSummary get() = GetNowSummary(tempRepo, feelsRepo, conditionRepo)
     val getHourlySummary get() = GetHourlySummary(tempRepo, popRepo, conditionRepo, sunRepo)
-    val getDailySummary get() = GetDailySummary(tempRepo, conditionRepo, popRepo)
     val getPrecipitationSummary get() = GetPrecipitationSummary(precipRepo)
     val getUvIndexSummary get() = GetUvIndexSummary(uvIndexRepo)
     val getWindSummary get() = GetWindSummary(windRepo, gustRepo)

@@ -18,5 +18,5 @@ import com.davidtakac.bura.units.Units
 
 class EagerConditionRepository(private val repo: ForecastRepository) : ConditionRepository {
     override suspend fun period(coords: Coordinates, units: Units): ConditionPeriod? =
-        repo.forecast(coords, units)?.weatherDescription
+        repo.forecast(coords, units)?.condition
 }

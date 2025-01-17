@@ -17,10 +17,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.davidtakac.bura.App
+import com.davidtakac.bura.forecast.ForecastRepository
 import com.davidtakac.bura.forecast.ForecastResult
 import com.davidtakac.bura.place.selected.SelectedPlaceRepository
 import com.davidtakac.bura.summary.daily.DailySummary
-import com.davidtakac.bura.summary.daily.GetDailySummary
+import com.davidtakac.bura.summary.daily.getDailySummary
 import com.davidtakac.bura.summary.feelslike.FeelsLikeSummary
 import com.davidtakac.bura.summary.feelslike.GetFeelsLikeSummary
 import com.davidtakac.bura.summary.hourly.HourSummary
@@ -50,9 +51,9 @@ import java.time.Instant
 class SummaryViewModel(
     private val placeRepo: SelectedPlaceRepository,
     private val unitsRepo: SelectedUnitsRepository,
+    private val forecastRepo: ForecastRepository,
     private val getNowSummary: GetNowSummary,
     private val getHourlySummary: GetHourlySummary,
-    private val getDailySummary: GetDailySummary,
     private val precipSummaryUseCase: GetPrecipitationSummary,
     private val getUvIndexSummary: GetUvIndexSummary,
     private val getWindSummary: GetWindSummary,
@@ -79,6 +80,7 @@ class SummaryViewModel(
         val coords = location.coordinates
         val units = unitsRepo.getSelectedUnits()
         val now = Instant.now().atZone(location.timeZone).toLocalDateTime()
+        val forecast = forecastRepo.forecast(coords, units) ?: return SummaryState.FailedToDownload
 
         val nowSummary = getNowSummary(coords, units, now)
         when (nowSummary) {
@@ -94,7 +96,12 @@ class SummaryViewModel(
             is ForecastResult.Success -> Unit
         }
 
-        val dailySummary = getDailySummary(coords, units, now)
+        val dailySummary = getDailySummary(
+            now = now,
+            tempPeriod = forecast.temperature,
+            condPeriod = forecast.condition,
+            popPeriod = forecast.pop
+        )
         when (dailySummary) {
             ForecastResult.FailedToDownload -> return SummaryState.FailedToDownload
             ForecastResult.Outdated -> return SummaryState.Outdated
@@ -180,9 +187,9 @@ class SummaryViewModel(
                 return SummaryViewModel(
                     container.selectedPlaceRepo,
                     container.selectedUnitsRepo,
+                    container.forecastRepo,
                     container.getNowSummary,
                     container.getHourlySummary,
-                    container.getDailySummary,
                     container.getPrecipitationSummary,
                     container.getUvIndexSummary,
                     container.getWindSummary,

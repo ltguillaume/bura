@@ -37,7 +37,7 @@ data class Forecast(
     val pressure: PressurePeriod,
     val visibility: VisibilityPeriod,
     val humidity: HumidityPeriod,
-    val weatherDescription: ConditionPeriod
+    val condition: ConditionPeriod
 ) {
     init {
         requireMatching(
@@ -52,7 +52,7 @@ data class Forecast(
             pressure,
             visibility,
             humidity,
-            weatherDescription
+            condition
         )
     }
 }

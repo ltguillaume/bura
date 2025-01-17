@@ -13,37 +13,29 @@
 package com.davidtakac.bura.summary.daily
 
 import com.davidtakac.bura.pop.Pop
-import com.davidtakac.bura.pop.PopRepository
 import com.davidtakac.bura.forecast.ForecastResult
 import com.davidtakac.bura.temperature.Temperature
-import com.davidtakac.bura.temperature.TemperatureRepository
-import com.davidtakac.bura.units.Units
 import com.davidtakac.bura.condition.Condition
-import com.davidtakac.bura.condition.ConditionRepository
-import com.davidtakac.bura.place.Coordinates
+import com.davidtakac.bura.condition.ConditionPeriod
+import com.davidtakac.bura.pop.PopPeriod
+import com.davidtakac.bura.temperature.TemperaturePeriod
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-class GetDailySummary(
-    private val tempRepo: TemperatureRepository,
-    private val descRepo: ConditionRepository,
-    private val popRepo: PopRepository,
-) {
-    suspend operator fun invoke(coords: Coordinates, units: Units, now: LocalDateTime): ForecastResult<DailySummary> {
-        val tempPeriod = tempRepo.period(coords, units) ?: return ForecastResult.FailedToDownload
-        val descPeriod = descRepo.period(coords, units) ?: return ForecastResult.FailedToDownload
-        val popPeriod = popRepo.period(coords, units) ?: return ForecastResult.FailedToDownload
-
-        val futureTempDays = tempPeriod.daysFrom(now.toLocalDate()) ?: return ForecastResult.Outdated
-        val popDays = popPeriod.momentsFrom(now)?.daysFrom(now.toLocalDate()) ?: return ForecastResult.Outdated
-        val descDays = descPeriod.momentsFrom(now)?.daysFrom(now.toLocalDate()) ?: return ForecastResult.Outdated
-
-        val minOfAllDays = futureTempDays.minOf { it.minimum }
-        val maxOfAllDays = futureTempDays.maxOf { it.maximum }
-
-        return ForecastResult.Success(DailySummary(
-            minTemp = minOfAllDays,
-            maxTemp = maxOfAllDays,
+fun getDailySummary(
+    now: LocalDateTime,
+    tempPeriod: TemperaturePeriod,
+    condPeriod: ConditionPeriod,
+    popPeriod: PopPeriod
+): ForecastResult<DailySummary> {
+    val nowDate = now.toLocalDate()
+    val futureTempDays = tempPeriod.daysFrom(nowDate) ?: return ForecastResult.Outdated
+    val popDays = popPeriod.momentsFrom(now)?.daysFrom(nowDate) ?: return ForecastResult.Outdated
+    val descDays = condPeriod.momentsFrom(now)?.daysFrom(nowDate) ?: return ForecastResult.Outdated
+    return ForecastResult.Success(
+        DailySummary(
+            minTemp = futureTempDays.minOf { it.minimum },
+            maxTemp = futureTempDays.maxOf { it.maximum },
             days = buildList {
                 for (i in futureTempDays.indices) {
                     add(
@@ -59,8 +51,8 @@ class GetDailySummary(
                     )
                 }
             }
-        ))
-    }
+        ),
+    )
 }
 
 data class DailySummary(
