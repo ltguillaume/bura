@@ -26,7 +26,6 @@ import com.davidtakac.bura.graphs.pop.GetPopGraphs
 import com.davidtakac.bura.graphs.precipitation.GetPrecipitationGraphs
 import com.davidtakac.bura.graphs.precipitation.GetPrecipitationTotals
 import com.davidtakac.bura.graphs.temperature.GetTemperatureGraphSummaries
-import com.davidtakac.bura.graphs.temperature.GetTemperatureGraphs
 import com.davidtakac.bura.gust.EagerGustRepository
 import com.davidtakac.bura.gust.GustRepository
 import com.davidtakac.bura.humidity.EagerHumidityRepository
@@ -95,7 +94,6 @@ class AppContainer(private val appContext: Context) {
     val selectedPlaceRepo: SelectedPlaceRepository by lazy { PrefsSelectedPlaceRepository(prefs, savedPlacesRepo) }
     val selectedUnitsRepo: SelectedUnitsRepository by lazy { PrefsSelectedUnitsRepository(prefs) }
 
-    val getTemperatureGraphs get() = GetTemperatureGraphs(tempRepo, conditionRepo)
     val getPopGraphs get() = GetPopGraphs(popRepo)
     val getPrecipitationTotals get() = GetPrecipitationTotals(precipRepo)
     val getTemperatureGraphSummaries get() = GetTemperatureGraphSummaries(tempRepo, conditionRepo, feelsRepo)

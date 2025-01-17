@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.davidtakac.bura.App
+import com.davidtakac.bura.forecast.ForecastRepository
 import com.davidtakac.bura.forecast.ForecastResult
 import com.davidtakac.bura.graphs.pop.PopGraph
 import com.davidtakac.bura.graphs.pop.GetPopGraphs
@@ -27,7 +28,7 @@ import com.davidtakac.bura.graphs.precipitation.PrecipitationGraphs
 import com.davidtakac.bura.graphs.temperature.GetTemperatureGraphSummaries
 import com.davidtakac.bura.graphs.temperature.TemperatureGraphSummary
 import com.davidtakac.bura.graphs.temperature.TemperatureGraphs
-import com.davidtakac.bura.graphs.temperature.GetTemperatureGraphs
+import com.davidtakac.bura.graphs.temperature.getTemperatureGraphs
 import com.davidtakac.bura.place.selected.SelectedPlaceRepository
 import com.davidtakac.bura.units.SelectedUnitsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,8 +39,8 @@ import java.time.Instant
 class EssentialGraphsViewModel(
     private val placeRepo: SelectedPlaceRepository,
     private val unitsRepo: SelectedUnitsRepository,
+    private val forecastRepo: ForecastRepository,
     private val getTempGraphSummaries: GetTemperatureGraphSummaries,
-    private val getTempGraphs: GetTemperatureGraphs,
     private val getPopGraphs: GetPopGraphs,
     private val getPrecipGraphs: GetPrecipitationGraphs,
     private val getPrecipTotals: GetPrecipitationTotals
@@ -61,6 +62,7 @@ class EssentialGraphsViewModel(
         val coords = location.coordinates
         val units = unitsRepo.getSelectedUnits()
         val now = Instant.now().atZone(location.timeZone).toLocalDateTime()
+        val forecast = forecastRepo.forecast(coords, units) ?: return EssentialGraphsState.FailedToDownload
 
         val tempGraphSummaries = getTempGraphSummaries(coords, units, now)
         when (tempGraphSummaries) {
@@ -69,7 +71,7 @@ class EssentialGraphsViewModel(
             is ForecastResult.Success -> Unit
         }
 
-        val tempGraphs = getTempGraphs(coords, units, now)
+        val tempGraphs = getTemperatureGraphs(now, forecast.temperature, forecast.condition)
         when (tempGraphs) {
             ForecastResult.FailedToDownload -> return EssentialGraphsState.FailedToDownload
             ForecastResult.Outdated -> return EssentialGraphsState.Outdated
@@ -114,8 +116,8 @@ class EssentialGraphsViewModel(
                 return EssentialGraphsViewModel(
                     container.selectedPlaceRepo,
                     container.selectedUnitsRepo,
+                    container.forecastRepo,
                     container.getTemperatureGraphSummaries,
-                    container.getTemperatureGraphs,
                     container.getPopGraphs,
                     container.getPrecipitationGraphs,
                     container.getPrecipitationTotals

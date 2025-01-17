@@ -20,7 +20,7 @@ import com.davidtakac.bura.graphs.common.GraphTime
 import com.davidtakac.bura.graphs.temperature.GraphTemperature
 import com.davidtakac.bura.graphs.temperature.TemperatureGraph
 import com.davidtakac.bura.graphs.temperature.TemperatureGraphPoint
-import com.davidtakac.bura.graphs.temperature.GetTemperatureGraphs
+import com.davidtakac.bura.graphs.temperature.getTemperatureGraphs
 import com.davidtakac.bura.temperature.Temperature
 import com.davidtakac.bura.temperature.TemperatureMoment
 import com.davidtakac.bura.temperature.TemperaturePeriod
@@ -32,35 +32,31 @@ import java.time.LocalTime
 import java.time.temporal.ChronoUnit
 
 class GetTemperatureGraphsTest {
-    
-
     @Test
     fun `combines data into graph points and extracts min max temps`() = runTest {
         val firstMoment = unixEpochStart
         val secondMoment = firstMoment.plus(1, ChronoUnit.HOURS)
         val thirdMoment = secondMoment.plus(1, ChronoUnit.HOURS)
         val now = secondMoment.plus(10, ChronoUnit.MINUTES)
-        val descRepo = FakeConditionRepository(
-            ConditionPeriod(
-                listOf(
-                    ConditionMoment(firstMoment, Condition(1, true)),
-                    ConditionMoment(secondMoment, Condition(2, false)),
-                    ConditionMoment(thirdMoment, Condition(3, false))
-                )
+        val condPeriod = ConditionPeriod(
+            listOf(
+                ConditionMoment(firstMoment, Condition(1, true)),
+                ConditionMoment(secondMoment, Condition(2, false)),
+                ConditionMoment(thirdMoment, Condition(3, false))
             )
         )
-        val tempRepo = FakeTemperatureRepository(
-            TemperaturePeriod(
-                listOf(
-                    TemperatureMoment(firstMoment, Temperature.fromDegreesCelsius(0.0)),
-                    TemperatureMoment(secondMoment, Temperature.fromDegreesCelsius(1.0)),
-                    TemperatureMoment(thirdMoment, Temperature.fromDegreesCelsius(2.0))
-                )
+        val tempPeriod = TemperaturePeriod(
+            listOf(
+                TemperatureMoment(firstMoment, Temperature.fromDegreesCelsius(0.0)),
+                TemperatureMoment(secondMoment, Temperature.fromDegreesCelsius(1.0)),
+                TemperatureMoment(thirdMoment, Temperature.fromDegreesCelsius(2.0))
             )
         )
-        val useCase = GetTemperatureGraphs(tempRepo, descRepo)
-        val result =
-            (useCase(coords, units, now) as ForecastResult.Success).data.graphs.first()
+        val result = (getTemperatureGraphs(
+            now,
+            tempPeriod,
+            condPeriod
+        ) as ForecastResult.Success).data.graphs.first()
         assertEquals(
             TemperatureGraph(
                 day = LocalDate.parse("1970-01-01"),
@@ -113,27 +109,25 @@ class GetTemperatureGraphsTest {
         val secondMoment = firstMoment.plus(1, ChronoUnit.HOURS)
         val thirdMoment = secondMoment.plus(1, ChronoUnit.HOURS)
         val now = secondMoment.plus(10, ChronoUnit.MINUTES)
-        val descRepo = FakeConditionRepository(
-            ConditionPeriod(
-                listOf(
-                    ConditionMoment(firstMoment, Condition(1, true)),
-                    ConditionMoment(secondMoment, Condition(2, false)),
-                    ConditionMoment(thirdMoment, Condition(3, false))
-                )
+        val condPeriod = ConditionPeriod(
+            listOf(
+                ConditionMoment(firstMoment, Condition(1, true)),
+                ConditionMoment(secondMoment, Condition(2, false)),
+                ConditionMoment(thirdMoment, Condition(3, false))
             )
         )
-        val tempRepo = FakeTemperatureRepository(
-            TemperaturePeriod(
-                listOf(
-                    TemperatureMoment(firstMoment, Temperature.fromDegreesCelsius(1.0)),
-                    TemperatureMoment(secondMoment, Temperature.fromDegreesCelsius(1.0)),
-                    TemperatureMoment(thirdMoment, Temperature.fromDegreesCelsius(1.0))
-                )
+        val tempPeriod = TemperaturePeriod(
+            listOf(
+                TemperatureMoment(firstMoment, Temperature.fromDegreesCelsius(1.0)),
+                TemperatureMoment(secondMoment, Temperature.fromDegreesCelsius(1.0)),
+                TemperatureMoment(thirdMoment, Temperature.fromDegreesCelsius(1.0))
             )
         )
-        val useCase = GetTemperatureGraphs(tempRepo, descRepo)
-        val result =
-            (useCase(coords, units, now) as ForecastResult.Success).data.graphs.first()
+        val result = (getTemperatureGraphs(
+            now,
+            tempPeriod,
+            condPeriod
+        ) as ForecastResult.Success).data.graphs.first()
         assert(result.points.all { it.temperature.meta == GraphTemperature.Meta.Regular })
     }
 
@@ -143,27 +137,25 @@ class GetTemperatureGraphsTest {
         val secondMoment = firstMoment.plus(1, ChronoUnit.HOURS)
         val thirdMoment = secondMoment.plus(1, ChronoUnit.HOURS)
         val now = secondMoment.plus(10, ChronoUnit.MINUTES)
-        val descRepo = FakeConditionRepository(
-            ConditionPeriod(
-                listOf(
-                    ConditionMoment(firstMoment, Condition(1, true)),
-                    ConditionMoment(secondMoment, Condition(2, false)),
-                    ConditionMoment(thirdMoment, Condition(3, false))
-                )
+        val condPeriod = ConditionPeriod(
+            listOf(
+                ConditionMoment(firstMoment, Condition(1, true)),
+                ConditionMoment(secondMoment, Condition(2, false)),
+                ConditionMoment(thirdMoment, Condition(3, false))
             )
         )
-        val tempRepo = FakeTemperatureRepository(
-            TemperaturePeriod(
-                listOf(
-                    TemperatureMoment(firstMoment, Temperature.fromDegreesCelsius(1.0)),
-                    TemperatureMoment(secondMoment, Temperature.fromDegreesCelsius(1.0)),
-                    TemperatureMoment(thirdMoment, Temperature.fromDegreesCelsius(2.0))
-                )
+        val tempPeriod = TemperaturePeriod(
+            listOf(
+                TemperatureMoment(firstMoment, Temperature.fromDegreesCelsius(1.0)),
+                TemperatureMoment(secondMoment, Temperature.fromDegreesCelsius(1.0)),
+                TemperatureMoment(thirdMoment, Temperature.fromDegreesCelsius(2.0))
             )
         )
-        val useCase = GetTemperatureGraphs(tempRepo, descRepo)
-        val result =
-            (useCase(coords, units, now) as ForecastResult.Success).data.graphs.first()
+        val result = (getTemperatureGraphs(
+            now,
+            tempPeriod,
+            condPeriod
+        ) as ForecastResult.Success).data.graphs.first()
         assertEquals(
             LocalTime.parse("01:00"),
             result.points.first { it.temperature.meta == GraphTemperature.Meta.Minimum }.time.value
@@ -175,25 +167,23 @@ class GetTemperatureGraphsTest {
         val firstMoment = unixEpochStart.plus(23, ChronoUnit.HOURS)
         val secondMoment = firstMoment.plus(1, ChronoUnit.HOURS)
         val now = firstMoment.plus(10, ChronoUnit.MINUTES)
-        val descRepo = FakeConditionRepository(
-            ConditionPeriod(
-                listOf(
-                    ConditionMoment(firstMoment, Condition(1, true)),
-                    ConditionMoment(secondMoment, Condition(2, false)),
-                )
+        val condPeriod = ConditionPeriod(
+            listOf(
+                ConditionMoment(firstMoment, Condition(1, true)),
+                ConditionMoment(secondMoment, Condition(2, false)),
             )
         )
-        val tempRepo = FakeTemperatureRepository(
-            TemperaturePeriod(
-                listOf(
-                    TemperatureMoment(firstMoment, Temperature.fromDegreesCelsius(2.0)),
-                    TemperatureMoment(secondMoment, Temperature.fromDegreesCelsius(1.0)),
-                )
+        val tempPeriod = TemperaturePeriod(
+            listOf(
+                TemperatureMoment(firstMoment, Temperature.fromDegreesCelsius(2.0)),
+                TemperatureMoment(secondMoment, Temperature.fromDegreesCelsius(1.0)),
             )
         )
-        val useCase = GetTemperatureGraphs(tempRepo, descRepo)
-        val result =
-            (useCase(coords, units, now) as ForecastResult.Success).data.graphs.first()
+        val result = (getTemperatureGraphs(
+            now,
+            tempPeriod,
+            condPeriod
+        ) as ForecastResult.Success).data.graphs.first()
         assertEquals(
             TemperatureGraph(
                 day = LocalDate.parse("1970-01-01"),
