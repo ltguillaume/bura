@@ -14,55 +14,45 @@ package com.davidtakac.bura.graphs.temperature
 
 import com.davidtakac.bura.forecast.ForecastResult
 import com.davidtakac.bura.temperature.Temperature
-import com.davidtakac.bura.temperature.TemperatureRepository
-import com.davidtakac.bura.units.Units
 import com.davidtakac.bura.condition.Condition
-import com.davidtakac.bura.condition.ConditionRepository
-import com.davidtakac.bura.place.Coordinates
+import com.davidtakac.bura.condition.ConditionPeriod
+import com.davidtakac.bura.temperature.TemperaturePeriod
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-class GetTemperatureGraphSummaries(
-    private val tempRepo: TemperatureRepository,
-    private val conditionRepo: ConditionRepository,
-    private val feelsLikeRepo: TemperatureRepository
-) {
-    suspend operator fun invoke(
-        coords: Coordinates,
-        units: Units,
-        now: LocalDateTime
-    ): ForecastResult<List<TemperatureGraphSummary>> {
-        val tempPeriod = tempRepo.period(coords, units) ?: return ForecastResult.FailedToDownload
-        val conditionPeriod = conditionRepo.period(coords, units) ?: return ForecastResult.FailedToDownload
-        val feelsLikePeriod = feelsLikeRepo.period(coords, units) ?: return ForecastResult.FailedToDownload
-        val tempDays = tempPeriod.daysFrom(now.toLocalDate()) ?: return ForecastResult.Outdated
-        val conditionDays = conditionPeriod.momentsFrom(now)?.daysFrom(now.toLocalDate()) ?: return ForecastResult.Outdated
-        val feelsLikeNow = feelsLikePeriod[now]?.temperature ?: return ForecastResult.Outdated
+fun getTemperatureGraphSummaries(
+    now: LocalDateTime,
+    tempPeriod: TemperaturePeriod,
+    feelsPeriod: TemperaturePeriod,
+    condPeriod: ConditionPeriod
+): ForecastResult<List<TemperatureGraphSummary>> {
+    val tempDays = tempPeriod.daysFrom(now.toLocalDate()) ?: return ForecastResult.Outdated
+    val conditionDays = condPeriod.momentsFrom(now)?.daysFrom(now.toLocalDate()) ?: return ForecastResult.Outdated
+    val feelsLikeNow = feelsPeriod[now]?.temperature ?: return ForecastResult.Outdated
 
-        return ForecastResult.Success(
-            data = tempDays.mapIndexed { idx, tempDay ->
-                val day = tempDay.first().hour.toLocalDate()
-                val minTemp = tempDay.minimum
-                val maxTemp = tempDay.maximum
-                val conditionDay = conditionDays[idx]
-                val condition = conditionDay[now]?.condition ?: conditionDay.day ?: conditionDay.night!!
-                val nowTemp = tempDay[now]?.temperature
+    return ForecastResult.Success(
+        data = tempDays.mapIndexed { idx, tempDay ->
+            val day = tempDay.first().hour.toLocalDate()
+            val minTemp = tempDay.minimum
+            val maxTemp = tempDay.maximum
+            val conditionDay = conditionDays[idx]
+            val condition = conditionDay[now]?.condition ?: conditionDay.day ?: conditionDay.night!!
+            val nowTemp = tempDay[now]?.temperature
 
-                TemperatureGraphSummary(
-                    day = day,
-                    minTemp = minTemp,
-                    maxTemp = maxTemp,
-                    condition = condition,
-                    now = nowTemp?.let {
-                        TemperatureGraphNowSummary(
-                            temp = nowTemp,
-                            feelsLike = feelsLikeNow
-                        )
-                    }
-                )
-            }
-        )
-    }
+            TemperatureGraphSummary(
+                day = day,
+                minTemp = minTemp,
+                maxTemp = maxTemp,
+                condition = condition,
+                now = nowTemp?.let {
+                    TemperatureGraphNowSummary(
+                        temp = nowTemp,
+                        feelsLike = feelsLikeNow
+                    )
+                }
+            )
+        }
+    )
 }
 
 data class TemperatureGraphSummary(

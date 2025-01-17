@@ -25,9 +25,9 @@ import com.davidtakac.bura.graphs.precipitation.GetPrecipitationGraphs
 import com.davidtakac.bura.graphs.precipitation.PrecipitationTotal
 import com.davidtakac.bura.graphs.precipitation.GetPrecipitationTotals
 import com.davidtakac.bura.graphs.precipitation.PrecipitationGraphs
-import com.davidtakac.bura.graphs.temperature.GetTemperatureGraphSummaries
 import com.davidtakac.bura.graphs.temperature.TemperatureGraphSummary
 import com.davidtakac.bura.graphs.temperature.TemperatureGraphs
+import com.davidtakac.bura.graphs.temperature.getTemperatureGraphSummaries
 import com.davidtakac.bura.graphs.temperature.getTemperatureGraphs
 import com.davidtakac.bura.place.selected.SelectedPlaceRepository
 import com.davidtakac.bura.units.SelectedUnitsRepository
@@ -40,7 +40,6 @@ class EssentialGraphsViewModel(
     private val placeRepo: SelectedPlaceRepository,
     private val unitsRepo: SelectedUnitsRepository,
     private val forecastRepo: ForecastRepository,
-    private val getTempGraphSummaries: GetTemperatureGraphSummaries,
     private val getPopGraphs: GetPopGraphs,
     private val getPrecipGraphs: GetPrecipitationGraphs,
     private val getPrecipTotals: GetPrecipitationTotals
@@ -64,7 +63,7 @@ class EssentialGraphsViewModel(
         val now = Instant.now().atZone(location.timeZone).toLocalDateTime()
         val forecast = forecastRepo.forecast(coords, units) ?: return EssentialGraphsState.FailedToDownload
 
-        val tempGraphSummaries = getTempGraphSummaries(coords, units, now)
+        val tempGraphSummaries = getTemperatureGraphSummaries(now, tempPeriod = forecast.temperature, feelsPeriod = forecast.feelsLike, forecast.condition)
         when (tempGraphSummaries) {
             ForecastResult.FailedToDownload -> return EssentialGraphsState.FailedToDownload
             ForecastResult.Outdated -> return EssentialGraphsState.Outdated
@@ -117,7 +116,6 @@ class EssentialGraphsViewModel(
                     container.selectedPlaceRepo,
                     container.selectedUnitsRepo,
                     container.forecastRepo,
-                    container.getTemperatureGraphSummaries,
                     container.getPopGraphs,
                     container.getPrecipitationGraphs,
                     container.getPrecipitationTotals
