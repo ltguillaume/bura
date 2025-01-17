@@ -14,7 +14,7 @@ package com.davidtakac.bura
 
 import com.davidtakac.bura.forecast.ForecastResult
 import com.davidtakac.bura.summary.uvindex.UseProtection
-import com.davidtakac.bura.summary.uvindex.GetUvIndexSummary
+import com.davidtakac.bura.summary.uvindex.getUvIndexSummary
 import com.davidtakac.bura.uvindex.UvIndex
 import com.davidtakac.bura.uvindex.UvIndexMoment
 import com.davidtakac.bura.uvindex.UvIndexPeriod
@@ -27,17 +27,14 @@ private val dangerous = UvIndex(3)
 private val safe = UvIndex(2)
 
 class UvIndexSummaryTest {
-    
-
     @Test
     fun `gets now`() = runTest {
         val firstMoment = unixEpochStart
         val now = firstMoment.plus(10, ChronoUnit.MINUTES)
         val period = UvIndexPeriod(listOf(UvIndexMoment(firstMoment, UvIndex(0))))
-        val useCase = GetUvIndexSummary(FakeUvIndexRepository(period))
         assertEquals(
             UvIndex(0),
-            (useCase(coords, units, now) as ForecastResult.Success).data.now
+            (getUvIndexSummary(now, period) as ForecastResult.Success).data.now
         )
     }
 
@@ -46,10 +43,9 @@ class UvIndexSummaryTest {
         val firstMoment = unixEpochStart
         val now = firstMoment.plus(10, ChronoUnit.MINUTES)
         val period = UvIndexPeriod(listOf(UvIndexMoment(firstMoment, safe)))
-        val useCase = GetUvIndexSummary(FakeUvIndexRepository(period))
         assertEquals(
             UseProtection.None,
-            (useCase(coords, units, now) as ForecastResult.Success).data.useProtection
+            (getUvIndexSummary(now, period) as ForecastResult.Success).data.useProtection
         )
     }
 
@@ -67,13 +63,12 @@ class UvIndexSummaryTest {
                 UvIndexMoment(secondSafe, safe),
             )
         )
-        val useCase = GetUvIndexSummary(FakeUvIndexRepository(period))
         assertEquals(
             UseProtection.FromUntil(
                 firstDanger.toLocalTime(),
                 secondSafe.toLocalTime()
             ),
-            (useCase(coords, units, now) as ForecastResult.Success).data.useProtection
+            (getUvIndexSummary(now, period) as ForecastResult.Success).data.useProtection
         )
     }
 
@@ -88,10 +83,9 @@ class UvIndexSummaryTest {
                 UvIndexMoment(firstSafe, safe),
             )
         )
-        val useCase = GetUvIndexSummary(FakeUvIndexRepository(period))
         assertEquals(
             UseProtection.Until(firstSafe.toLocalTime()),
-            (useCase(coords, units, now) as ForecastResult.Success).data.useProtection
+            (getUvIndexSummary(now, period) as ForecastResult.Success).data.useProtection
         )
     }
 
@@ -109,10 +103,9 @@ class UvIndexSummaryTest {
                 UvIndexMoment(firstSafe, safe),
             )
         )
-        val useCase = GetUvIndexSummary(FakeUvIndexRepository(period))
         assertEquals(
             UseProtection.Until(firstSafe.toLocalTime()),
-            (useCase(coords, units, now) as ForecastResult.Success).data.useProtection
+            (getUvIndexSummary(now, period) as ForecastResult.Success).data.useProtection
         )
     }
 
@@ -130,10 +123,9 @@ class UvIndexSummaryTest {
                 UvIndexMoment(thirdDanger, dangerous),
             )
         )
-        val useCase = GetUvIndexSummary(FakeUvIndexRepository(period))
         assertEquals(
             UseProtection.UntilEndOfDay,
-            (useCase(coords, units, now) as ForecastResult.Success).data.useProtection
+            (getUvIndexSummary(now, period) as ForecastResult.Success).data.useProtection
         )
     }
 
@@ -155,10 +147,9 @@ class UvIndexSummaryTest {
                 UvIndexMoment(secondSafe, safe),
             )
         )
-        val useCase = GetUvIndexSummary(FakeUvIndexRepository(period))
         assertEquals(
             UseProtection.Until(firstSafe.toLocalTime()),
-            (useCase(coords, units, now) as ForecastResult.Success).data.useProtection
+            (getUvIndexSummary(now, period) as ForecastResult.Success).data.useProtection
         )
     }
 
@@ -168,7 +159,6 @@ class UvIndexSummaryTest {
         val afterFirstMoment = firstMoment.plus(1, ChronoUnit.HOURS)
         val now = afterFirstMoment.plus(10, ChronoUnit.MINUTES)
         val period = UvIndexPeriod(listOf(UvIndexMoment(firstMoment, safe)))
-        val useCase = GetUvIndexSummary(FakeUvIndexRepository(period))
-        assertEquals(ForecastResult.Outdated, useCase(coords, units, now))
+        assertEquals(ForecastResult.Outdated, getUvIndexSummary(now, period))
     }
 }

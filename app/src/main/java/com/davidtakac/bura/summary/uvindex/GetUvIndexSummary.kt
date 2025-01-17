@@ -13,51 +13,45 @@
 package com.davidtakac.bura.summary.uvindex
 
 import com.davidtakac.bura.forecast.ForecastResult
-import com.davidtakac.bura.place.Coordinates
-import com.davidtakac.bura.units.Units
 import com.davidtakac.bura.uvindex.UvIndex
-import com.davidtakac.bura.uvindex.UvIndexRepository
+import com.davidtakac.bura.uvindex.UvIndexPeriod
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.temporal.ChronoUnit
 
-class GetUvIndexSummary(private val repo: UvIndexRepository) {
-    suspend operator fun invoke(
-        coords: Coordinates,
-        units: Units,
-        now: LocalDateTime
-    ): ForecastResult<UvIndexSummary> {
-        val uvPeriod = repo.period(coords, units) ?: return ForecastResult.FailedToDownload
-        val futureUv = uvPeriod.getDay(now.toLocalDate())?.momentsFrom(now) ?: return ForecastResult.Outdated
-        val protection = futureUv.protectionWindows.firstOrNull()?.let {
-            if (it.startInclusive == now.truncatedTo(ChronoUnit.HOURS)) {
-                if (it.endExclusive == null) {
-                    UseProtection.UntilEndOfDay
-                } else {
-                    UseProtection.Until(
-                        endExclusive = it.endExclusive.toLocalTime()
-                    )
-                }
+fun getUvIndexSummary(
+    now: LocalDateTime,
+    uvIndexPeriod: UvIndexPeriod
+): ForecastResult<UvIndexSummary> {
+    val futureUv = uvIndexPeriod.getDay(now.toLocalDate())?.momentsFrom(now) ?: return ForecastResult.Outdated
+    val protection = futureUv.protectionWindows.firstOrNull()?.let {
+        if (it.startInclusive == now.truncatedTo(ChronoUnit.HOURS)) {
+            if (it.endExclusive == null) {
+                UseProtection.UntilEndOfDay
             } else {
-                if (it.endExclusive == null) {
-                    UseProtection.FromUntilEndOfDay(
-                        startInclusive = it.startInclusive.toLocalTime()
-                    )
-                } else {
-                    UseProtection.FromUntil(
-                        startInclusive = it.startInclusive.toLocalTime(),
-                        endExclusive = it.endExclusive.toLocalTime()
-                    )
-                }
+                UseProtection.Until(
+                    endExclusive = it.endExclusive.toLocalTime()
+                )
             }
-        } ?: UseProtection.None
-        return ForecastResult.Success(
-            UvIndexSummary(
-                now = uvPeriod[now]?.uvIndex ?: return ForecastResult.Outdated,
-                useProtection = protection
-            )
+        } else {
+            if (it.endExclusive == null) {
+                UseProtection.FromUntilEndOfDay(
+                    startInclusive = it.startInclusive.toLocalTime()
+                )
+            } else {
+                UseProtection.FromUntil(
+                    startInclusive = it.startInclusive.toLocalTime(),
+                    endExclusive = it.endExclusive.toLocalTime()
+                )
+            }
+        }
+    } ?: UseProtection.None
+    return ForecastResult.Success(
+        UvIndexSummary(
+            now = uvIndexPeriod[now]?.uvIndex ?: return ForecastResult.Outdated,
+            useProtection = protection
         )
-    }
+    )
 }
 
 data class UvIndexSummary(
