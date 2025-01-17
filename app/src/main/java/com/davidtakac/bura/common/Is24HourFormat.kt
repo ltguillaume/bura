@@ -26,28 +26,22 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 
-private var value: Flow<Boolean>? = null
-
-private fun is24HourFormatFlow(context: Context): Flow<Boolean> {
-    val currValue = value
-    if (currValue != null) return currValue
-
-    val newValue = callbackFlow {
-        val callback = object : ContentObserver(Handler(Looper.getMainLooper())) {
-            override fun deliverSelfNotifications() = true
-            override fun onChange(selfChange: Boolean) {
-                trySendBlocking(DateFormat.is24HourFormat(context))
-            }
+private fun is24HourFormatFlow(context: Context): Flow<Boolean> = callbackFlow {
+    val callback = object : ContentObserver(Handler(Looper.getMainLooper())) {
+        override fun deliverSelfNotifications() = true
+        override fun onChange(selfChange: Boolean) {
+            trySendBlocking(DateFormat.is24HourFormat(context))
         }
-        val uri = android.provider.Settings.System.getUriFor(android.provider.Settings.System.TIME_12_24)
-        context.contentResolver.registerContentObserver(uri, false, callback)
-        awaitClose { context.contentResolver.unregisterContentObserver(callback) }
-    }.distinctUntilChanged()
-    value = newValue
-    return newValue
-}
+    }
+    val uri = android.provider.Settings.System.getUriFor(android.provider.Settings.System.TIME_12_24)
+    context.contentResolver.registerContentObserver(uri, false, callback)
+    awaitClose { context.contentResolver.unregisterContentObserver(callback) }
+}.distinctUntilChanged()
 
-val is24HourFormat: Boolean @Composable get() {
-    val context = LocalContext.current
-    return is24HourFormatFlow(context).collectAsState(initial = DateFormat.is24HourFormat(context)).value
-}
+val is24HourFormat: Boolean
+    @Composable get() {
+        val context = LocalContext.current
+        return is24HourFormatFlow(context)
+            .collectAsState(initial = DateFormat.is24HourFormat(context))
+            .value
+    }
