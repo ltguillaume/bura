@@ -40,11 +40,11 @@ class GetSavedPlacesTest {
         val momentDateTime = momentInstant.atZone(ZoneOffset.UTC).toLocalDateTime()
         val now = momentInstant.plus(10, ChronoUnit.MINUTES)
         val firstPlace = Place(
-            name = "first", "", "", "",
+            name = "first", "", "", "", "", "", "",
             Location(ZoneId.of("GMT"), Coordinates(latitude = 0.0, longitude = 1.0))
         )
         val secondPlace = Place(
-            name = "second", "", "", "",
+            name = "second", "", "", "", "", "", "",
             Location(ZoneId.of("GMT+1"), Coordinates(latitude = 0.0, longitude = 10.0))
         )
         val tempRepo = FakeMultipleCoordsTemperatureRepository(
