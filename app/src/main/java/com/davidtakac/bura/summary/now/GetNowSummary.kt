@@ -14,31 +14,27 @@ package com.davidtakac.bura.summary.now
 
 import com.davidtakac.bura.forecast.ForecastResult
 import com.davidtakac.bura.temperature.Temperature
-import com.davidtakac.bura.temperature.TemperatureRepository
-import com.davidtakac.bura.units.Units
 import com.davidtakac.bura.condition.Condition
-import com.davidtakac.bura.condition.ConditionRepository
-import com.davidtakac.bura.place.Coordinates
+import com.davidtakac.bura.condition.ConditionPeriod
+import com.davidtakac.bura.temperature.TemperaturePeriod
 import java.time.LocalDateTime
 
-class GetNowSummary(
-    private val tempRepo: TemperatureRepository,
-    private val feelsRepo: TemperatureRepository,
-    private val descRepo: ConditionRepository,
-) {
-    suspend operator fun invoke(coords: Coordinates, units: Units, now: LocalDateTime) : ForecastResult<NowSummary> {
-        val tempPeriod = tempRepo.period(coords, units) ?: return ForecastResult.FailedToDownload
-        val feelsPeriod = feelsRepo.period(coords, units) ?: return ForecastResult.FailedToDownload
-        val descPeriod = descRepo.period(coords, units) ?: return ForecastResult.FailedToDownload
-        val tempToday = tempPeriod.getDay(now.toLocalDate(),) ?: return ForecastResult.Outdated
-        return ForecastResult.Success(NowSummary(
+fun getNowSummary(
+    now: LocalDateTime,
+    tempPeriod: TemperaturePeriod,
+    feelsPeriod: TemperaturePeriod,
+    condPeriod: ConditionPeriod
+): ForecastResult<NowSummary> {
+    val tempToday = tempPeriod.getDay(now.toLocalDate()) ?: return ForecastResult.Outdated
+    return ForecastResult.Success(
+        NowSummary(
             temp = tempPeriod[now]?.temperature ?: return ForecastResult.Outdated,
             feelsLike = feelsPeriod[now]?.temperature ?: return ForecastResult.Outdated,
             minTemp = tempToday.minimum,
             maxTemp = tempToday.maximum,
-            cond = descPeriod[now]?.condition ?: return ForecastResult.Outdated
-        ))
-    }
+            cond = condPeriod[now]?.condition ?: return ForecastResult.Outdated
+        ),
+    )
 }
 
 data class NowSummary(

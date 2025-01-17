@@ -17,7 +17,7 @@ import com.davidtakac.bura.condition.ConditionMoment
 import com.davidtakac.bura.condition.ConditionPeriod
 import com.davidtakac.bura.forecast.ForecastResult
 import com.davidtakac.bura.summary.now.NowSummary
-import com.davidtakac.bura.summary.now.GetNowSummary
+import com.davidtakac.bura.summary.now.getNowSummary
 import com.davidtakac.bura.temperature.Temperature
 import com.davidtakac.bura.temperature.TemperatureMoment
 import com.davidtakac.bura.temperature.TemperaturePeriod
@@ -27,8 +27,6 @@ import org.junit.Test
 import java.time.temporal.ChronoUnit
 
 class GetNowSummaryTest {
-    
-
     @Test
     fun `summarizes current temperature, feels like and description and returns min and max temp of today`() =
         runTest {
@@ -57,12 +55,7 @@ class GetNowSummaryTest {
                     ConditionMoment(secondDayFirstMoment, Condition(wmoCode = 3, isDay = true))
                 )
             )
-            val useCase = GetNowSummary(
-                tempRepo = FakeTemperatureRepository(temperaturePeriod),
-                feelsRepo = FakeTemperatureRepository(feelsLikePeriod),
-                descRepo = FakeConditionRepository(conditionPeriod),
-            )
-            val summary = useCase(coords, units, now)
+            val summary = getNowSummary(now, temperaturePeriod, feelsLikePeriod, conditionPeriod)
             assertEquals(
                 ForecastResult.Success(
                     NowSummary(
@@ -97,11 +90,6 @@ class GetNowSummaryTest {
                 ConditionMoment(firstMoment, Condition(wmoCode = 1, isDay = false)),
             )
         )
-        val useCase = GetNowSummary(
-            tempRepo = FakeTemperatureRepository(temperaturePeriod),
-            feelsRepo = FakeTemperatureRepository(feelsLikePeriod),
-            descRepo = FakeConditionRepository(conditionPeriod),
-        )
-        assertEquals(ForecastResult.Outdated, useCase(coords, units, now))
+        assertEquals(ForecastResult.Outdated, getNowSummary(now, temperaturePeriod, feelsLikePeriod, conditionPeriod))
     }
 }

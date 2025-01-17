@@ -29,7 +29,7 @@ import com.davidtakac.bura.summary.hourly.GetHourlySummary
 import com.davidtakac.bura.summary.humidity.HumiditySummary
 import com.davidtakac.bura.summary.humidity.GetHumiditySummary
 import com.davidtakac.bura.summary.now.NowSummary
-import com.davidtakac.bura.summary.now.GetNowSummary
+import com.davidtakac.bura.summary.now.getNowSummary
 import com.davidtakac.bura.summary.precipitation.PrecipitationSummary
 import com.davidtakac.bura.summary.precipitation.GetPrecipitationSummary
 import com.davidtakac.bura.summary.pressure.PressureSummary
@@ -52,7 +52,6 @@ class SummaryViewModel(
     private val placeRepo: SelectedPlaceRepository,
     private val unitsRepo: SelectedUnitsRepository,
     private val forecastRepo: ForecastRepository,
-    private val getNowSummary: GetNowSummary,
     private val getHourlySummary: GetHourlySummary,
     private val precipSummaryUseCase: GetPrecipitationSummary,
     private val getUvIndexSummary: GetUvIndexSummary,
@@ -82,7 +81,12 @@ class SummaryViewModel(
         val now = Instant.now().atZone(location.timeZone).toLocalDateTime()
         val forecast = forecastRepo.forecast(coords, units) ?: return SummaryState.FailedToDownload
 
-        val nowSummary = getNowSummary(coords, units, now)
+        val nowSummary = getNowSummary(
+            now = now,
+            tempPeriod = forecast.temperature,
+            feelsPeriod = forecast.feelsLike,
+            condPeriod = forecast.condition
+        )
         when (nowSummary) {
             ForecastResult.FailedToDownload -> return SummaryState.FailedToDownload
             ForecastResult.Outdated -> return SummaryState.Outdated
@@ -188,7 +192,6 @@ class SummaryViewModel(
                     container.selectedPlaceRepo,
                     container.selectedUnitsRepo,
                     container.forecastRepo,
-                    container.getNowSummary,
                     container.getHourlySummary,
                     container.getPrecipitationSummary,
                     container.getUvIndexSummary,
