@@ -41,7 +41,7 @@ import com.davidtakac.bura.summary.uvindex.getUvIndexSummary
 import com.davidtakac.bura.summary.visibility.VisibilitySummary
 import com.davidtakac.bura.summary.visibility.GetVisibilitySummary
 import com.davidtakac.bura.summary.wind.WindSummary
-import com.davidtakac.bura.summary.wind.GetWindSummary
+import com.davidtakac.bura.summary.wind.getWindSummary
 import com.davidtakac.bura.units.SelectedUnitsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -52,7 +52,6 @@ class SummaryViewModel(
     private val placeRepo: SelectedPlaceRepository,
     private val unitsRepo: SelectedUnitsRepository,
     private val forecastRepo: ForecastRepository,
-    private val getWindSummary: GetWindSummary,
     private val getPressureSummary: GetPressureSummary,
     private val getHumiditySummary: GetHumiditySummary,
     private val visSummaryUseCase: GetVisibilitySummary,
@@ -78,61 +77,42 @@ class SummaryViewModel(
         val now = Instant.now().atZone(location.timeZone).toLocalDateTime()
         val forecast = forecastRepo.forecast(coords, units) ?: return SummaryState.FailedToDownload
 
-        val nowSummary = getNowSummary(
-            now = now,
-            tempPeriod = forecast.temperature,
-            feelsPeriod = forecast.feelsLike,
-            condPeriod = forecast.condition
-        )
+        val nowSummary = getNowSummary(now, tempPeriod = forecast.temperature, feelsPeriod = forecast.feelsLike, forecast.condition)
         when (nowSummary) {
             ForecastResult.FailedToDownload -> return SummaryState.FailedToDownload
             ForecastResult.Outdated -> return SummaryState.Outdated
             is ForecastResult.Success -> Unit
         }
 
-        val hourlySummary = getHourlySummary(
-            now = now,
-            tempPeriod = forecast.temperature,
-            popPeriod = forecast.pop,
-            condPeriod = forecast.condition,
-            sunPeriod = forecast.sun
-        )
+        val hourlySummary = getHourlySummary(now, forecast.temperature, forecast.pop, forecast.condition, forecast.sun)
         when (hourlySummary) {
             ForecastResult.FailedToDownload -> return SummaryState.FailedToDownload
             ForecastResult.Outdated -> return SummaryState.Outdated
             is ForecastResult.Success -> Unit
         }
 
-        val dailySummary = getDailySummary(
-            now = now,
-            tempPeriod = forecast.temperature,
-            condPeriod = forecast.condition,
-            popPeriod = forecast.pop
-        )
+        val dailySummary = getDailySummary(now, forecast.temperature, forecast.condition, forecast.pop)
         when (dailySummary) {
             ForecastResult.FailedToDownload -> return SummaryState.FailedToDownload
             ForecastResult.Outdated -> return SummaryState.Outdated
             is ForecastResult.Success -> Unit
         }
 
-        val precipSummary = getPrecipitationSummary(
-            now = now,
-            precipPeriod = forecast.precipitation
-        )
+        val precipSummary = getPrecipitationSummary(now, forecast.precipitation)
         when (precipSummary) {
             ForecastResult.FailedToDownload -> return SummaryState.FailedToDownload
             ForecastResult.Outdated -> return SummaryState.Outdated
             is ForecastResult.Success -> Unit
         }
 
-        val uvIndexSummary = getUvIndexSummary(now = now, uvIndexPeriod = forecast.uvIndex)
+        val uvIndexSummary = getUvIndexSummary(now, forecast.uvIndex)
         when (uvIndexSummary) {
             ForecastResult.FailedToDownload -> return SummaryState.FailedToDownload
             ForecastResult.Outdated -> return SummaryState.Outdated
             is ForecastResult.Success -> Unit
         }
 
-        val windSummary = getWindSummary(coords, units, now)
+        val windSummary = getWindSummary(now, forecast.wind, forecast.gust)
         when (windSummary) {
             ForecastResult.FailedToDownload -> return SummaryState.FailedToDownload
             ForecastResult.Outdated -> return SummaryState.Outdated
@@ -198,7 +178,6 @@ class SummaryViewModel(
                     container.selectedPlaceRepo,
                     container.selectedUnitsRepo,
                     container.forecastRepo,
-                    container.getWindSummary,
                     container.getPressureSummary,
                     container.getHumiditySummary,
                     container.getVisibilitySummary,

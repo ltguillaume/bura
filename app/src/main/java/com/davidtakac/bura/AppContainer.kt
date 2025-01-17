@@ -50,7 +50,6 @@ import com.davidtakac.bura.summary.humidity.GetHumiditySummary
 import com.davidtakac.bura.summary.pressure.GetPressureSummary
 import com.davidtakac.bura.summary.sun.GetSunSummary
 import com.davidtakac.bura.summary.visibility.GetVisibilitySummary
-import com.davidtakac.bura.summary.wind.GetWindSummary
 import com.davidtakac.bura.sun.EagerSunRepository
 import com.davidtakac.bura.sun.SunRepository
 import com.davidtakac.bura.temperature.EagerDewPointRepository
@@ -101,7 +100,6 @@ class AppContainer(private val appContext: Context) {
     val selectedPlaceRepo: SelectedPlaceRepository by lazy { PrefsSelectedPlaceRepository(prefs, savedPlacesRepo) }
     val selectedUnitsRepo: SelectedUnitsRepository by lazy { PrefsSelectedUnitsRepository(prefs) }
 
-    val getWindSummary get() = GetWindSummary(windRepo, gustRepo)
     val getSunSummary get() = GetSunSummary(sunRepo, conditionRepo)
     val getPressureSummary get() = GetPressureSummary(pressureRepo)
     val getHumiditySummary get() = GetHumiditySummary(humidityRepo, dewPointRepo)

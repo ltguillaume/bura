@@ -16,7 +16,7 @@ import com.davidtakac.bura.forecast.ForecastResult
 import com.davidtakac.bura.gust.GustMoment
 import com.davidtakac.bura.gust.GustPeriod
 import com.davidtakac.bura.summary.wind.WindSummary
-import com.davidtakac.bura.summary.wind.GetWindSummary
+import com.davidtakac.bura.summary.wind.getWindSummary
 import com.davidtakac.bura.wind.Wind
 import com.davidtakac.bura.wind.WindDirection
 import com.davidtakac.bura.wind.WindMoment
@@ -28,8 +28,6 @@ import org.junit.Test
 import java.time.temporal.ChronoUnit
 
 class WindSummaryTest {
-    
-
     @Test
     fun `gets current wind speed, direction and gust speed`() = runTest {
         val time = unixEpochStart
@@ -43,11 +41,7 @@ class WindSummaryTest {
             )
         )
         val gustPeriod = GustPeriod(listOf(GustMoment(time, WindSpeed.fromMetersPerSecond(1.0))))
-        val useCase = GetWindSummary(
-            windRepo = FakeWindRepository(windPeriod),
-            gustRepo = FakeGustRepository(gustPeriod),
-        )
-        val summary = useCase(coords, units, now)
+        val summary = getWindSummary(now, windPeriod, gustPeriod)
         assertEquals(
             ForecastResult.Success(
                 WindSummary(
@@ -72,11 +66,7 @@ class WindSummaryTest {
             )
         )
         val gustPeriod = GustPeriod(listOf(GustMoment(time, WindSpeed.fromMetersPerSecond(1.0))))
-        val useCase = GetWindSummary(
-            windRepo = FakeWindRepository(windPeriod),
-            gustRepo = FakeGustRepository(gustPeriod),
-        )
-        val summary = useCase(coords, units, now)
+        val summary = getWindSummary(now, windPeriod, gustPeriod)
         assertEquals(ForecastResult.Outdated, summary)
     }
 }

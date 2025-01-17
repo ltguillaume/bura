@@ -13,32 +13,23 @@
 package com.davidtakac.bura.summary.wind
 
 import com.davidtakac.bura.forecast.ForecastResult
-import com.davidtakac.bura.gust.GustRepository
-import com.davidtakac.bura.place.Coordinates
-import com.davidtakac.bura.units.Units
+import com.davidtakac.bura.gust.GustPeriod
 import com.davidtakac.bura.wind.Wind
-import com.davidtakac.bura.wind.WindRepository
+import com.davidtakac.bura.wind.WindPeriod
 import com.davidtakac.bura.wind.WindSpeed
 import java.time.LocalDateTime
 
-class GetWindSummary(
-    private val windRepo: WindRepository,
-    private val gustRepo: GustRepository,
-) {
-    suspend operator fun invoke(
-        coords: Coordinates,
-        units: Units,
-        now: LocalDateTime
-    ): ForecastResult<WindSummary> {
-        val windPeriod = windRepo.period(coords, units) ?: return ForecastResult.FailedToDownload
-        val gustPeriod = gustRepo.period(coords, units) ?: return ForecastResult.FailedToDownload
-        return ForecastResult.Success(
-            WindSummary(
-                windNow = windPeriod[now]?.wind ?: return ForecastResult.Outdated,
-                gustNow = gustPeriod[now]?.speed ?: return ForecastResult.Outdated
-            )
+fun getWindSummary(
+    now: LocalDateTime,
+    windPeriod: WindPeriod,
+    gustPeriod: GustPeriod
+): ForecastResult<WindSummary> {
+    return ForecastResult.Success(
+        WindSummary(
+            windNow = windPeriod[now]?.wind ?: return ForecastResult.Outdated,
+            gustNow = gustPeriod[now]?.speed ?: return ForecastResult.Outdated
         )
-    }
+    )
 }
 
 data class WindSummary(
