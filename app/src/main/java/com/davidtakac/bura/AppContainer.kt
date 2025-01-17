@@ -22,7 +22,6 @@ import com.davidtakac.bura.forecast.ForecastConverter
 import com.davidtakac.bura.forecast.ForecastDataCacher
 import com.davidtakac.bura.forecast.ForecastDataDownloader
 import com.davidtakac.bura.forecast.ForecastRepository
-import com.davidtakac.bura.graphs.precipitation.GetPrecipitationGraphs
 import com.davidtakac.bura.graphs.precipitation.GetPrecipitationTotals
 import com.davidtakac.bura.gust.EagerGustRepository
 import com.davidtakac.bura.gust.GustRepository
@@ -93,7 +92,6 @@ class AppContainer(private val appContext: Context) {
     val selectedUnitsRepo: SelectedUnitsRepository by lazy { PrefsSelectedUnitsRepository(prefs) }
 
     val getPrecipitationTotals get() = GetPrecipitationTotals(precipRepo)
-    val getPrecipitationGraphs get() = GetPrecipitationGraphs(precipRepo, conditionRepo)
 
     private val savedPlacesRepo: SavedPlacesRepository by lazy { FileSavedPlacesRepository(root) }
     val getSavedPlaces get() = GetSavedPlaces(savedPlacesRepo, staticTempRepo, staticConditionRepo)

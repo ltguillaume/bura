@@ -13,54 +13,45 @@
 package com.davidtakac.bura.graphs.precipitation
 
 import com.davidtakac.bura.condition.Condition
-import com.davidtakac.bura.condition.ConditionRepository
+import com.davidtakac.bura.condition.ConditionPeriod
 import com.davidtakac.bura.forecast.ForecastResult
 import com.davidtakac.bura.graphs.common.GraphTime
-import com.davidtakac.bura.place.Coordinates
 import com.davidtakac.bura.precipitation.MixedPrecipitation
-import com.davidtakac.bura.precipitation.PrecipitationRepository
-import com.davidtakac.bura.units.Units
+import com.davidtakac.bura.precipitation.PrecipitationPeriod
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-class GetPrecipitationGraphs(
-    private val precipRepo: PrecipitationRepository,
-    private val condRepo: ConditionRepository
-) {
-    suspend operator fun invoke(
-        coords: Coordinates,
-        units: Units,
-        now: LocalDateTime
-    ): ForecastResult<PrecipitationGraphs> {
-        val precip = precipRepo.period(coords, units) ?: return ForecastResult.FailedToDownload
-        val cond = condRepo.period(coords, units) ?: return ForecastResult.FailedToDownload
-        val precipDays = precip.daysFrom(now.toLocalDate()) ?: return ForecastResult.Outdated
-        val condDays = cond.daysFrom(now.toLocalDate()) ?: return ForecastResult.Outdated
-        return ForecastResult.Success(
-            data = PrecipitationGraphs(
-                max = precipDays.maxOf { it.max },
-                graphs = precipDays.mapIndexed { dayIdx, day ->
-                    PrecipitationGraph(
-                        day = day.first().hour.toLocalDate(),
-                        points = buildList {
-                            addAll(
-                                day.mapIndexed { momentIdx, moment ->
-                                    PrecipitationGraphPoint(
-                                        time = GraphTime(
-                                            hour = moment.hour,
-                                            now = now
-                                        ),
-                                        precip = moment.precipitation,
-                                        cond = condDays[dayIdx][momentIdx].condition
-                                    )
-                                }
-                            )
-                        }
-                    )
-                }
-            )
+fun getPrecipitationGraphs(
+    now: LocalDateTime,
+    precipPeriod: PrecipitationPeriod,
+    condPeriod: ConditionPeriod
+): ForecastResult<PrecipitationGraphs> {
+    val precipDays = precipPeriod.daysFrom(now.toLocalDate()) ?: return ForecastResult.Outdated
+    val condDays = condPeriod.daysFrom(now.toLocalDate()) ?: return ForecastResult.Outdated
+    return ForecastResult.Success(
+        data = PrecipitationGraphs(
+            max = precipDays.maxOf { it.max },
+            graphs = precipDays.mapIndexed { dayIdx, day ->
+                PrecipitationGraph(
+                    day = day.first().hour.toLocalDate(),
+                    points = buildList {
+                        addAll(
+                            day.mapIndexed { momentIdx, moment ->
+                                PrecipitationGraphPoint(
+                                    time = GraphTime(
+                                        hour = moment.hour,
+                                        now = now
+                                    ),
+                                    precip = moment.precipitation,
+                                    cond = condDays[dayIdx][momentIdx].condition
+                                )
+                            }
+                        )
+                    }
+                )
+            }
         )
-    }
+    )
 }
 
 data class PrecipitationGraphs(
