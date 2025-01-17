@@ -122,6 +122,8 @@
 
     <string name="sunrise">日出</string>
     <string name="sunset">日落</string>
+    <string name="sunrise_short">@string/sunrise</string>
+    <string name="sunset_short">@string/sunset</string>
     <string name="sunrise_value">日出：%s</string>
     <string name="sunset_value">日落：%s</string>
     <string name="sunrise_not_today">今天没有日出</string>

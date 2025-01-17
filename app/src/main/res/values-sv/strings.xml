@@ -122,6 +122,8 @@
 
     <string name="sunrise">Soluppgång</string>
     <string name="sunset">Solnedgång</string>
+    <string name="sunrise_short">@string/sunrise</string>
+    <string name="sunset_short">@string/sunset</string>
     <string name="sunrise_value">Soluppgång: %s</string>
     <string name="sunset_value">Solnedgång: %s</string>
     <string name="sunrise_not_today">Ingen soluppgång i dag.</string>

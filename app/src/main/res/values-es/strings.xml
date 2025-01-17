@@ -126,6 +126,8 @@
 
     <string name="sunrise">Amanecer</string>
     <string name="sunset">Atardecer</string>
+    <string name="sunrise_short">@string/sunrise</string>
+    <string name="sunset_short">@string/sunset</string>
     <string name="sunrise_value">Amanecer: %s</string>
     <string name="sunset_value">Atardecer: %s</string>
     <string name="sunrise_not_today">No amanece hoy.</string>

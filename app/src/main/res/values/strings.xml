@@ -122,6 +122,15 @@
 
     <string name="sunrise">Sunrise</string>
     <string name="sunset">Sunset</string>
+    <!--
+    sunrise_short and sunset_short are used in the hourly forecast on the Summary (Home) screen.
+    To make these strings visually consistent with the hour strings, you can override them with
+    shorter strings when it makes sense and sounds natural for the language in question. Otherwise
+    reference the full strings @string/sunrise and @string/sunset. For more info, see issue #62.
+    -->
+    <string name="sunrise_short">@string/sunrise</string>
+    <string name="sunset_short">@string/sunset</string>
+
     <string name="sunrise_value">Sunrise: %s</string>
     <string name="sunset_value">Sunset: %s</string>
     <string name="sunrise_not_today">No sunrise today.</string>

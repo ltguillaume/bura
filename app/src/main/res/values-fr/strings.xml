@@ -122,6 +122,8 @@
 
     <string name="sunrise">Lever du soleil</string>
     <string name="sunset">Coucher du soleil</string>
+    <string name="sunrise_short">@string/sunrise</string>
+    <string name="sunset_short">@string/sunset</string>
     <string name="sunrise_value">Lever du soleil : %s</string>
     <string name="sunset_value">Coucher du soleil : %s</string>
     <string name="sunrise_not_today">Pas de lever du soleil aujourd’hui.</string>

@@ -110,6 +110,8 @@
     <string name="humidity_value_percent">%s%%</string>
     <string name="sunrise">Izlazak Sunca</string>
     <string name="sunset">Zalazak Sunca</string>
+    <string name="sunrise_short">@string/sunrise</string>
+    <string name="sunset_short">@string/sunset</string>
     <string name="sunrise_value">Izlazak: %s</string>
     <string name="sunset_value">Zalazak: %s</string>
     <string name="sunrise_not_today">Nema izlaska Sunca danas.</string>

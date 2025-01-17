@@ -122,6 +122,8 @@
 
     <string name="sunrise">Bình minh</string>
     <string name="sunset">Hoàng hôn</string>
+    <string name="sunrise_short">@string/sunrise</string>
+    <string name="sunset_short">@string/sunset</string>
     <string name="sunrise_value">Bình minh: %s</string>
     <string name="sunset_value">Hoàng hôn: %s</string>
     <string name="sunrise_not_today">Hôm nay không có bình minh.</string>

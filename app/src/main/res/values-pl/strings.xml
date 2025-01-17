@@ -122,6 +122,8 @@
     <string name="sunset">Zachód słońca</string>
     <string name="sunrise_value">Wschód: %s</string>
     <string name="sunset_value">Zachód: %s</string>
+    <string name="sunrise_short">@string/sunrise</string>
+    <string name="sunset_short">@string/sunset</string>
     <string name="sunrise_not_today">Brak wschodu słońca.</string>
     <string name="sunset_not_today">Brak zachodu słońca.</string>
     <string name="sunrise_value_more_than_days_away">&gt; %sd</string>

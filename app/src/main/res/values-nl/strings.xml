@@ -122,6 +122,8 @@
 
     <string name="sunrise">Zonsopkomst</string>
     <string name="sunset">Zonsondergang</string>
+    <string name="sunrise_short">@string/sunrise</string>
+    <string name="sunset_short">@string/sunset</string>
     <string name="sunrise_value">Zonsopkomst om %s.</string>
     <string name="sunset_value">Zonsondergang om %s.</string>
     <string name="sunrise_not_today">Vandaag geen zonsopkomst.</string>

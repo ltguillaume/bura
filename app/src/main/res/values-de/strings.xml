@@ -122,6 +122,8 @@
 
     <string name="sunrise">Sonnenaufgang</string>
     <string name="sunset">Sonnenuntergang</string>
+    <string name="sunrise_short">@string/sunrise</string>
+    <string name="sunset_short">@string/sunset</string>
     <string name="sunrise_value">Sonnenaufgang: %s</string>
     <string name="sunset_value">Sonnenuntergang: %s</string>
     <string name="sunrise_not_today">Heute kein Sonnenaufgang.</string>

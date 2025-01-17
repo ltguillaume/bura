@@ -122,6 +122,8 @@
 
     <string name="sunrise">Восход</string>
     <string name="sunset">Закат</string>
+    <string name="sunrise_short">@string/sunrise</string>
+    <string name="sunset_short">@string/sunset</string>
     <string name="sunrise_value">Восход в %s</string>
     <string name="sunset_value">Закат в %s</string>
     <string name="sunrise_not_today">Сегодня нет восхода солнца.</string>

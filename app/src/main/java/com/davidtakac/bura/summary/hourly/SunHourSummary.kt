@@ -47,7 +47,7 @@ fun SunHourSummary(state: HourSummary.Sun, modifier: Modifier = Modifier) {
             )
         },
         pop = null,
-        temperature = { Text(stringResource(if (state.event == SunEvent.Sunrise) R.string.sunrise else R.string.sunset)) },
+        temperature = { Text(stringResource(if (state.event == SunEvent.Sunrise) R.string.sunrise_short else R.string.sunset_short)) },
         modifier = modifier
     )
 }
