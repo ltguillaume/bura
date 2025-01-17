@@ -1,0 +1,14 @@
+### Fixed
+- Dutch (#64), Spanish (#75) and German (#79)
+- Search text cut off (#35)
+- Blank screen when spamming back button (#65)
+
+### Improved
+- Place search results now display admin1, 2, 3 and 4 for easy identification (#53)
+- Saved places now display admin1 next to country name (#53)
+- Place search now returns up to 100 results (#53)
+- Graph scroll position is preserved between pages (#63)
+
+### Added
+- AM/PM time format (#24)
+- Short sunrise and sunset strings (#62)
