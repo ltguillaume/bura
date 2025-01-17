@@ -30,6 +30,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.time.Instant
 
+// todo: also refactor this to remove all use cases and keep it simple
 class PlacePickerViewModel(
     private val selectedPlaceRepo: SelectedPlaceRepository,
     private val selectedUnitsRepo: SelectedUnitsRepository,
