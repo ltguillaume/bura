@@ -27,7 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.davidtakac.bura.R
 import com.davidtakac.bura.common.AppTheme
-import com.davidtakac.bura.common.rememberDateTimeFormatter
+import com.davidtakac.bura.common.rememberDateTimeHourFormatter
 import com.davidtakac.bura.condition.Condition
 import com.davidtakac.bura.condition.image
 import com.davidtakac.bura.pop.Pop
@@ -39,7 +39,7 @@ import java.time.LocalDateTime
 
 @Composable
 fun WeatherHourSummary(state: HourSummary.Weather, modifier: Modifier = Modifier) {
-    val formatter = rememberDateTimeFormatter(ofPattern = R.string.date_time_pattern_hour)
+    val formatter = rememberDateTimeHourFormatter()
     HourSummary(
         time = { Text(if (state.isNow) stringResource(R.string.date_time_now) else state.time.format(formatter)) },
         icon = {

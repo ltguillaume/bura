@@ -24,10 +24,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.davidtakac.bura.R
 import com.davidtakac.bura.common.AppIcons
 import com.davidtakac.bura.common.AppTheme
-import com.davidtakac.bura.common.rememberDateTimeFormatter
+import com.davidtakac.bura.common.rememberDateTimeHourFormatter
 import com.davidtakac.bura.common.rememberNumberFormat
 import java.text.NumberFormat
 import java.time.format.DateTimeFormatter
@@ -45,6 +44,7 @@ data class GraphArgs(
     val axisTextStyle: TextStyle,
     val axisColor: Color,
     val axisDashIntervals: List<Float>,
+    val bottomAxisTextPaddingLeft: Float,
     val bottomAxisTextPaddingTop: Float,
     val endAxisTextPaddingStart: Float,
     val pointTextPaddingBottom: Float,
@@ -75,7 +75,7 @@ data class GraphArgs(
             val axisTextStyle = typography.bodySmall
             val axisTextPadding = 6.dp.toPx()
             GraphArgs(
-                startGutter = 8.dp.toPx(),
+                startGutter = 0.dp.toPx(),
                 endGutter = 48.dp.toPx(),
                 topGutter = 32.dp.toPx(),
                 bottomGutter = axisTextStyle.lineHeight.toPx() + (2 * axisTextPadding),
@@ -85,6 +85,7 @@ data class GraphArgs(
                 axisTextStyle = typography.bodySmall,
                 axisColor = colorScheme.onSurfaceVariant,
                 axisDashIntervals = listOf(4.dp, 2.dp).map { it.toPx() },
+                bottomAxisTextPaddingLeft = axisTextPadding,
                 bottomAxisTextPaddingTop = axisTextPadding,
                 endAxisTextPaddingStart = axisTextPadding,
                 pointTextPaddingBottom = axisTextPadding,
@@ -102,42 +103,32 @@ data class GraphArgs(
         }
 
         @Composable
-        fun rememberTemperatureArgs(): GraphArgs {
+        private fun rememberDefault(): GraphArgs {
             val density = LocalDensity.current
             val colorScheme = MaterialTheme.colorScheme
             val typography = MaterialTheme.typography
-            val dateTimeFormatter = rememberDateTimeFormatter(ofPattern = R.string.date_time_pattern_hour)
+            val dateTimeFormatter = rememberDateTimeHourFormatter()
             val numberFormat = rememberNumberFormat()
             val icons = AppTheme.icons
-            return remember(density, colorScheme, typography, dateTimeFormatter, numberFormat, icons) {
+            return remember(
+                density,
+                colorScheme,
+                typography,
+                dateTimeFormatter,
+                numberFormat,
+                icons
+            ) {
                 default(density, dateTimeFormatter, numberFormat, typography, colorScheme, icons)
             }
         }
 
         @Composable
-        fun rememberPopArgs(): GraphArgs {
-            val density = LocalDensity.current
-            val colorScheme = MaterialTheme.colorScheme
-            val typography = MaterialTheme.typography
-            val dateTimeFormatter = rememberDateTimeFormatter(ofPattern = R.string.date_time_pattern_hour)
-            val numberFormat = rememberNumberFormat()
-            val icons = AppTheme.icons
-            return remember(density, colorScheme, typography, dateTimeFormatter, numberFormat, icons) {
-                default(density, dateTimeFormatter, numberFormat, typography, colorScheme, icons)
-            }
-        }
+        fun rememberTemperatureArgs() = rememberDefault()
 
         @Composable
-        fun rememberPrecipArgs(): GraphArgs {
-            val density = LocalDensity.current
-            val colorScheme = MaterialTheme.colorScheme
-            val typography = MaterialTheme.typography
-            val dateTimeFormatter = rememberDateTimeFormatter(ofPattern = R.string.date_time_pattern_hour)
-            val numberFormat = rememberNumberFormat()
-            val icons = AppTheme.icons
-            return remember(density, colorScheme, typography, dateTimeFormatter, numberFormat, icons) {
-                default(density, dateTimeFormatter, numberFormat, typography, colorScheme, icons)
-            }
-        }
+        fun rememberPopArgs() = rememberDefault()
+
+        @Composable
+        fun rememberPrecipitationArgs() = rememberDefault()
     }
 }

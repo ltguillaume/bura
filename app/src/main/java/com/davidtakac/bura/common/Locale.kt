@@ -13,11 +13,13 @@
 package com.davidtakac.bura.common
 
 import android.content.Context
+import android.text.format.DateFormat
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import com.davidtakac.bura.R
 import java.text.NumberFormat
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -39,14 +41,14 @@ private val supportedLocales = listOf(
 
 private fun appLocale(context: Context): Locale {
     val defaultLocale = context.resources.configuration.locales[0]
-    val defaultLocaleSupported =  supportedLocales.any { it == defaultLocale || it.language == defaultLocale.language }
+    val defaultLocaleSupported = supportedLocales.any { it == defaultLocale || it.language == defaultLocale.language }
     return if (defaultLocaleSupported) defaultLocale else fallbackLocale
 }
 
 @Composable
 fun rememberAppLocale(): Locale {
     val context = LocalContext.current
-    return remember (context) { appLocale(context) }
+    return remember(context) { appLocale(context) }
 }
 
 @Composable
@@ -55,6 +57,12 @@ fun rememberDateTimeFormatter(@StringRes ofPattern: Int): DateTimeFormatter {
     val locale = appLocale(LocalContext.current)
     return remember(pattern, locale) { DateTimeFormatter.ofPattern(pattern, locale) }
 }
+
+@Composable
+fun rememberDateTimeHourFormatter(): DateTimeFormatter = rememberDateTimeFormatter(
+    if (DateFormat.is24HourFormat(LocalContext.current)) R.string.date_time_pattern_hour
+    else R.string.date_time_pattern_hour_ampm
+)
 
 @Composable
 fun rememberNumberFormat(): NumberFormat {

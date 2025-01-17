@@ -26,33 +26,35 @@ fun DrawScope.drawTimeAxis(
 ) {
     for (i in 0..24) {
         val x = ((i.toFloat() / 24) * (size.width - args.endGutter - args.startGutter)) + args.startGutter
-        fun drawTimeHelperLine(dashed: Boolean = true) {
+        fun drawTimeHelperLine(onEdge: Boolean) {
             drawLine(
                 color = args.axisColor,
-                start = Offset(x, y = args.topGutter),
-                end = Offset(x, y = size.height - args.bottomGutter),
+                start = Offset(x, y = if (onEdge) 0f else args.topGutter),
+                end = Offset(x, y = size.height),
                 strokeWidth = args.axisWidth,
-                pathEffect = if (dashed) PathEffect.dashPathEffect(args.axisDashIntervals.toFloatArray()) else null
+                pathEffect = if (!onEdge) PathEffect.dashPathEffect(args.axisDashIntervals.toFloatArray()) else null
             )
         }
-        if (i % 4 == 0) {
+        if (i % 6 == 0) {
             val time = LocalTime.of(if (i == 24) 0 else i, 0)
             val label = measurer.measure(
                 args.axisTimeFormatter.format(time),
                 style = args.axisTextStyle
             )
-            drawTimeHelperLine(dashed = i != 0 && i != 24)
-            drawText(
-                textLayoutResult = label,
-                color = args.axisColor,
-                topLeft = Offset(
-                    x = (x - (label.size.width / 2)).coerceIn(
-                        minimumValue = args.startGutter + args.textPaddingMinHorizontal,
-                        maximumValue = size.width - args.endGutter - label.size.width - args.textPaddingMinHorizontal
-                    ),
-                    y = size.height - args.bottomGutter + args.bottomAxisTextPaddingTop
+            drawTimeHelperLine(onEdge = i == 0 || i == 24)
+            if (i != 24) {
+                drawText(
+                    textLayoutResult = label,
+                    color = args.axisColor,
+                    topLeft = Offset(
+                        x = (x + args.bottomAxisTextPaddingLeft).coerceIn(
+                            minimumValue = args.startGutter + args.textPaddingMinHorizontal,
+                            maximumValue = size.width - args.endGutter - label.size.width - args.textPaddingMinHorizontal
+                        ),
+                        y = size.height - args.bottomGutter + args.bottomAxisTextPaddingTop
+                    )
                 )
-            )
+            }
         }
         onStepDrawn(i, x)
     }

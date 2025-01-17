@@ -75,6 +75,7 @@
     <string name="date_time_now">现在</string>
     <string name="date_time_today">今天</string>
     <string name="date_time_pattern_hour">H 点</string>
+    <string name="date_time_pattern_hour_ampm">h\u2009a</string>
     <string name="date_time_pattern_hour_minute">HH:mm</string>
     <string name="date_time_pattern_dow">E</string>
     <string name="date_time_pattern_dow_hour_minute">E HH:mm</string>

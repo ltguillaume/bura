@@ -233,7 +233,7 @@ private fun PrecipitationGraphPreview() {
                     )
                 }
             ),
-            args = GraphArgs.rememberPrecipArgs(),
+            args = GraphArgs.rememberPrecipitationArgs(),
             max = MixedPrecipitation.fromMillimeters(
                 Rain.fromMillimeters(15.0),
                 Showers.Zero,
@@ -274,7 +274,7 @@ private fun PrecipitationGraphDarkPreview() {
                     )
                 }
             ),
-            args = GraphArgs.rememberPrecipArgs(),
+            args = GraphArgs.rememberPrecipitationArgs(),
             max = MixedPrecipitation.fromMillimeters(
                 Rain.fromMillimeters(15.0),
                 Showers.Zero,
