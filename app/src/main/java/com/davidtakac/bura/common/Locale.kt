@@ -13,7 +13,6 @@
 package com.davidtakac.bura.common
 
 import android.content.Context
-import android.text.format.DateFormat
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -60,19 +59,19 @@ fun rememberDateTimeFormatter(@StringRes ofPattern: Int): DateTimeFormatter {
 
 @Composable
 fun rememberDateTimeHourFormatter(): DateTimeFormatter = rememberDateTimeFormatter(
-    if (DateFormat.is24HourFormat(LocalContext.current)) R.string.date_time_pattern_hour
+    if (is24HourFormat) R.string.date_time_pattern_hour
     else R.string.date_time_pattern_hour_ampm
 )
 
 @Composable
 fun rememberDateTimeHourMinuteFormatter(): DateTimeFormatter = rememberDateTimeFormatter(
-    if (DateFormat.is24HourFormat(LocalContext.current)) R.string.date_time_pattern_hour_minute
+    if (is24HourFormat) R.string.date_time_pattern_hour_minute
     else R.string.date_time_pattern_hour_minute_ampm
 )
 
 @Composable
 fun rememberDateTimeDayAndTimeFormatter(): DateTimeFormatter = rememberDateTimeFormatter(
-    if (DateFormat.is24HourFormat(LocalContext.current)) R.string.date_time_pattern_dow_hour_minute
+    if (is24HourFormat) R.string.date_time_pattern_dow_hour_minute
     else R.string.date_time_pattern_dow_hour_minute_ampm
 )
 
