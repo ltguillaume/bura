@@ -45,7 +45,6 @@ import com.davidtakac.bura.precipitation.EagerPrecipitationRepository
 import com.davidtakac.bura.precipitation.PrecipitationRepository
 import com.davidtakac.bura.pressure.EagerPressureRepository
 import com.davidtakac.bura.pressure.PressureRepository
-import com.davidtakac.bura.summary.feelslike.GetFeelsLikeSummary
 import com.davidtakac.bura.sun.EagerSunRepository
 import com.davidtakac.bura.sun.SunRepository
 import com.davidtakac.bura.temperature.EagerDewPointRepository
@@ -95,8 +94,6 @@ class AppContainer(private val appContext: Context) {
 
     val selectedPlaceRepo: SelectedPlaceRepository by lazy { PrefsSelectedPlaceRepository(prefs, savedPlacesRepo) }
     val selectedUnitsRepo: SelectedUnitsRepository by lazy { PrefsSelectedUnitsRepository(prefs) }
-
-    val getFeelsLikeSummary get() = GetFeelsLikeSummary(tempRepo, feelsRepo)
 
     val getTemperatureGraphs get() = GetTemperatureGraphs(tempRepo, conditionRepo)
     val getPopGraphs get() = GetPopGraphs(popRepo)

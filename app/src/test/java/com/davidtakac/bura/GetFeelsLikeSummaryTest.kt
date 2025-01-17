@@ -14,8 +14,8 @@ package com.davidtakac.bura
 
 import com.davidtakac.bura.forecast.ForecastResult
 import com.davidtakac.bura.summary.feelslike.FeelsLikeSummary
-import com.davidtakac.bura.summary.feelslike.GetFeelsLikeSummary
 import com.davidtakac.bura.summary.feelslike.FeelsVsActual
+import com.davidtakac.bura.summary.feelslike.getFeelsLikeSummary
 import com.davidtakac.bura.temperature.Temperature
 import com.davidtakac.bura.temperature.TemperatureMoment
 import com.davidtakac.bura.temperature.TemperaturePeriod
@@ -25,8 +25,6 @@ import org.junit.Test
 import java.time.temporal.ChronoUnit
 
 class GetFeelsLikeSummaryTest {
-    
-
     @Test
     fun `gets now and describes what it feels like`() = runTest {
         val firstMoment = unixEpochStart
@@ -47,11 +45,6 @@ class GetFeelsLikeSummaryTest {
                 )
             )
         )
-        val useCase = GetFeelsLikeSummary(
-            tempRepo = FakeTemperatureRepository(temperaturePeriod),
-            feelsRepo = FakeTemperatureRepository(feelsLikePeriod),
-        )
-        val summary = useCase(coords, units, now)
         assertEquals(
             ForecastResult.Success(
                 FeelsLikeSummary(
@@ -60,7 +53,7 @@ class GetFeelsLikeSummaryTest {
                     vsActual = FeelsVsActual.Colder
                 )
             ),
-            summary
+            getFeelsLikeSummary(now, tempPeriod = temperaturePeriod, feelsPeriod = feelsLikePeriod)
         )
     }
 
@@ -84,11 +77,6 @@ class GetFeelsLikeSummaryTest {
                 )
             )
         )
-        val useCase = GetFeelsLikeSummary(
-            tempRepo = FakeTemperatureRepository(temperaturePeriod),
-            feelsRepo = FakeTemperatureRepository(feelsLikePeriod),
-        )
-        val summary = useCase(coords, units, now)
         assertEquals(
             ForecastResult.Success(
                 FeelsLikeSummary(
@@ -97,7 +85,7 @@ class GetFeelsLikeSummaryTest {
                     vsActual = FeelsVsActual.Similar
                 )
             ),
-            summary
+            getFeelsLikeSummary(now, tempPeriod = temperaturePeriod, feelsPeriod = feelsLikePeriod)
         )
     }
 
@@ -121,11 +109,6 @@ class GetFeelsLikeSummaryTest {
                 )
             )
         )
-        val useCase = GetFeelsLikeSummary(
-            tempRepo = FakeTemperatureRepository(temperaturePeriod),
-            feelsRepo = FakeTemperatureRepository(feelsLikePeriod),
-        )
-        val summary = useCase(coords, units, now)
-        assertEquals(ForecastResult.Outdated, summary)
+        assertEquals(ForecastResult.Outdated, getFeelsLikeSummary(now, tempPeriod = temperaturePeriod, feelsPeriod = feelsLikePeriod))
     }
 }

@@ -13,44 +13,41 @@
 package com.davidtakac.bura.summary.feelslike
 
 import com.davidtakac.bura.forecast.ForecastResult
-import com.davidtakac.bura.place.Coordinates
 import com.davidtakac.bura.temperature.Temperature
-import com.davidtakac.bura.temperature.TemperatureRepository
-import com.davidtakac.bura.units.Units
+import com.davidtakac.bura.temperature.TemperaturePeriod
 import java.time.LocalDateTime
 import kotlin.math.absoluteValue
 
-class GetFeelsLikeSummary(
-    private val tempRepo: TemperatureRepository,
-    private val feelsRepo: TemperatureRepository,
-) {
-    suspend operator fun invoke(coords: Coordinates, units: Units, now: LocalDateTime): ForecastResult<FeelsLikeSummary> {
-        val tempPeriod = tempRepo.period(coords, units) ?: return ForecastResult.FailedToDownload
-        val feelsPeriod = feelsRepo.period(coords, units) ?: return ForecastResult.FailedToDownload
-        val feelsNow = feelsPeriod[now]?.temperature ?: return ForecastResult.Outdated
-        val actualNow =  tempPeriod[now]?.temperature ?: return ForecastResult.Outdated
-        return ForecastResult.Success(FeelsLikeSummary(
+fun getFeelsLikeSummary(
+    now: LocalDateTime,
+    tempPeriod: TemperaturePeriod,
+    feelsPeriod: TemperaturePeriod
+): ForecastResult<FeelsLikeSummary> {
+    val feelsNow = feelsPeriod[now]?.temperature ?: return ForecastResult.Outdated
+    val actualNow = tempPeriod[now]?.temperature ?: return ForecastResult.Outdated
+    return ForecastResult.Success(
+        FeelsLikeSummary(
             feelsLikeNow = feelsNow,
             actualNow = actualNow,
             vsActual = calculateComparedToActual(
                 actualTemp = actualNow,
                 feelsLikeTemp = feelsNow
             )
-        ))
-    }
+        ),
+    )
+}
 
-    private fun calculateComparedToActual(
-        actualTemp: Temperature,
-        feelsLikeTemp: Temperature
-    ): FeelsVsActual {
-        val actualCelsius = actualTemp.convertTo(Temperature.Unit.DegreesCelsius).value
-        val feelsCelsius = feelsLikeTemp.convertTo(Temperature.Unit.DegreesCelsius).value
-        return when {
-            (feelsCelsius - actualCelsius).absoluteValue < 1 -> FeelsVsActual.Similar
-            feelsCelsius <= 10 -> if (feelsCelsius < actualCelsius) FeelsVsActual.Colder else FeelsVsActual.Warmer
-            feelsCelsius <= 25 -> if (feelsCelsius < actualCelsius) FeelsVsActual.Cooler else FeelsVsActual.Warmer
-            else -> if (feelsCelsius < actualCelsius) FeelsVsActual.Cooler else FeelsVsActual.Hotter
-        }
+private fun calculateComparedToActual(
+    actualTemp: Temperature,
+    feelsLikeTemp: Temperature
+): FeelsVsActual {
+    val actualCelsius = actualTemp.convertTo(Temperature.Unit.DegreesCelsius).value
+    val feelsCelsius = feelsLikeTemp.convertTo(Temperature.Unit.DegreesCelsius).value
+    return when {
+        (feelsCelsius - actualCelsius).absoluteValue < 1 -> FeelsVsActual.Similar
+        feelsCelsius <= 10 -> if (feelsCelsius < actualCelsius) FeelsVsActual.Colder else FeelsVsActual.Warmer
+        feelsCelsius <= 25 -> if (feelsCelsius < actualCelsius) FeelsVsActual.Cooler else FeelsVsActual.Warmer
+        else -> if (feelsCelsius < actualCelsius) FeelsVsActual.Cooler else FeelsVsActual.Hotter
     }
 }
 

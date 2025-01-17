@@ -23,7 +23,7 @@ import com.davidtakac.bura.place.selected.SelectedPlaceRepository
 import com.davidtakac.bura.summary.daily.DailySummary
 import com.davidtakac.bura.summary.daily.getDailySummary
 import com.davidtakac.bura.summary.feelslike.FeelsLikeSummary
-import com.davidtakac.bura.summary.feelslike.GetFeelsLikeSummary
+import com.davidtakac.bura.summary.feelslike.getFeelsLikeSummary
 import com.davidtakac.bura.summary.hourly.HourSummary
 import com.davidtakac.bura.summary.hourly.getHourlySummary
 import com.davidtakac.bura.summary.humidity.HumiditySummary
@@ -51,8 +51,7 @@ import java.time.Instant
 class SummaryViewModel(
     private val placeRepo: SelectedPlaceRepository,
     private val unitsRepo: SelectedUnitsRepository,
-    private val forecastRepo: ForecastRepository,
-    private val getFeelsLikeSummary: GetFeelsLikeSummary
+    private val forecastRepo: ForecastRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow<SummaryState>(SummaryState.Loading)
     val state = _state.asStateFlow()
@@ -143,7 +142,7 @@ class SummaryViewModel(
             is ForecastResult.Success -> Unit
         }
 
-        val feelsLikeSummary = getFeelsLikeSummary(coords, units, now)
+        val feelsLikeSummary = getFeelsLikeSummary(now, tempPeriod = forecast.temperature, feelsPeriod = forecast.feelsLike)
         when (feelsLikeSummary) {
             ForecastResult.FailedToDownload -> return SummaryState.FailedToDownload
             ForecastResult.Outdated -> return SummaryState.Outdated
@@ -173,8 +172,7 @@ class SummaryViewModel(
                 return SummaryViewModel(
                     container.selectedPlaceRepo,
                     container.selectedUnitsRepo,
-                    container.forecastRepo,
-                    container.getFeelsLikeSummary
+                    container.forecastRepo
                 ) as T
             }
         }
