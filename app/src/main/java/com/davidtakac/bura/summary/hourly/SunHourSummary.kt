@@ -31,11 +31,12 @@ import com.davidtakac.bura.R
 import com.davidtakac.bura.common.AppTheme
 import com.davidtakac.bura.sun.SunEvent
 import com.davidtakac.bura.common.rememberDateTimeFormatter
+import com.davidtakac.bura.common.rememberDateTimeHourMinuteFormatter
 import java.time.LocalDateTime
 
 @Composable
 fun SunHourSummary(state: HourSummary.Sun, modifier: Modifier = Modifier) {
-    val formatter = rememberDateTimeFormatter(ofPattern = R.string.date_time_pattern_hour_minute)
+    val formatter = rememberDateTimeHourMinuteFormatter()
     HourSummary(
         time = { Text(state.time.format(formatter)) },
         icon = {

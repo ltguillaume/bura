@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.davidtakac.bura.R
 import com.davidtakac.bura.summary.SummaryTile
 import com.davidtakac.bura.common.AppTheme
-import com.davidtakac.bura.common.rememberDateTimeFormatter
+import com.davidtakac.bura.common.rememberDateTimeHourMinuteFormatter
 import com.davidtakac.bura.uvindex.UvIndex
 import com.davidtakac.bura.uvindex.riskString
 import com.davidtakac.bura.uvindex.valueString
@@ -39,7 +39,7 @@ import java.time.LocalTime
 
 @Composable
 fun UvIndexSummary(state: UvIndexSummary, modifier: Modifier = Modifier) {
-    val formatter = rememberDateTimeFormatter(ofPattern = R.string.date_time_pattern_hour_minute)
+    val formatter = rememberDateTimeHourMinuteFormatter()
     SummaryTile(
         label = { Text(text = stringResource(R.string.uv_index)) },
         value = { Text(text = state.now.valueString()) },

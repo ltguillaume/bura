@@ -48,7 +48,7 @@ import androidx.compose.ui.unit.dp
 import com.davidtakac.bura.R
 import com.davidtakac.bura.common.AppTheme
 import com.davidtakac.bura.common.HighLowText
-import com.davidtakac.bura.common.rememberDateTimeFormatter
+import com.davidtakac.bura.common.rememberDateTimeHourMinuteFormatter
 import com.davidtakac.bura.condition.Condition
 import com.davidtakac.bura.condition.image
 import com.davidtakac.bura.place.Coordinates
@@ -187,7 +187,7 @@ private fun DetailsAndTime(
                 )
             )
             VerticalDivider(modifier = Modifier.height(12.dp))
-            val formatter = rememberDateTimeFormatter(ofPattern = R.string.date_time_pattern_hour_minute)
+            val formatter = rememberDateTimeHourMinuteFormatter()
             Text(
                 text = formatter.format(time),
                 style = MaterialTheme.typography.bodyMedium,

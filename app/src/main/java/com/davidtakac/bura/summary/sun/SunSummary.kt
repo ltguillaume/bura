@@ -29,6 +29,7 @@ import com.davidtakac.bura.common.capitalize
 import com.davidtakac.bura.common.rememberAppLocale
 import com.davidtakac.bura.summary.SummaryTile
 import com.davidtakac.bura.common.rememberDateTimeFormatter
+import com.davidtakac.bura.common.rememberDateTimeHourMinuteFormatter
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -37,7 +38,7 @@ import java.time.LocalTime
 fun SunSummary(state: SunSummary, modifier: Modifier = Modifier) {
     val locale = rememberAppLocale()
     val dayFormatter = rememberDateTimeFormatter(ofPattern = R.string.date_time_pattern_dow)
-    val timeFormatter = rememberDateTimeFormatter(ofPattern = R.string.date_time_pattern_hour_minute)
+    val timeFormatter = rememberDateTimeHourMinuteFormatter()
     val dayAndTimeFormatter = rememberDateTimeFormatter(ofPattern = R.string.date_time_pattern_dow_hour_minute)
 
     SummaryTile(
