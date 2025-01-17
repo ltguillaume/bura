@@ -13,40 +13,36 @@
 package com.davidtakac.bura.summary.pressure
 
 import com.davidtakac.bura.pressure.Pressure
-import com.davidtakac.bura.pressure.PressureRepository
 import com.davidtakac.bura.forecast.ForecastResult
-import com.davidtakac.bura.place.Coordinates
-import com.davidtakac.bura.units.Units
+import com.davidtakac.bura.pressure.PressurePeriod
 import java.time.LocalDateTime
 import kotlin.math.absoluteValue
 
-class GetPressureSummary(private val repo: PressureRepository) {
-    suspend operator fun invoke(
-        coords: Coordinates,
-        units: Units,
-        now: LocalDateTime
-    ): ForecastResult<PressureSummary> {
-        val pressurePeriod = repo.period(coords, units) ?: return ForecastResult.FailedToDownload
-        val pressureToday = pressurePeriod.getDay(now.toLocalDate()) ?: return ForecastResult.Outdated
-        val pressureNow = pressurePeriod[now]?.pressure ?: return ForecastResult.Outdated
+fun getPressureSummary(
+    now: LocalDateTime,
+    pressurePeriod: PressurePeriod
+): ForecastResult<PressureSummary> {
+    val pressureToday = pressurePeriod.getDay(now.toLocalDate()) ?: return ForecastResult.Outdated
+    val pressureNow = pressurePeriod[now]?.pressure ?: return ForecastResult.Outdated
 
-        val nowHpa = pressureNow.convertTo(Pressure.Unit.Hectopascal).value
-        val pastHpa = pressurePeriod.momentsUntil(now, takeMoments = 2)?.firstOrNull()
-            ?.pressure?.convertTo(Pressure.Unit.Hectopascal)?.value
-            ?: return ForecastResult.Outdated
-        val diffHpa = (nowHpa - pastHpa).absoluteValue
-        val trend = when {
-            diffHpa < 1 -> PressureTrend.Stable
-            diffHpa > 0 -> PressureTrend.Rising
-            else -> PressureTrend.Falling
-        }
+    val nowHpa = pressureNow.convertTo(Pressure.Unit.Hectopascal).value
+    val pastHpa = pressurePeriod.momentsUntil(now, takeMoments = 2)?.firstOrNull()
+        ?.pressure?.convertTo(Pressure.Unit.Hectopascal)?.value
+        ?: return ForecastResult.Outdated
+    val diffHpa = (nowHpa - pastHpa).absoluteValue
+    val trend = when {
+        diffHpa < 1 -> PressureTrend.Stable
+        diffHpa > 0 -> PressureTrend.Rising
+        else -> PressureTrend.Falling
+    }
 
-        return ForecastResult.Success(PressureSummary(
+    return ForecastResult.Success(
+        PressureSummary(
             now = pressureNow,
             average = pressureToday.average,
             trend = trend
-        ))
-    }
+        ),
+    )
 }
 
 data class PressureSummary(

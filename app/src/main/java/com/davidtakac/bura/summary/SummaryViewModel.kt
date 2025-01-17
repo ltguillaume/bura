@@ -33,7 +33,7 @@ import com.davidtakac.bura.summary.now.getNowSummary
 import com.davidtakac.bura.summary.precipitation.PrecipitationSummary
 import com.davidtakac.bura.summary.precipitation.getPrecipitationSummary
 import com.davidtakac.bura.summary.pressure.PressureSummary
-import com.davidtakac.bura.summary.pressure.GetPressureSummary
+import com.davidtakac.bura.summary.pressure.getPressureSummary
 import com.davidtakac.bura.summary.sun.SunSummary
 import com.davidtakac.bura.summary.sun.GetSunSummary
 import com.davidtakac.bura.summary.uvindex.UvIndexSummary
@@ -52,7 +52,6 @@ class SummaryViewModel(
     private val placeRepo: SelectedPlaceRepository,
     private val unitsRepo: SelectedUnitsRepository,
     private val forecastRepo: ForecastRepository,
-    private val getPressureSummary: GetPressureSummary,
     private val getHumiditySummary: GetHumiditySummary,
     private val visSummaryUseCase: GetVisibilitySummary,
     private val getSunSummary: GetSunSummary,
@@ -119,7 +118,7 @@ class SummaryViewModel(
             is ForecastResult.Success -> Unit
         }
 
-        val pressureSummary = getPressureSummary(coords, units, now)
+        val pressureSummary = getPressureSummary(now, forecast.pressure)
         when (pressureSummary) {
             ForecastResult.FailedToDownload -> return SummaryState.FailedToDownload
             ForecastResult.Outdated -> return SummaryState.Outdated
@@ -178,7 +177,6 @@ class SummaryViewModel(
                     container.selectedPlaceRepo,
                     container.selectedUnitsRepo,
                     container.forecastRepo,
-                    container.getPressureSummary,
                     container.getHumiditySummary,
                     container.getVisibilitySummary,
                     container.getSunSummary,

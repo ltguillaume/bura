@@ -17,16 +17,14 @@ import com.davidtakac.bura.pressure.Pressure
 import com.davidtakac.bura.pressure.PressureMoment
 import com.davidtakac.bura.pressure.PressurePeriod
 import com.davidtakac.bura.summary.pressure.PressureSummary
-import com.davidtakac.bura.summary.pressure.GetPressureSummary
 import com.davidtakac.bura.summary.pressure.PressureTrend
+import com.davidtakac.bura.summary.pressure.getPressureSummary
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.time.temporal.ChronoUnit
 
 class GetPressureSummaryTest {
-    
-
     @Test
     fun `when at least one moment before now, returns now and trend`() = runTest {
         val firstMoment = unixEpochStart
@@ -43,10 +41,8 @@ class GetPressureSummaryTest {
                 )
             )
         )
-        val repository = FakePressureRepository(period)
         val now = secondMoment.plus(10, ChronoUnit.MINUTES)
-        val useCase = GetPressureSummary(repository)
-        val summary = useCase(coords, units, now)
+        val summary = getPressureSummary(now, period)
         assertEquals(
             ForecastResult.Success(
                 PressureSummary(
@@ -71,11 +67,9 @@ class GetPressureSummaryTest {
             )
         )
         val now = firstMoment.plus(1, ChronoUnit.HOURS)
-        val repository = FakePressureRepository(period)
-        val useCase = GetPressureSummary(repository)
         assertEquals(
             ForecastResult.Outdated,
-            useCase(coords, units, now)
+            getPressureSummary(now, period)
         )
     }
 
@@ -91,9 +85,7 @@ class GetPressureSummaryTest {
             )
         )
         val now = firstMoment
-        val repository = FakePressureRepository(period)
-        val useCase = GetPressureSummary(repository)
-        val summary = useCase(coords, units, now)
+        val summary = getPressureSummary(now, period)
         assertEquals(ForecastResult.Outdated, summary)
     }
 }
