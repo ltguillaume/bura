@@ -47,7 +47,6 @@ import com.davidtakac.bura.pressure.EagerPressureRepository
 import com.davidtakac.bura.pressure.PressureRepository
 import com.davidtakac.bura.summary.feelslike.GetFeelsLikeSummary
 import com.davidtakac.bura.summary.sun.GetSunSummary
-import com.davidtakac.bura.summary.visibility.GetVisibilitySummary
 import com.davidtakac.bura.sun.EagerSunRepository
 import com.davidtakac.bura.sun.SunRepository
 import com.davidtakac.bura.temperature.EagerDewPointRepository
@@ -100,7 +99,6 @@ class AppContainer(private val appContext: Context) {
 
     val getSunSummary get() = GetSunSummary(sunRepo, conditionRepo)
     val getFeelsLikeSummary get() = GetFeelsLikeSummary(tempRepo, feelsRepo)
-    val getVisibilitySummary get() = GetVisibilitySummary(visibilityRepo)
 
     val getTemperatureGraphs get() = GetTemperatureGraphs(tempRepo, conditionRepo)
     val getPopGraphs get() = GetPopGraphs(popRepo)

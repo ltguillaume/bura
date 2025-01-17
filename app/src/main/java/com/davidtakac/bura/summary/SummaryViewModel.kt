@@ -39,7 +39,7 @@ import com.davidtakac.bura.summary.sun.GetSunSummary
 import com.davidtakac.bura.summary.uvindex.UvIndexSummary
 import com.davidtakac.bura.summary.uvindex.getUvIndexSummary
 import com.davidtakac.bura.summary.visibility.VisibilitySummary
-import com.davidtakac.bura.summary.visibility.GetVisibilitySummary
+import com.davidtakac.bura.summary.visibility.getVisibilitySummary
 import com.davidtakac.bura.summary.wind.WindSummary
 import com.davidtakac.bura.summary.wind.getWindSummary
 import com.davidtakac.bura.units.SelectedUnitsRepository
@@ -52,7 +52,6 @@ class SummaryViewModel(
     private val placeRepo: SelectedPlaceRepository,
     private val unitsRepo: SelectedUnitsRepository,
     private val forecastRepo: ForecastRepository,
-    private val visSummaryUseCase: GetVisibilitySummary,
     private val getSunSummary: GetSunSummary,
     private val getFeelsLikeSummary: GetFeelsLikeSummary
 ) : ViewModel() {
@@ -131,7 +130,7 @@ class SummaryViewModel(
             is ForecastResult.Success -> Unit
         }
 
-        val visSummary = visSummaryUseCase(coords, units, now)
+        val visSummary = getVisibilitySummary(now, forecast.visibility)
         when (visSummary) {
             ForecastResult.FailedToDownload -> return SummaryState.FailedToDownload
             ForecastResult.Outdated -> return SummaryState.Outdated
@@ -176,7 +175,6 @@ class SummaryViewModel(
                     container.selectedPlaceRepo,
                     container.selectedUnitsRepo,
                     container.forecastRepo,
-                    container.getVisibilitySummary,
                     container.getSunSummary,
                     container.getFeelsLikeSummary
                 ) as T
