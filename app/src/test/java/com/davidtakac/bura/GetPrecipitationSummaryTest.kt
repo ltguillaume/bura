@@ -22,7 +22,7 @@ import com.davidtakac.bura.precipitation.Snow
 import com.davidtakac.bura.summary.precipitation.FuturePrecipitation
 import com.davidtakac.bura.summary.precipitation.PastPrecipitation
 import com.davidtakac.bura.summary.precipitation.PrecipitationSummary
-import com.davidtakac.bura.summary.precipitation.GetPrecipitationSummary
+import com.davidtakac.bura.summary.precipitation.getPrecipitationSummary
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -32,8 +32,6 @@ import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 
 class GetPrecipitationSummaryTest {
-    
-
     private fun dayOfPrecipitation(
         startTime: LocalDateTime,
         millimetersPerHour: Double
@@ -54,8 +52,7 @@ class GetPrecipitationSummaryTest {
         val startTime = unixEpochStart
         val period = PrecipitationPeriod(dayOfPrecipitation(startTime, 1.0))
         val middle = startTime.plus(8, ChronoUnit.HOURS).plus(10, ChronoUnit.MINUTES)
-        val useCase = GetPrecipitationSummary(FakePrecipitationRepository(period))
-        val summary = useCase(coords, units, middle)
+        val summary = getPrecipitationSummary(now = middle, precipPeriod = period)
         assertEquals(
             ForecastResult.Success(
                 PrecipitationSummary(
@@ -78,8 +75,7 @@ class GetPrecipitationSummaryTest {
         val startTime = unixEpochStart
         val period = PrecipitationPeriod(dayOfPrecipitation(startTime, 1.0))
         val start = startTime.plus(10, ChronoUnit.MINUTES)
-        val useCase = GetPrecipitationSummary(FakePrecipitationRepository(period))
-        val summary = useCase(coords, units, start)
+        val summary = getPrecipitationSummary(now = start, precipPeriod = period)
         assertEquals(ForecastResult.Outdated, summary)
     }
 
@@ -88,8 +84,7 @@ class GetPrecipitationSummaryTest {
         val startTime = unixEpochStart
         val period = PrecipitationPeriod(dayOfPrecipitation(startTime, 1.0))
         val end = startTime.plus(24, ChronoUnit.HOURS).plus(10, ChronoUnit.MINUTES)
-        val useCase = GetPrecipitationSummary(FakePrecipitationRepository(period))
-        val summary = useCase(coords, units, end)
+        val summary = getPrecipitationSummary(now = end, precipPeriod = period)
         assertEquals(ForecastResult.Outdated, summary)
     }
 
@@ -98,8 +93,7 @@ class GetPrecipitationSummaryTest {
         val startTime = unixEpochStart
         val period = PrecipitationPeriod(dayOfPrecipitation(startTime, 1.0))
         val afterEnd = startTime.plus(3, ChronoUnit.DAYS).plus(10, ChronoUnit.MINUTES)
-        val useCase = GetPrecipitationSummary(FakePrecipitationRepository(period))
-        val summary = useCase(coords, units, afterEnd)
+        val summary = getPrecipitationSummary(now = afterEnd, precipPeriod = period)
         assertEquals(ForecastResult.Outdated, summary)
     }
 
@@ -125,8 +119,7 @@ class GetPrecipitationSummaryTest {
                 }
             )
             val now = startTime.plus(1, ChronoUnit.DAYS).plus(10, ChronoUnit.MINUTES)
-            val useCase = GetPrecipitationSummary(FakePrecipitationRepository(period))
-            val summary = useCase(coords, units, now)
+            val summary = getPrecipitationSummary(now, period)
             assertEquals(
                 FuturePrecipitation.OnDay(
                     onDay = Instant.ofEpochSecond(0).plus(2, ChronoUnit.DAYS)
@@ -148,8 +141,7 @@ class GetPrecipitationSummaryTest {
             }
         )
         val now = startTime.plus(1, ChronoUnit.DAYS).plus(10, ChronoUnit.MINUTES)
-        val useCase = GetPrecipitationSummary(FakePrecipitationRepository(period))
-        val summary = useCase(coords, units, now)
+        val summary = getPrecipitationSummary(now, period)
         assertEquals(
             FuturePrecipitation.None(inDays = 1),
             (summary as ForecastResult.Success).data.future
@@ -172,8 +164,7 @@ class GetPrecipitationSummaryTest {
                 }
             )
             val now = startTime.plus(1, ChronoUnit.DAYS).plus(10, ChronoUnit.MINUTES)
-            val useCase = GetPrecipitationSummary(FakePrecipitationRepository(period))
-            val summary = useCase(coords, units, now)
+            val summary = getPrecipitationSummary(now, period)
             assertEquals(
                 FuturePrecipitation.InHours(
                     inHours = 24,
@@ -194,8 +185,7 @@ class GetPrecipitationSummaryTest {
             }
         )
         val now = startTime.plus(1, ChronoUnit.DAYS).plus(10, ChronoUnit.MINUTES)
-        val useCase = GetPrecipitationSummary(FakePrecipitationRepository(period))
-        val summary = useCase(coords, units, now)
+        val summary = getPrecipitationSummary(now, period)
         assertEquals(
             FuturePrecipitation.InHours(
                 inHours = 24,
