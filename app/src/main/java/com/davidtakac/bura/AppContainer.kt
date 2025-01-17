@@ -16,17 +16,11 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.davidtakac.bura.common.UserAgentProvider
 import com.davidtakac.bura.condition.ConditionRepository
-import com.davidtakac.bura.condition.EagerConditionRepository
 import com.davidtakac.bura.condition.StaticConditionRepository
 import com.davidtakac.bura.forecast.ForecastConverter
 import com.davidtakac.bura.forecast.ForecastDataCacher
 import com.davidtakac.bura.forecast.ForecastDataDownloader
 import com.davidtakac.bura.forecast.ForecastRepository
-import com.davidtakac.bura.graphs.precipitation.GetPrecipitationTotals
-import com.davidtakac.bura.gust.EagerGustRepository
-import com.davidtakac.bura.gust.GustRepository
-import com.davidtakac.bura.humidity.EagerHumidityRepository
-import com.davidtakac.bura.humidity.HumidityRepository
 import com.davidtakac.bura.place.saved.DeletePlace
 import com.davidtakac.bura.place.saved.FileSavedPlacesRepository
 import com.davidtakac.bura.place.saved.GetSavedPlaces
@@ -35,27 +29,10 @@ import com.davidtakac.bura.place.search.SearchPlaces
 import com.davidtakac.bura.place.selected.PrefsSelectedPlaceRepository
 import com.davidtakac.bura.place.selected.SelectPlace
 import com.davidtakac.bura.place.selected.SelectedPlaceRepository
-import com.davidtakac.bura.pop.EagerPopRepository
-import com.davidtakac.bura.pop.PopRepository
-import com.davidtakac.bura.precipitation.EagerPrecipitationRepository
-import com.davidtakac.bura.precipitation.PrecipitationRepository
-import com.davidtakac.bura.pressure.EagerPressureRepository
-import com.davidtakac.bura.pressure.PressureRepository
-import com.davidtakac.bura.sun.EagerSunRepository
-import com.davidtakac.bura.sun.SunRepository
-import com.davidtakac.bura.temperature.EagerDewPointRepository
-import com.davidtakac.bura.temperature.EagerFeelsLikeRepository
-import com.davidtakac.bura.temperature.EagerTemperatureRepository
 import com.davidtakac.bura.temperature.StaticTemperatureRepository
 import com.davidtakac.bura.temperature.TemperatureRepository
 import com.davidtakac.bura.units.PrefsSelectedUnitsRepository
 import com.davidtakac.bura.units.SelectedUnitsRepository
-import com.davidtakac.bura.uvindex.EagerUvIndexRepository
-import com.davidtakac.bura.uvindex.UvIndexRepository
-import com.davidtakac.bura.visibility.EagerVisibilityRepository
-import com.davidtakac.bura.visibility.VisibilityRepository
-import com.davidtakac.bura.wind.EagerWindRepository
-import com.davidtakac.bura.wind.WindRepository
 
 class AppContainer(private val appContext: Context) {
     val prefs: SharedPreferences get() = appContext.getSharedPreferences("prefs", Context.MODE_PRIVATE)
@@ -71,27 +48,11 @@ class AppContainer(private val appContext: Context) {
         )
     }
 
-    private val tempRepo: TemperatureRepository get() = EagerTemperatureRepository(forecastRepo)
-    private val feelsRepo: TemperatureRepository get() = EagerFeelsLikeRepository(forecastRepo)
-    private val conditionRepo: ConditionRepository get() = EagerConditionRepository(forecastRepo)
-    private val sunRepo: SunRepository get() = EagerSunRepository(forecastRepo)
-    private val popRepo: PopRepository get() = EagerPopRepository(forecastRepo)
-    private val precipRepo: PrecipitationRepository get() = EagerPrecipitationRepository(forecastRepo)
-    private val uvIndexRepo: UvIndexRepository get() = EagerUvIndexRepository(forecastRepo)
-    private val windRepo: WindRepository get() = EagerWindRepository(forecastRepo)
-    private val gustRepo: GustRepository get() = EagerGustRepository(forecastRepo)
-    private val pressureRepo: PressureRepository get() = EagerPressureRepository(forecastRepo)
-    private val humidityRepo: HumidityRepository get() = EagerHumidityRepository(forecastRepo)
-    private val dewPointRepo: TemperatureRepository get() = EagerDewPointRepository(forecastRepo)
-    private val visibilityRepo: VisibilityRepository get() = EagerVisibilityRepository(forecastRepo)
-
     private val staticTempRepo: TemperatureRepository get() = StaticTemperatureRepository(forecastRepo)
     private val staticConditionRepo: ConditionRepository get() = StaticConditionRepository(forecastRepo)
 
     val selectedPlaceRepo: SelectedPlaceRepository by lazy { PrefsSelectedPlaceRepository(prefs, savedPlacesRepo) }
     val selectedUnitsRepo: SelectedUnitsRepository by lazy { PrefsSelectedUnitsRepository(prefs) }
-
-    val getPrecipitationTotals get() = GetPrecipitationTotals(precipRepo)
 
     private val savedPlacesRepo: SavedPlacesRepository by lazy { FileSavedPlacesRepository(root) }
     val getSavedPlaces get() = GetSavedPlaces(savedPlacesRepo, staticTempRepo, staticConditionRepo)

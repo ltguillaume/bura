@@ -14,8 +14,8 @@ package com.davidtakac.bura
 
 import com.davidtakac.bura.forecast.ForecastResult
 import com.davidtakac.bura.graphs.precipitation.PrecipitationTotal
-import com.davidtakac.bura.graphs.precipitation.GetPrecipitationTotals
 import com.davidtakac.bura.graphs.precipitation.TotalPrecipitationInHours
+import com.davidtakac.bura.graphs.precipitation.getPrecipitationTotals
 import com.davidtakac.bura.precipitation.MixedPrecipitation
 import com.davidtakac.bura.precipitation.PrecipitationMoment
 import com.davidtakac.bura.precipitation.PrecipitationPeriod
@@ -29,13 +29,11 @@ import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
 class GetPrecipitationTotalsTest {
-    
-
     @Test
     fun `generates last and future for today and future for other days`() = runTest {
         val startOfFirstDay = unixEpochStart
         val startOfSecondDay = startOfFirstDay.plus(1, ChronoUnit.DAYS)
-        val repo = FakePrecipitationRepository(PrecipitationPeriod(buildList {
+        val period = PrecipitationPeriod(buildList {
             for (i in 0..23) {
                 add(
                     PrecipitationMoment(
@@ -60,12 +58,10 @@ class GetPrecipitationTotalsTest {
                     )
                 )
             }
-        }))
-        val useCase = GetPrecipitationTotals(repo)
-        val totals = (useCase(
-            coords,
-            units,
-            startOfFirstDay.plus(8, ChronoUnit.HOURS)
+        })
+        val totals = (getPrecipitationTotals(
+            startOfFirstDay.plus(8, ChronoUnit.HOURS),
+            period
         ) as ForecastResult.Success).data
         assertEquals(
             listOf(

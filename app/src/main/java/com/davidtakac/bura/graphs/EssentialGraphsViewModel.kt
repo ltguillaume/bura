@@ -22,9 +22,9 @@ import com.davidtakac.bura.forecast.ForecastResult
 import com.davidtakac.bura.graphs.pop.PopGraph
 import com.davidtakac.bura.graphs.pop.getPopGraphs
 import com.davidtakac.bura.graphs.precipitation.PrecipitationTotal
-import com.davidtakac.bura.graphs.precipitation.GetPrecipitationTotals
 import com.davidtakac.bura.graphs.precipitation.PrecipitationGraphs
 import com.davidtakac.bura.graphs.precipitation.getPrecipitationGraphs
+import com.davidtakac.bura.graphs.precipitation.getPrecipitationTotals
 import com.davidtakac.bura.graphs.temperature.TemperatureGraphSummary
 import com.davidtakac.bura.graphs.temperature.TemperatureGraphs
 import com.davidtakac.bura.graphs.temperature.getTemperatureGraphSummaries
@@ -39,8 +39,7 @@ import java.time.Instant
 class EssentialGraphsViewModel(
     private val placeRepo: SelectedPlaceRepository,
     private val unitsRepo: SelectedUnitsRepository,
-    private val forecastRepo: ForecastRepository,
-    private val getPrecipTotals: GetPrecipitationTotals
+    private val forecastRepo: ForecastRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow<EssentialGraphsState>(EssentialGraphsState.Loading)
     val state = _state.asStateFlow()
@@ -89,7 +88,7 @@ class EssentialGraphsViewModel(
             is ForecastResult.Success -> Unit
         }
 
-        val precipTotals = getPrecipTotals(coords, units, now)
+        val precipTotals = getPrecipitationTotals(now, forecast.precipitation)
         when (precipTotals) {
             ForecastResult.FailedToDownload -> return EssentialGraphsState.FailedToDownload
             ForecastResult.Outdated -> return EssentialGraphsState.Outdated
@@ -114,7 +113,6 @@ class EssentialGraphsViewModel(
                     container.selectedPlaceRepo,
                     container.selectedUnitsRepo,
                     container.forecastRepo,
-                    container.getPrecipitationTotals
                 ) as T
             }
         }
