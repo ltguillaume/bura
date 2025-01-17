@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -55,6 +56,7 @@ private val graphLabelSpacing = 8.dp
 
 @Composable
 fun EssentialGraphPage(
+    listState: LazyListState,
     summary: TemperatureGraphSummary,
     temperatureGraph: TemperatureGraph,
     minTemp: Temperature,
@@ -68,6 +70,7 @@ fun EssentialGraphPage(
     precipitationTotal: PrecipitationTotal
 ) {
     LazyColumn(
+        state = listState,
         verticalArrangement = Arrangement.spacedBy(verticalSpacing),
         contentPadding = contentPadding,
         modifier = Modifier.fillMaxSize()

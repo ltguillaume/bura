@@ -13,11 +13,11 @@
 package com.davidtakac.bura.graphs
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,8 +28,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -41,6 +47,7 @@ import com.davidtakac.bura.common.animateShimmerColorAsState
 import com.davidtakac.bura.graphs.common.GraphArgs
 import com.davidtakac.bura.graphs.common.GraphsPagerIndicator
 import com.davidtakac.bura.graphs.common.GraphsPagerIndicatorSkeleton
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -103,7 +110,6 @@ fun EssentialGraphsScreen(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun Pager(
     state: EssentialGraphsState.Success,
@@ -115,10 +121,11 @@ private fun Pager(
         val tempGraphs = state.tempGraphs
         val dates = remember(summaries) { summaries.map { it.day } }
         val pagerState = rememberPagerState(initialPage = initialDay?.let { dates.indexOf(it) } ?: 0) { summaries.size }
+        val pagerPage by remember { derivedStateOf { pagerState.currentPage } }
         val scope = rememberCoroutineScope()
         GraphsPagerIndicator(
             state = dates,
-            selected = pagerState.currentPage,
+            selected = pagerPage,
             onClick = {
                 scope.launch {
                     pagerState.animateScrollToPage(dates.indexOf(it))
@@ -126,8 +133,36 @@ private fun Pager(
             },
             modifier = Modifier.fillMaxWidth()
         )
+        var itemIndex by remember { mutableIntStateOf(0) }
+        var itemScrollOffset by remember { mutableIntStateOf(0) }
+
         HorizontalPager(state = pagerState) { page ->
+            val listState = rememberLazyListState()
+            LaunchedEffect(itemIndex, itemScrollOffset, page, pagerPage) {
+                if (page != pagerPage) {
+                    listState.scrollToItem(itemIndex, itemScrollOffset)
+                }
+            }
+            LaunchedEffect(listState) {
+                snapshotFlow { listState.firstVisibleItemIndex }
+                    .distinctUntilChanged()
+                    .collect {
+                        if (page == pagerPage) {
+                            itemIndex = it
+                        }
+                    }
+            }
+            LaunchedEffect(listState) {
+                snapshotFlow { listState.firstVisibleItemScrollOffset }
+                    .distinctUntilChanged()
+                    .collect {
+                        if (page == pagerPage) {
+                            itemScrollOffset = it
+                        }
+                    }
+            }
             EssentialGraphPage(
+                listState = listState,
                 summary = summaries[page],
                 temperatureGraph = tempGraphs.graphs[page],
                 minTemp = tempGraphs.minTemp,
