@@ -17,13 +17,12 @@ import com.davidtakac.bura.condition.ConditionMoment
 import com.davidtakac.bura.condition.ConditionPeriod
 import com.davidtakac.bura.place.Coordinates
 import com.davidtakac.bura.place.Location
-import com.davidtakac.bura.place.saved.GetSavedPlaces
 import com.davidtakac.bura.place.Place
 import com.davidtakac.bura.place.saved.SavedPlace
+import com.davidtakac.bura.place.saved.getSavedPlace
 import com.davidtakac.bura.temperature.Temperature
 import com.davidtakac.bura.temperature.TemperatureMoment
 import com.davidtakac.bura.temperature.TemperaturePeriod
-import com.davidtakac.bura.units.Units
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -35,66 +34,94 @@ import java.time.temporal.ChronoUnit
 
 class GetSavedPlacesTest {
     @Test
-    fun `gets saved places with conditions attached if available`() = runTest {
+    fun `gets saved place with conditions`() = runTest {
         val momentInstant = Instant.ofEpochSecond(0)
         val momentDateTime = momentInstant.atZone(ZoneOffset.UTC).toLocalDateTime()
         val now = momentInstant.plus(10, ChronoUnit.MINUTES)
-        val firstPlace = Place(
+        val place = Place(
             name = "first", "", "", "", "", "", "",
             Location(ZoneId.of("GMT"), Coordinates(latitude = 0.0, longitude = 1.0))
         )
-        val secondPlace = Place(
+        val tempPeriod = TemperaturePeriod(
+            listOf(
+                TemperatureMoment(
+                    hour = momentDateTime,
+                    temperature = Temperature.fromDegreesCelsius(10.0)
+                )
+            ),
+        )
+        val condPeriod = ConditionPeriod(
+            listOf(
+                ConditionMoment(
+                    hour = momentDateTime,
+                    condition = Condition(0, true)
+                )
+            ),
+        )
+        val result = getSavedPlace(now, place, false, tempPeriod, condPeriod)
+        assertEquals(
+            SavedPlace(
+                place = place,
+                time = LocalTime.parse("00:10"),
+                selected = false,
+                conditions = SavedPlace.Conditions(
+                    temp = Temperature.fromDegreesCelsius(10.0),
+                    minTemp = Temperature.fromDegreesCelsius(10.0),
+                    maxTemp = Temperature.fromDegreesCelsius(10.0),
+                    condition = Condition(0, true)
+                )
+            ),
+            result
+        )
+    }
+
+    @Test
+    fun `gets saved place without conditions`() = runTest {
+        val momentInstant = Instant.ofEpochSecond(0)
+        val now = momentInstant.plus(10, ChronoUnit.MINUTES)
+        val place = Place(
             name = "second", "", "", "", "", "", "",
             Location(ZoneId.of("GMT+1"), Coordinates(latitude = 0.0, longitude = 10.0))
         )
-        val tempRepo = FakeMultipleCoordsTemperatureRepository(
-            mapOf(
-                firstPlace.location.coordinates to TemperaturePeriod(
-                    listOf(
-                        TemperatureMoment(
-                            hour = momentDateTime,
-                            temperature = Temperature.fromDegreesCelsius(10.0)
-                        )
-                    )
-                ),
-                secondPlace.location.coordinates to null
-            )
-        )
-        val condRepo = FakeMultipleCoordsConditionRepository(
-            mapOf(
-                firstPlace.location.coordinates to ConditionPeriod(
-                    listOf(
-                        ConditionMoment(
-                            hour = momentDateTime,
-                            condition = Condition(0, true)
-                        )
-                    )
-                ),
-                secondPlace.location.coordinates to null
-            )
-        )
-        val savedPlacesRepo = FakeSavedPlacesRepository(listOf(firstPlace, secondPlace))
-        val useCase = GetSavedPlaces(savedPlacesRepo, tempRepo, condRepo)
-        val result = useCase.invoke(secondPlace, Units.Default, now)
+        val tempPeriod = null
+        val condPeriod = null
+        val result = getSavedPlace(now, place, true, tempPeriod, condPeriod)
         assertEquals(
+            SavedPlace(
+                place = place,
+                time = LocalTime.parse("01:10"),
+                selected = true,
+                conditions = null,
+            ),
+            result
+        )
+    }
+
+    @Test
+    fun `gets saved place without conditions when data is mixed`() = runTest {
+        val momentInstant = Instant.ofEpochSecond(0)
+        val momentDateTime = momentInstant.atZone(ZoneOffset.UTC).toLocalDateTime()
+        val now = momentInstant.plus(10, ChronoUnit.MINUTES)
+        val place = Place(
+            name = "second", "", "", "", "", "", "",
+            Location(ZoneId.of("GMT+1"), Coordinates(latitude = 0.0, longitude = 10.0))
+        )
+        val tempPeriod = TemperaturePeriod(
             listOf(
-                SavedPlace(
-                    place = firstPlace,
-                    time = LocalTime.parse("00:10"),
-                    selected = false,
-                    conditions = SavedPlace.Conditions(
-                        temp = Temperature.fromDegreesCelsius(10.0),
-                        minTemp = Temperature.fromDegreesCelsius(10.0),
-                        maxTemp = Temperature.fromDegreesCelsius(10.0),
-                        condition = Condition(0, true)
-                    )
-                ),
-                SavedPlace(
-                    place = secondPlace,
-                    time = LocalTime.parse("01:10"),
-                    selected = true,
-                    conditions = null,
-                ),
+                TemperatureMoment(
+                    hour = momentDateTime,
+                    temperature = Temperature.fromDegreesCelsius(10.0)
+                )
+            ),
+        )
+        val condPeriod = null
+        val result = getSavedPlace(now, place, true, tempPeriod, condPeriod)
+        assertEquals(
+            SavedPlace(
+                place = place,
+                time = LocalTime.parse("01:10"),
+                selected = true,
+                conditions = null,
             ),
             result
         )

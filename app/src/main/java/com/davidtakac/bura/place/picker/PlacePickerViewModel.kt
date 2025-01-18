@@ -24,16 +24,13 @@ import com.davidtakac.bura.place.saved.GetSavedPlaces
 import com.davidtakac.bura.place.search.SearchPlaces
 import com.davidtakac.bura.place.selected.SelectPlace
 import com.davidtakac.bura.place.selected.SelectedPlaceRepository
-import com.davidtakac.bura.units.SelectedUnitsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.time.Instant
 
-// todo: also refactor this to remove all use cases and keep it simple
 class PlacePickerViewModel(
     private val selectedPlaceRepo: SelectedPlaceRepository,
-    private val selectedUnitsRepo: SelectedUnitsRepository,
     private val selectPlace: SelectPlace,
     private val getSavedPlaces: GetSavedPlaces,
     private val searchPlaces: SearchPlaces,
@@ -72,7 +69,10 @@ class PlacePickerViewModel(
     fun getSavedPlaces() {
         viewModelScope.launch {
             _state.value = _state.value.copy(loading = true)
-            _state.value = _state.value.copy(loading = false, results = getSavedPlacesResults())
+            _state.value = _state.value.copy(
+                results = PlacePickerResults.SavedPlaces(getSavedPlaces.invoke(Instant.now())),
+                loading = false,
+            )
         }
     }
 
@@ -94,21 +94,10 @@ class PlacePickerViewModel(
             deletePlace.invoke(place)
             _state.value = _state.value.copy(
                 loading = false,
-                results = getSavedPlacesResults(),
+                results = PlacePickerResults.SavedPlaces(getSavedPlaces.invoke(Instant.now())),
                 selectedPlace = selectedPlaceRepo.getSelectedPlace()
             )
         }
-    }
-
-    private suspend fun getSavedPlacesResults(): PlacePickerResults.SavedPlaces {
-        val selectedUnits = selectedUnitsRepo.getSelectedUnits()
-        val selectedPlace = selectedPlaceRepo.getSelectedPlace()
-        val places = getSavedPlaces.invoke(
-            selectedPlace = selectedPlace,
-            selectedUnits = selectedUnits,
-            now = Instant.now()
-        )
-        return PlacePickerResults.SavedPlaces(places)
     }
 
     companion object {
@@ -118,7 +107,6 @@ class PlacePickerViewModel(
                 val container = (checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]) as App).container
                 return PlacePickerViewModel(
                     container.selectedPlaceRepo,
-                    container.selectedUnitsRepo,
                     container.selectPlace,
                     container.getSavedPlaces,
                     container.searchPlaces,

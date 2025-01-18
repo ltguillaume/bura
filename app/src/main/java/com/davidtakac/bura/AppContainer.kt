@@ -15,8 +15,6 @@ package com.davidtakac.bura
 import android.content.Context
 import android.content.SharedPreferences
 import com.davidtakac.bura.common.UserAgentProvider
-import com.davidtakac.bura.condition.ConditionRepository
-import com.davidtakac.bura.condition.StaticConditionRepository
 import com.davidtakac.bura.forecast.ForecastConverter
 import com.davidtakac.bura.forecast.ForecastDataCacher
 import com.davidtakac.bura.forecast.ForecastDataDownloader
@@ -29,8 +27,6 @@ import com.davidtakac.bura.place.search.SearchPlaces
 import com.davidtakac.bura.place.selected.PrefsSelectedPlaceRepository
 import com.davidtakac.bura.place.selected.SelectPlace
 import com.davidtakac.bura.place.selected.SelectedPlaceRepository
-import com.davidtakac.bura.temperature.StaticTemperatureRepository
-import com.davidtakac.bura.temperature.TemperatureRepository
 import com.davidtakac.bura.units.PrefsSelectedUnitsRepository
 import com.davidtakac.bura.units.SelectedUnitsRepository
 
@@ -48,14 +44,11 @@ class AppContainer(private val appContext: Context) {
         )
     }
 
-    private val staticTempRepo: TemperatureRepository get() = StaticTemperatureRepository(forecastRepo)
-    private val staticConditionRepo: ConditionRepository get() = StaticConditionRepository(forecastRepo)
-
     val selectedPlaceRepo: SelectedPlaceRepository by lazy { PrefsSelectedPlaceRepository(prefs, savedPlacesRepo) }
     val selectedUnitsRepo: SelectedUnitsRepository by lazy { PrefsSelectedUnitsRepository(prefs) }
 
     private val savedPlacesRepo: SavedPlacesRepository by lazy { FileSavedPlacesRepository(root) }
-    val getSavedPlaces get() = GetSavedPlaces(savedPlacesRepo, staticTempRepo, staticConditionRepo)
+    val getSavedPlaces get() = GetSavedPlaces(selectedUnitsRepo, selectedPlaceRepo, savedPlacesRepo, forecastRepo)
     val searchPlaces get() = SearchPlaces(userAgentProvider)
     val selectPlace get() = SelectPlace(selectedPlaceRepo, savedPlacesRepo)
     val deletePlace get() = DeletePlace(savedPlacesRepo, forecastCacher)

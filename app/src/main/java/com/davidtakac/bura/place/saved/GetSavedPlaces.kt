@@ -13,50 +13,74 @@
 package com.davidtakac.bura.place.saved
 
 import com.davidtakac.bura.condition.ConditionPeriod
-import com.davidtakac.bura.condition.ConditionRepository
+import com.davidtakac.bura.forecast.ForecastRepository
+import com.davidtakac.bura.forecast.UpdatePolicy
 import com.davidtakac.bura.place.Place
+import com.davidtakac.bura.place.selected.SelectedPlaceRepository
 import com.davidtakac.bura.temperature.TemperaturePeriod
-import com.davidtakac.bura.temperature.TemperatureRepository
-import com.davidtakac.bura.units.Units
+import com.davidtakac.bura.units.SelectedUnitsRepository
 import java.time.Instant
 import java.time.LocalDateTime
 
 class GetSavedPlaces(
+    private val selectedUnitsRepo: SelectedUnitsRepository,
+    private val selectedPlaceRepo: SelectedPlaceRepository,
     private val savedPlacesRepo: SavedPlacesRepository,
-    private val tempRepo: TemperatureRepository,
-    private val conditionRepo: ConditionRepository
+    private val forecastRepo: ForecastRepository,
 ) {
-    suspend operator fun invoke(selectedPlace: Place?, selectedUnits: Units, now: Instant): List<SavedPlace> {
-        return savedPlacesRepo.getSavedPlaces().map { savedPlace ->
-            val location = savedPlace.location
-            val coords = location.coordinates
-            val dateTimeAtPlace = now.atZone(savedPlace.location.timeZone).toLocalDateTime()
-            val dateAtPlace = dateTimeAtPlace.toLocalDate()
-            val tempDayAtPlace = tempRepo.period(coords, selectedUnits)?.getDay(dateAtPlace)
-            val condDayAtPlace = conditionRepo.period(coords, selectedUnits)?.getDay(dateAtPlace)
-            val conditions = if (tempDayAtPlace != null && condDayAtPlace != null) getConditions(
-                dateTimeAtPlace,
-                tempDayAtPlace,
-                condDayAtPlace
-            ) else null
-            SavedPlace(
-                place = savedPlace,
-                time = now.atZone(location.timeZone).toLocalTime(),
-                selected = savedPlace == selectedPlace,
-                conditions = conditions
+    suspend operator fun invoke(now: Instant): List<SavedPlace> {
+        val selectedUnits = selectedUnitsRepo.getSelectedUnits()
+        val selectedPlace = selectedPlaceRepo.getSelectedPlace()
+        return savedPlacesRepo.getSavedPlaces().map { place ->
+            val forecast = forecastRepo.forecast(
+                coords = place.location.coordinates,
+                units = selectedUnits,
+                updatePolicy = UpdatePolicy.Static
+            )
+            getSavedPlace(
+                now = now,
+                place = place,
+                selected = place == selectedPlace,
+                tempPeriod = forecast?.temperature,
+                condPeriod = forecast?.condition,
             )
         }
     }
+}
 
-    private fun getConditions(
-        now: LocalDateTime,
-        tempDay: TemperaturePeriod,
-        conditionDay: ConditionPeriod
-    ): SavedPlace.Conditions = SavedPlace.Conditions(
-        temp = tempDay[now]!!.temperature,
-        minTemp = tempDay.minimum,
-        maxTemp = tempDay.maximum,
-        condition = conditionDay[now]?.condition
-            ?: conditionDay.day ?: conditionDay.night!!
+fun getSavedPlace(
+    now: Instant,
+    place: Place,
+    selected: Boolean,
+    tempPeriod: TemperaturePeriod?,
+    condPeriod: ConditionPeriod?
+): SavedPlace {
+    val location = place.location
+    val dateTimeAtPlace = now.atZone(place.location.timeZone).toLocalDateTime()
+    val dateAtPlace = dateTimeAtPlace.toLocalDate()
+    val tempDayAtPlace = tempPeriod?.getDay(dateAtPlace)
+    val condDayAtPlace = condPeriod?.getDay(dateAtPlace)
+    val conditions = if (tempDayAtPlace != null && condDayAtPlace != null) getConditions(
+        dateTimeAtPlace,
+        tempDayAtPlace,
+        condDayAtPlace
+    ) else null
+    return SavedPlace(
+        place = place,
+        time = now.atZone(location.timeZone).toLocalTime(),
+        selected = selected,
+        conditions = conditions
     )
 }
+
+private fun getConditions(
+    now: LocalDateTime,
+    tempDay: TemperaturePeriod,
+    conditionDay: ConditionPeriod
+): SavedPlace.Conditions = SavedPlace.Conditions(
+    temp = tempDay[now]!!.temperature,
+    minTemp = tempDay.minimum,
+    maxTemp = tempDay.maximum,
+    condition = conditionDay[now]?.condition
+        ?: conditionDay.day ?: conditionDay.night!!
+)
