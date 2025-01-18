@@ -122,8 +122,8 @@
 
     <string name="sunrise">Zonsopkomst</string>
     <string name="sunset">Zonsondergang</string>
-    <string name="sunrise_short">@string/sunrise</string>
-    <string name="sunset_short">@string/sunset</string>
+    <string name="sunrise_short">Op</string>
+    <string name="sunset_short">Onder</string>
     <string name="sunrise_value">Zonsopkomst om %s.</string>
     <string name="sunset_value">Zonsondergang om %s.</string>
     <string name="sunrise_not_today">Vandaag geen zonsopkomst.</string>
@@ -165,7 +165,7 @@
     <string name="vis_value_km">%s km</string>
     <string name="vis_unit_mi">mi</string>
     <string name="vis_value_mi">%s mi</string>
-    <string name="vis_description_perfect">Perfect helder zicht.</string>
+    <string name="vis_description_perfect">Volledig zicht.</string>
     <string name="vis_description_clear">Helder zicht.</string>
     <string name="vis_description_fair">Redelijk duidelijk zicht.</string>
     <string name="vis_description_low">Beperkt zicht.</string>
