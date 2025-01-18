@@ -36,6 +36,7 @@ private val supportedLocales = listOf(
     Locale.forLanguageTag("pl"),
     Locale.forLanguageTag("sv"),
     Locale.forLanguageTag("nl"),
+    Locale.forLanguageTag("ar"),
 )
 
 private fun appLocale(context: Context): Locale {

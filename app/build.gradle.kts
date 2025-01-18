@@ -40,6 +40,7 @@ android {
                 "pl",
                 "sv",
                 "nl",
+                "ar",
             )
         )
     }
