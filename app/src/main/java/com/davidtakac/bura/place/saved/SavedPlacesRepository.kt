@@ -12,12 +12,100 @@
 
 package com.davidtakac.bura.place.saved
 
+import com.davidtakac.bura.common.getStringOrNull
 import com.davidtakac.bura.place.Coordinates
+import com.davidtakac.bura.place.Location
 import com.davidtakac.bura.place.Place
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import java.io.File
+import java.nio.file.Files
+import java.nio.file.attribute.BasicFileAttributes
+import java.time.ZoneId
 
-interface SavedPlacesRepository {
-    suspend fun savePlace(place: Place)
-    suspend fun getSavedPlaces(): List<Place>
-    suspend fun getSavedPlace(coords: Coordinates): Place?
-    suspend fun deletePlace(place: Place)
+class SavedPlacesRepository(private val root: File) {
+    private var memoryCache: MutableList<Place>? = null
+
+    suspend fun savePlace(place: Place) {
+        if (getSavedPlace(place.location.coordinates) != null) return
+
+        val file = File(getDir(), place.location.coordinates.id)
+        val json = convertPlaceToJson(place)
+        withContext(Dispatchers.IO) { file.writeText(json) }
+        memoryCache?.add(0, place)
+    }
+
+    suspend fun getSavedPlaces(): List<Place> {
+        val fromMemory = memoryCache
+        if (fromMemory != null) return fromMemory
+
+        val fromFiles = getDir()
+            .listFiles()
+            ?.sortedByDescending {
+                val attrs = Files.readAttributes(it.toPath(), BasicFileAttributes::class.java)
+                attrs.lastModifiedTime()
+            }
+            ?.map { convertFileToPlace(it) }
+            ?: emptyList()
+        memoryCache = mutableListOf<Place>().apply { addAll(fromFiles) }
+        return fromFiles
+    }
+
+    suspend fun getSavedPlace(coords: Coordinates): Place? =
+        getSavedPlaces().firstOrNull { it.location.coordinates == coords }
+
+    suspend fun deletePlace(place: Place) {
+        val file = findPlaceFile(place.location.coordinates) ?: return
+        withContext(Dispatchers.IO) { file.delete() }
+        memoryCache?.remove(place)
+    }
+
+    private suspend fun convertFileToPlace(file: File): Place =
+        withContext(Dispatchers.IO) {
+            val jsonString = file.readText()
+            val record = JSONObject(jsonString)
+            Place(
+                name = record.getString("name"),
+                admin1 = record.getStringOrNull("admin1"),
+                admin2 = record.getStringOrNull("admin2"),
+                admin3 = record.getStringOrNull("admin3"),
+                admin4 = record.getStringOrNull("admin4"),
+                countryCode = record.getString("countryCode"),
+                countryName = record.getStringOrNull("countryName"),
+                location = Location(
+                    timeZone = ZoneId.of(record.getString("timeZone")),
+                    coordinates = Coordinates(
+                        latitude = record.getDouble("latitude"),
+                        longitude = record.getDouble("longitude")
+                    ),
+                )
+            )
+        }
+
+    private suspend fun convertPlaceToJson(place: Place): String =
+        withContext(Dispatchers.Default) {
+            JSONObject().apply {
+                put("name", place.name)
+                put("admin1", place.admin1 ?: JSONObject.NULL)
+                put("admin2", place.admin2 ?: JSONObject.NULL)
+                put("admin3", place.admin3 ?: JSONObject.NULL)
+                put("admin4", place.admin4 ?: JSONObject.NULL)
+                put("countryCode", place.countryCode)
+                put("countryName", place.countryName ?: JSONObject.NULL)
+                put("timeZone", place.location.timeZone.id)
+                put("latitude", place.location.coordinates.latitude)
+                put("longitude", place.location.coordinates.longitude)
+            }.toString()
+        }
+
+    private suspend fun findPlaceFile(coords: Coordinates): File? =
+        withContext(Dispatchers.IO) {
+            val allFiles = getDir().listFiles()
+            val targetName = coords.id
+            allFiles?.firstOrNull { it.name == targetName }
+        }
+
+    private suspend fun getDir(): File =
+        withContext(Dispatchers.IO) { File(root, "places").apply { mkdir() } }
 }

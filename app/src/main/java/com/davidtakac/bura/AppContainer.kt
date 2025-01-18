@@ -20,14 +20,11 @@ import com.davidtakac.bura.forecast.ForecastDataCacher
 import com.davidtakac.bura.forecast.ForecastDataDownloader
 import com.davidtakac.bura.forecast.ForecastRepository
 import com.davidtakac.bura.place.saved.DeletePlace
-import com.davidtakac.bura.place.saved.FileSavedPlacesRepository
 import com.davidtakac.bura.place.saved.GetSavedPlaces
 import com.davidtakac.bura.place.saved.SavedPlacesRepository
 import com.davidtakac.bura.place.search.SearchPlaces
-import com.davidtakac.bura.place.selected.PrefsSelectedPlaceRepository
-import com.davidtakac.bura.place.selected.SelectPlace
 import com.davidtakac.bura.place.selected.SelectedPlaceRepository
-import com.davidtakac.bura.units.PrefsSelectedUnitsRepository
+import com.davidtakac.bura.place.selected.SelectPlace
 import com.davidtakac.bura.units.SelectedUnitsRepository
 
 class AppContainer(private val appContext: Context) {
@@ -44,10 +41,10 @@ class AppContainer(private val appContext: Context) {
         )
     }
 
-    val selectedPlaceRepo: SelectedPlaceRepository by lazy { PrefsSelectedPlaceRepository(prefs, savedPlacesRepo) }
-    val selectedUnitsRepo: SelectedUnitsRepository by lazy { PrefsSelectedUnitsRepository(prefs) }
+    val selectedPlaceRepo by lazy { SelectedPlaceRepository(prefs, savedPlacesRepo) }
+    val selectedUnitsRepo by lazy { SelectedUnitsRepository(prefs) }
 
-    private val savedPlacesRepo: SavedPlacesRepository by lazy { FileSavedPlacesRepository(root) }
+    private val savedPlacesRepo by lazy { SavedPlacesRepository(root) }
     val getSavedPlaces get() = GetSavedPlaces(selectedUnitsRepo, selectedPlaceRepo, savedPlacesRepo, forecastRepo)
     val searchPlaces get() = SearchPlaces(userAgentProvider)
     val selectPlace get() = SelectPlace(selectedPlaceRepo, savedPlacesRepo)

@@ -12,9 +12,23 @@
 
 package com.davidtakac.bura.place.selected
 
+import android.content.SharedPreferences
+import androidx.core.content.edit
+import com.davidtakac.bura.place.Coordinates
 import com.davidtakac.bura.place.Place
+import com.davidtakac.bura.place.saved.SavedPlacesRepository
 
-interface SelectedPlaceRepository {
-    suspend fun selectPlace(place: Place)
-    suspend fun getSelectedPlace(): Place?
+private const val SELECTED_PLACE_KEY = "selected_place_coords"
+
+class SelectedPlaceRepository(
+    private val prefs: SharedPreferences,
+    private val savedPlacesRepository: SavedPlacesRepository
+) {
+    suspend fun selectPlace(place: Place) =
+        prefs.edit { putString(SELECTED_PLACE_KEY, place.location.coordinates.id) }
+
+    suspend fun getSelectedPlace(): Place? {
+        val coords = prefs.getString(SELECTED_PLACE_KEY, null)?.let(Coordinates::fromId) ?: return null
+        return savedPlacesRepository.getSavedPlace(coords)
+    }
 }
