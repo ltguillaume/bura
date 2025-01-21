@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.davidtakac.bura.common.AppTheme
+import com.davidtakac.bura.common.autoMirror
 
 @Composable
 fun AppleTemperatureScale(
@@ -50,6 +51,7 @@ fun AppleTemperatureScale(
     val gradient = AppTheme.colors.temperatureColors(absMinCelsius, absMaxCelsius)
     Canvas(
         modifier = Modifier
+            .autoMirror()
             .fillMaxWidth()
             .height(6.dp)
             .then(modifier)

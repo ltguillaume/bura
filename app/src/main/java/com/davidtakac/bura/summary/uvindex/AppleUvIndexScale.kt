@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.davidtakac.bura.common.AppTheme
+import com.davidtakac.bura.common.autoMirror
 import com.davidtakac.bura.uvindex.UvIndex
 
 @Composable
@@ -35,6 +36,7 @@ fun AppleUvIndexScale(uvIndexNow: UvIndex, modifier: Modifier = Modifier) {
     val nowOutlineThickness = with(LocalDensity.current) { 4.dp.toPx() }
     Canvas(
         modifier = Modifier
+            .autoMirror()
             .height(6.dp)
             .then(modifier)
             .clip(RoundedCornerShape(percent = 100))
