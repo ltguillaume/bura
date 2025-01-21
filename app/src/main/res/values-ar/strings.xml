@@ -23,7 +23,7 @@
     <string name="credit_weather">بيانات الطقس من Open-Meteo.com</string>
     <string name="credit_geocoding">بيانات التحديد الجغرافي من Open-Meteo.com</string>
 
-    <string name="place_picker_hint_search">ابحث عن مناطق و مدن...</string>
+    <string name="place_picker_hint_search">ابحث عن مناطق و مدن…</string>
     <string name="place_picker_title_saved_places">المناطق و المدن المحفوظة</string>
     <string name="place_picker_title_search_results">نتائج البحث</string>
     <string name="place_picker_error_no_internet">يبدو أنك غير متصل بالإنترنت. اتصل بالإنترنت وحاول مرة أخرى.</string>
@@ -75,12 +75,12 @@
     <string name="date_time_now">الآن</string>
     <string name="date_time_today">اليوم</string>
     <string name="date_time_pattern_hour">HH</string>
-    <string name="date_time_pattern_hour_ampm">h\u2009ص/م</string>
+    <string name="date_time_pattern_hour_ampm">h\u2009a</string>
     <string name="date_time_pattern_hour_minute">HH:mm</string>
-    <string name="date_time_pattern_hour_minute_ampm">h:mm\u2009ص/م</string>
+    <string name="date_time_pattern_hour_minute_ampm">h:mm\u2009a</string>
     <string name="date_time_pattern_dow">E</string>
     <string name="date_time_pattern_dow_hour_minute">E, HH:mm</string>
-    <string name="date_time_pattern_dow_hour_minute_ampm">E, h:mm\u2009ص/م</string>
+    <string name="date_time_pattern_dow_hour_minute_ampm">E, h:mm\u2009a</string>
 
     <string name="precip_mixed">هطول الأمطار</string>
     <string name="precip_rain">المطر</string>
