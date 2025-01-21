@@ -34,7 +34,7 @@ fun SearchedPlaceItem(state: Place, onClick: () -> Unit, modifier: Modifier = Mo
             )
             .then(modifier)
     ) {
-        Text(text = "${state.name}, ${state.countryName ?: state.countryCode}")
+        Text(text = listOf(state.name, state.countryName ?: state.countryCode).joinToString(", "))
         val adminList = remember(state.admin1, state.admin2, state.admin3, state.admin4) {
             listOfNotNull(state.admin1, state.admin2, state.admin3, state.admin4)
         }
