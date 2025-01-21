@@ -66,6 +66,10 @@ android {
         kotlinCompilerExtensionVersion = "1.5.11"
     }
 
+    kotlin {
+        jvmToolchain(17)
+    }
+
     kotlinOptions {
         // Source: https://developer.android.com/jetpack/compose/performance/stability/fix#configuration-file
         // Replaced project.absolutePath with rootDir.
