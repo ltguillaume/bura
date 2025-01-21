@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import com.davidtakac.bura.R
 import java.text.NumberFormat
 import java.time.format.DateTimeFormatter
+import java.time.format.DecimalStyle
 import java.util.Locale
 
 private val fallbackLocale = Locale.US
@@ -55,7 +56,11 @@ fun rememberAppLocale(): Locale {
 fun rememberDateTimeFormatter(@StringRes ofPattern: Int): DateTimeFormatter {
     val pattern = stringResource(ofPattern)
     val locale = appLocale(LocalContext.current)
-    return remember(pattern, locale) { DateTimeFormatter.ofPattern(pattern, locale) }
+    return remember(pattern, locale) {
+        DateTimeFormatter
+            .ofPattern(pattern, locale)
+            .withDecimalStyle(DecimalStyle.of(locale))
+    }
 }
 
 @Composable
