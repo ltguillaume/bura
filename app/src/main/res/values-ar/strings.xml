@@ -103,7 +103,7 @@
     <string name="precip_unit_in">″</string>
     <string name="precip_value_in">%s″</string>
 
-    <string name="pop_value_percent">%s%%</string>
+    <string name="pop_value_percent">%s٪</string>
 
     <string name="pressure">الضغط</string>
     <string name="pressure_trend_falling">هبوط</string>
@@ -118,7 +118,7 @@
     <string name="pressure_value_mmhg">%s ملليمتر زئبق</string>
 
     <string name="humidity">الرطوبة</string>
-    <string name="humidity_value_percent">%s%%</string>
+    <string name="humidity_value_percent">%s٪</string>
 
     <string name="sunrise">شروق الشمس</string>
     <string name="sunset">غروب الشمس</string>
