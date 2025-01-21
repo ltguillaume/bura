@@ -30,6 +30,7 @@ import com.davidtakac.bura.precipitation.Rain
 import com.davidtakac.bura.precipitation.Showers
 import com.davidtakac.bura.precipitation.Snow
 import com.davidtakac.bura.common.AppTheme
+import com.davidtakac.bura.common.rememberNumberFormat
 import java.time.LocalDate
 
 @Composable
@@ -51,7 +52,7 @@ private fun PrecipitationHours(
             text = stringResource(
                 if (past) R.string.cond_screen_precip_value_in_last_hours
                 else R.string.cond_screen_precip_value_in_next_hours,
-                "${state.hours}"
+                rememberNumberFormat().format(state.hours)
             ),
         )
         PrecipitationBullets(state = state.total, modifier = Modifier.fillMaxWidth())

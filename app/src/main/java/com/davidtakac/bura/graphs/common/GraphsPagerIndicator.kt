@@ -39,6 +39,7 @@ import com.davidtakac.bura.common.AppTheme
 import com.davidtakac.bura.common.capitalize
 import com.davidtakac.bura.common.rememberAppLocale
 import com.davidtakac.bura.common.rememberDateTimeFormatter
+import com.davidtakac.bura.common.rememberNumberFormat
 import java.time.LocalDate
 
 @Composable
@@ -56,7 +57,7 @@ fun GraphsPagerIndicator(
                 onClick = { onClick(date) },
                 unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 text = { Text(formatter.format(date).capitalize(rememberAppLocale())) },
-                icon = { Text(text = "${date.dayOfMonth}") }
+                icon = { Text(text = rememberNumberFormat().format(date.dayOfMonth)) }
             )
         }
     }
