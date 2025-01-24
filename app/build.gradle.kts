@@ -13,6 +13,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose")
 }
 
 android {
@@ -63,15 +64,13 @@ android {
         compose = true
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.11"
-    }
-
-    kotlin {
-        jvmToolchain(17)
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 
     kotlinOptions {
+        jvmTarget = "21"
         // Source: https://developer.android.com/jetpack/compose/performance/stability/fix#configuration-file
         // Replaced project.absolutePath with rootDir.
         freeCompilerArgs += listOf(
@@ -96,5 +95,5 @@ dependencies {
 
     // Testing
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.1")
 }
