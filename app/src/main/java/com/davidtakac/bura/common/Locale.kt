@@ -16,11 +16,16 @@ import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.LayoutDirection
 import com.davidtakac.bura.R
 import java.text.NumberFormat
 import java.time.format.DateTimeFormatter
+import java.time.format.DecimalStyle
 import java.util.Locale
 
 private val fallbackLocale = Locale.US
@@ -36,6 +41,7 @@ private val supportedLocales = listOf(
     Locale.forLanguageTag("pl"),
     Locale.forLanguageTag("sv"),
     Locale.forLanguageTag("nl"),
+    Locale.forLanguageTag("ar"),
 )
 
 private fun appLocale(context: Context): Locale {
@@ -54,7 +60,11 @@ fun rememberAppLocale(): Locale {
 fun rememberDateTimeFormatter(@StringRes ofPattern: Int): DateTimeFormatter {
     val pattern = stringResource(ofPattern)
     val locale = appLocale(LocalContext.current)
-    return remember(pattern, locale) { DateTimeFormatter.ofPattern(pattern, locale) }
+    return remember(pattern, locale) {
+        DateTimeFormatter
+            .ofPattern(pattern, locale)
+            .withDecimalStyle(DecimalStyle.of(locale))
+    }
 }
 
 @Composable
@@ -80,3 +90,11 @@ fun rememberNumberFormat(): NumberFormat {
     val locale = appLocale(LocalContext.current)
     return remember(locale) { NumberFormat.getNumberInstance(locale) }
 }
+
+@Composable
+fun Modifier.autoMirror() =
+    if (LocalLayoutDirection.current == LayoutDirection.Rtl) this then Modifier.scale(
+        scaleX = -1f,
+        scaleY = 1f
+    )
+    else this

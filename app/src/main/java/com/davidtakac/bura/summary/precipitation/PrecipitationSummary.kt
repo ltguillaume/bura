@@ -40,6 +40,7 @@ import com.davidtakac.bura.summary.SummaryTile
 import com.davidtakac.bura.summary.ValueAndUnit
 import com.davidtakac.bura.common.AppTheme
 import com.davidtakac.bura.common.rememberDateTimeFormatter
+import com.davidtakac.bura.common.rememberNumberFormat
 import java.time.LocalDate
 
 @Composable
@@ -55,7 +56,7 @@ fun PrecipitationSummary(
             Text(
                 stringResource(
                     R.string.precip_value_in_last_hours,
-                    "${state.past.inHours}"
+                    rememberNumberFormat().format(state.past.inHours)
                 )
             )
         },

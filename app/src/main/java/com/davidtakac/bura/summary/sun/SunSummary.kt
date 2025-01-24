@@ -31,6 +31,7 @@ import com.davidtakac.bura.common.rememberDateTimeDayAndTimeFormatter
 import com.davidtakac.bura.summary.SummaryTile
 import com.davidtakac.bura.common.rememberDateTimeFormatter
 import com.davidtakac.bura.common.rememberDateTimeHourMinuteFormatter
+import com.davidtakac.bura.common.rememberNumberFormat
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -56,12 +57,16 @@ fun SunSummary(state: SunSummary, modifier: Modifier = Modifier) {
                     is Sunrise.WithSunsetLater -> timeFormatter.format(state.time)
                     is Sunset.WithSunriseLater -> timeFormatter.format(state.time)
 
-                    is Sunrise.OutOfSight ->
-                        if (state.forDuration.toDays() < 1) stringResource(R.string.sunrise_value_more_than_hours_away, "${state.forDuration.toHours()}")
-                        else stringResource(R.string.sunrise_value_more_than_days_away, "${state.forDuration.toDays()}")
-                    is Sunset.OutOfSight ->
-                        if (state.forDuration.toDays() < 1) stringResource(R.string.sunset_value_more_than_hours_away, "${state.forDuration.toHours()}")
-                        else stringResource(R.string.sunset_value_more_than_days_away, "${state.forDuration.toDays()}")
+                    is Sunrise.OutOfSight -> {
+                        val numberFormat = rememberNumberFormat()
+                        if (state.forDuration.toDays() < 1) stringResource(R.string.sunrise_value_more_than_hours_away, numberFormat.format(state.forDuration.toHours()))
+                        else stringResource(R.string.sunrise_value_more_than_days_away, numberFormat.format(state.forDuration.toDays()))
+                    }
+                    is Sunset.OutOfSight -> {
+                        val numberFormat = rememberNumberFormat()
+                        if (state.forDuration.toDays() < 1) stringResource(R.string.sunset_value_more_than_hours_away, numberFormat.format(state.forDuration.toHours()))
+                        else stringResource(R.string.sunset_value_more_than_days_away, numberFormat.format(state.forDuration.toDays()))
+                    }
                 }
             )
         },

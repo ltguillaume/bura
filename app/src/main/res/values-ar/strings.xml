@@ -1,0 +1,226 @@
+<!--
+  ~ Copyright 2024 David Takač
+  ~
+  ~ This file is part of Bura.
+  ~
+  ~ Bura is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ Bura is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License along with Bura. If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+    <string name="app_name">Bura</string>
+    <string name="general_error_failed_to_download">فشل في تنزيل التوقعات. اتصل بالإنترنت وحاول مرة أخرى.</string>
+    <string name="general_error_outdated">بيانات التوقعات الخاصة بك قد انتهت صلاحيتها. اتصل بالإنترنت وحاول مرة أخرى.</string>
+    <string name="general_error_no_selected_place">لا يوجد مكان محدد.</string>
+    <string name="general_btn_try_again">حاول مرة أخرى</string>
+    <string name="general_btn_select_place">اختر مكان</string>
+    <string name="general_btn_dialog_confirm">موافق</string>
+    <string name="general_btn_dialog_cancel">إلغاء</string>
+
+    <string name="credit_weather">بيانات الطقس من Open-Meteo.com</string>
+    <string name="credit_geocoding">بيانات التحديد الجغرافي من Open-Meteo.com</string>
+
+    <string name="place_picker_hint_search">ابحث عن مناطق و مدن…</string>
+    <string name="place_picker_title_saved_places">المناطق و المدن المحفوظة</string>
+    <string name="place_picker_title_search_results">نتائج البحث</string>
+    <string name="place_picker_error_no_internet">يبدو أنك غير متصل بالإنترنت. اتصل بالإنترنت وحاول مرة أخرى.</string>
+    <string name="place_picker_error_value_no_results_for">لا توجد نتائج لـ \"%s\".</string>
+    <string name="place_picker_error_no_saved_places">لا توجد مناطق محفوظة.</string>
+    <string name="delete_place_value">حذف %s؟</string>
+    <string name="delete_place_description">سيؤدي ذلك أيضًا إلى حذف بيانات التوقعات المخزنة مؤقتًا</string>
+
+    <string name="cond_screen_title">الظروف الجوية</string>
+    <string name="cond_screen_pop">احتمالية هطول أمطار</string>
+    <string name="cond_screen_precip">مجموع الأمطار</string>
+    <string name="cond_screen_temp_unit_celsius">درجة مئوية (°C)</string>
+    <string name="cond_screen_temp_unit_fahrenheit">درجة فهرنهايت (°F)</string>
+    <string name="cond_screen_precip_value_in_last_hours">آخر %s ساعة</string>
+    <string name="cond_screen_precip_value_in_next_hours">الـ %s ساعة التالية</string>
+
+    <string name="settings_screen_title">الإعدادات</string>
+    <string name="settings_screen_title_units">الوحدات</string>
+    <string name="settings_screen_title_temp_unit">درجة الحرارة</string>
+    <string name="settings_screen_label_temp_unit_celsius">درجات مئوية</string>
+    <string name="settings_screen_label_temp_unit_fahrenheit">درجات فهرنهايت</string>
+    <string name="settings_screen_title_wind_unit">الرياح</string>
+    <string name="settings_screen_label_wind_unit_mps">أمتار في الثانية</string>
+    <string name="settings_screen_label_wind_unit_kph">كيلومترات في الساعة</string>
+    <string name="settings_screen_label_wind_unit_mph">أميال في الساعة</string>
+    <string name="settings_screen_label_wind_unit_kn">عقد</string>
+    <string name="settings_screen_title_precip_unit">هطول الأمطار</string>
+    <string name="settings_screen_title_rain_unit">المطر</string>
+    <string name="settings_screen_title_showers_unit">الزخات</string>
+    <string name="settings_screen_title_snow_unit">الثلج</string>
+    <string name="settings_screen_label_precip_unit_mm">ملليمترات</string>
+    <string name="settings_screen_label_precip_unit_cm">سنتيمترات</string>
+    <string name="settings_screen_label_precip_unit_in">بوصات</string>
+    <string name="settings_screen_title_pressure_unit">الضغط</string>
+    <string name="settings_screen_label_pressure_unit_hpa">هيكتوباسكال</string>
+    <string name="settings_screen_label_pressure_unit_inhg">بوصة زئبق</string>
+    <string name="settings_screen_label_pressure_unit_mmhg">ملليمتر زئبق</string>
+    <string name="settings_screen_title_vis_unit">الرؤية</string>
+    <string name="settings_screen_label_vis_unit_km">كيلومترات</string>
+    <string name="settings_screen_label_vis_unit_mi">أميال</string>
+    <string name="settings_screen_label_vis_unit_m">أمتار</string>
+    <string name="settings_screen_label_vis_unit_ft">أقدام</string>
+    <string name="settings_screen_title_appearance">المظهر</string>
+    <string name="settings_screen_title_theme">السمة</string>
+    <string name="settings_screen_label_dark">داكن</string>
+    <string name="settings_screen_label_light">فاتح</string>
+    <string name="settings_screen_label_follow_system">اتبع النظام</string>
+
+    <string name="date_time_now">الآن</string>
+    <string name="date_time_today">اليوم</string>
+    <string name="date_time_pattern_hour">HH</string>
+    <string name="date_time_pattern_hour_ampm">h\u2009a</string>
+    <string name="date_time_pattern_hour_minute">HH:mm</string>
+    <string name="date_time_pattern_hour_minute_ampm">h:mm\u2009a</string>
+    <string name="date_time_pattern_dow">E</string>
+    <string name="date_time_pattern_dow_hour_minute">E, HH:mm</string>
+    <string name="date_time_pattern_dow_hour_minute_ampm">E, h:mm\u2009a</string>
+
+    <string name="precip_mixed">هطول الأمطار</string>
+    <string name="precip_rain">المطر</string>
+    <string name="precip_showers">الزخات</string>
+    <string name="precip_snow">الثلج</string>
+    <string name="precip_value_in_last_hours">في آخر %s ساعة</string>
+    <string name="precip_value_showers_in_next_hours">%1$s زخات متوقعة في الـ %2$s ساعة التالية</string>
+    <string name="precip_value_rain_in_next_hours">%1$s أمطار متوقعة في الـ %2$s ساعة التالية</string>
+    <string name="precip_value_snow_in_next_hours">%1$s ثلوج متوقعة في الـ %2$s ساعة التالية</string>
+    <string name="precip_value_mixed_in_next_hours">%1$s متوقعة في الـ %2$s ساعة التالية</string>
+    <string name="precip_value_showers_on_day">التالي المتوقع %1$s زخات في %2$s</string>
+    <string name="precip_value_rain_on_day">التالي المتوقع %1$s مطر في %2$s</string>
+    <string name="precip_value_snow_on_day">التالي المتوقع %1$s ثلج في %2$s</string>
+    <string name="precip_value_mixed_on_day">التالي المتوقع %1$s في %2$s</string>
+    <string name="precip_value_none_in_next_days">لا شيء متوقع في %s أيام التالية</string>
+    <string name="precip_unit_mm">ملم</string>
+    <string name="precip_value_mm">%s ملم</string>
+    <string name="precip_unit_cm">سم</string>
+    <string name="precip_value_cm">%s سم</string>
+    <string name="precip_unit_in">″</string>
+    <string name="precip_value_in">%s″</string>
+
+    <string name="pop_value_percent">%s٪</string>
+
+    <string name="pressure">الضغط</string>
+    <string name="pressure_trend_falling">هبوط</string>
+    <string name="pressure_trend_steady">ثابت</string>
+    <string name="pressure_trend_rising">ارتفاع</string>
+    <string name="pressure_value_average">متوسط %s</string>
+    <string name="pressure_unit_hpa">هيكتوباسكال</string>
+    <string name="pressure_value_hpa">%s هيكتوباسكال</string>
+    <string name="pressure_unit_inhg">بوصة زئبق</string>
+    <string name="pressure_value_inhg">%s بوصة زئبق</string>
+    <string name="pressure_unit_mmhg">ملليمتر زئبق</string>
+    <string name="pressure_value_mmhg">%s ملليمتر زئبق</string>
+
+    <string name="humidity">الرطوبة</string>
+    <string name="humidity_value_percent">%s٪</string>
+
+    <string name="sunrise">شروق الشمس</string>
+    <string name="sunset">غروب الشمس</string>
+    <string name="sunrise_short">@string/sunrise</string>
+    <string name="sunset_short">@string/sunset</string>
+    <string name="sunrise_value">شروق الشمس على %s</string>
+    <string name="sunset_value">غروب الشمس على %s</string>
+    <string name="sunrise_not_today">لا شروق للشمس اليوم</string>
+    <string name="sunset_not_today">لا غروب للشمس اليوم</string>
+    <string name="sunrise_value_more_than_days_away">&gt; %s يوم</string>
+    <string name="sunrise_value_more_than_hours_away">&gt; %s ساعة</string>
+    <string name="sunset_value_more_than_days_away">&gt; %s يوم</string>
+    <string name="sunset_value_more_than_hours_away">&gt; %s ساعة</string>
+
+    <string name="temp_value_degree">%s°</string>
+    <string name="dew_point_value_right_now">درجة الندى الآن %s</string>
+    <string name="feels_like">درجة الحرارة الملموسة</string>
+    <string name="feels_like_value">الملموسة %s</string>
+    <string name="feels_like_value_actual">المسجلة %s</string>
+    <string name="feels_like_cooler_than_actual">تعطي الرياح انطباعاً بالانتعاش</string>
+    <string name="feels_like_colder_than_actual">الرياح تجعلها تشعر بالبرودة</string>
+    <string name="feels_like_warmer_than_actual">تعطي الرطوبة انطباعًا بالانتعاش</string>
+    <string name="feels_like_hotter_than_actual">تمنح الرطوبة شعورًا بالدفء</string>
+    <string name="feels_like_similar_to_actual">مماثلة لدرجة الحرارة المسجلة</string>
+
+    <string name="uv_index">مؤشر الأشعة فوق البنفسجية</string>
+    <string name="uv_index_risk_low">منخفض</string>
+    <string name="uv_index_risk_moderate">معتدل</string>
+    <string name="uv_index_risk_high">مرتفع</string>
+    <string name="uv_index_risk_very_high">مرتفع جدا</string>
+    <string name="uv_index_risk_extreme">شديد</string>
+    <string name="uv_index_protection_value_from_until">استخدم الحماية من الشمس %1$s-%2$s</string>
+    <string name="uv_index_protection_value_from">استخدم الحماية من الشمس من %s</string>
+    <string name="uv_index_protection_value_until">استخدم الحماية من الشمس حتى %s</string>
+    <string name="uv_index_protection_value_until_end_of_day">استخدم الحماية من الشمس لبقية اليوم</string>
+    <string name="uv_index_protection_value_none">منخفض لبقية اليوم</string>
+
+    <string name="vis">الرؤية</string>
+    <string name="vis_unit_m">م</string>
+    <string name="vis_value_m">%s م</string>
+    <string name="vis_unit_ft">قدم</string>
+    <string name="vis_value_ft">%s قدم</string>
+    <string name="vis_unit_km">كم</string>
+    <string name="vis_value_km">%s كم</string>
+    <string name="vis_unit_mi">ميل</string>
+    <string name="vis_value_mi">%s ميل</string>
+    <string name="vis_description_perfect">الرؤية واضحة تماماً</string>
+    <string name="vis_description_clear">الرؤية واضحة</string>
+    <string name="vis_description_fair">الرؤية واضحة إلى حد ما</string>
+    <string name="vis_description_low">الرؤية محجوبة</string>
+    <string name="vis_description_very_low">الرؤية محجوبة جدا</string>
+
+    <string name="wind_label">الرياح</string>
+    <string name="wind_bft_0">هادئة</string>
+    <string name="wind_bft_1">هواء خفيف</string>
+    <string name="wind_bft_2">نسيم خفيف</string>
+    <string name="wind_bft_3">نسيم لطيف</string>
+    <string name="wind_bft_4">نسيم معتدل</string>
+    <string name="wind_bft_5">نسيم منعش</string>
+    <string name="wind_bft_6">نسيم قوي</string>
+    <string name="wind_bft_7">عاصفة قريبة</string>
+    <string name="wind_bft_8">عاصفة قوية</string>
+    <string name="wind_bft_9">عاصفة شديدة</string>
+    <string name="wind_bft_10">عاصفة كاملة</string>
+    <string name="wind_bft_11">عاصفة عنيفة</string>
+    <string name="wind_bft_12">قوة إعصارية</string>
+    <string name="wind_value_gusts_at">هبات بسرعة %s</string>
+    <string name="wind_unit_mps">م/ث</string>
+    <string name="wind_value_mps">%s م/ث</string>
+    <string name="wind_unit_kph">كم/س</string>
+    <string name="wind_value_kph">%s كم/س</string>
+    <string name="wind_unit_kn">عقد</string>
+    <string name="wind_value_kn">%s عقد</string>
+    <string name="wind_unit_mph">ميل/س</string>
+    <string name="wind_value_mph">%s ميل/س</string>
+
+    <string name="wmo_0">صافي</string>
+    <string name="wmo_1">صافي في الغالب</string>
+    <string name="wmo_2">غائم جزئيا</string>
+    <string name="wmo_3">غائم</string>
+    <string name="wmo_45">ضباب</string>
+    <string name="wmo_48">ضباب متجمد</string>
+    <string name="wmo_51">رذاذ خفيف</string>
+    <string name="wmo_53">رذاذ</string>
+    <string name="wmo_55">رذاذ كثيف</string>
+    <string name="wmo_56">رذاذ متجمد خفيف</string>
+    <string name="wmo_57">رذاذ متجمد كثيف</string>
+    <string name="wmo_61">مطر خفيف</string>
+    <string name="wmo_63">مطر</string>
+    <string name="wmo_65">مطر كثيف</string>
+    <string name="wmo_66">مطر متجمد خفيف</string>
+    <string name="wmo_67">مطر متجمد كثيف</string>
+    <string name="wmo_71">ثلج خفيف</string>
+    <string name="wmo_73">ثلج</string>
+    <string name="wmo_75">ثلج كثيف</string>
+    <string name="wmo_77">حبوب ثلجية</string>
+    <string name="wmo_80">زخات خفيفة</string>
+    <string name="wmo_81">زخات</string>
+    <string name="wmo_82">زخات كثيفة</string>
+    <string name="wmo_85">زخات ثلجية خفيفة</string>
+    <string name="wmo_86">زخات ثلجية كثيفة</string>
+    <string name="wmo_95">عاصفة رعدية</string>
+    <string name="wmo_96">عاصفة رعدية مع بَرَد خفيف</string>
+    <string name="wmo_99">عاصفة رعدية مع بَرَد كثيف</string>
+</resources>
