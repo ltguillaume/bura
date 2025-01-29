@@ -149,7 +149,7 @@ private fun DrawScope.drawHorizontalAxisAndPlot(
         )
     }
     nowCenter?.let {
-        drawPastOverlayWithPoint(it, args)
+        drawPastOverlayWithPoint(nowCenter = it, args = args)
     }
 }
 

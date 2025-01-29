@@ -174,7 +174,7 @@ private fun DrawScope.drawHorizontalAxisAndBars(
     }
 
     nowX?.let {
-        drawPastOverlay(it, args)
+        drawPastOverlay(nowX = it, args = args)
     }
 }
 
