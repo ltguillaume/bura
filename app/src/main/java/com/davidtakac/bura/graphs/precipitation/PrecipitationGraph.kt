@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -28,11 +29,13 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import com.davidtakac.bura.common.AppTheme
@@ -116,7 +119,6 @@ private fun DrawScope.drawHorizontalAxisAndBars(
         measurer = measurer,
         args = args
     ) { i, x ->
-        // Temperature line
         val point = state.points.getOrNull(i) ?: return@drawTimeAxis
         if (point.time.meta == GraphTime.Meta.Present) nowX = x
 
@@ -200,36 +202,11 @@ private fun DrawScope.drawPrecipAxis(
 @Preview
 @Composable
 private fun PrecipitationGraphPreview() {
-    val now = remember { LocalDateTime.parse("1970-01-01T08:00") }
     AppTheme {
         PrecipitationGraph(
-            state = PrecipitationGraph(
-                day = LocalDate.parse("1970-01-01"),
-                points = List(24) {
-                    PrecipitationGraphPoint(
-                        time = GraphTime(
-                            hour = LocalDateTime.parse("1970-01-01T00:00")
-                                .plus(it.toLong(), ChronoUnit.HOURS),
-                            now = now
-                        ),
-                        precip = MixedPrecipitation.fromMillimeters(
-                            rain = Rain.fromMillimeters(Random.nextDouble(until = 5.0)),
-                            showers = Showers.fromMillimeters(Random.nextDouble(until = 5.0)),
-                            snow = Snow.fromMillimeters(Random.nextDouble(until = 5.0))
-                        ),
-                        cond = Condition(
-                            wmoCode = Random.nextInt(0, 3),
-                            isDay = Random.nextBoolean()
-                        )
-                    )
-                }
-            ),
+            state = previewState,
             args = GraphArgs.rememberPrecipitationArgs(),
-            max = MixedPrecipitation.fromMillimeters(
-                Rain.fromMillimeters(15.0),
-                Showers.Zero,
-                Snow.Zero
-            ),
+            max = previewState.points.maxOf { it.precip },
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(4f / 3f)
@@ -240,37 +217,31 @@ private fun PrecipitationGraphPreview() {
 
 @Preview
 @Composable
+private fun PrecipitationGraphRtlPreview() {
+    AppTheme {
+        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+            PrecipitationGraph(
+                state = previewState,
+                args = GraphArgs.rememberPrecipitationArgs(),
+                max = previewState.points.maxOf { it.precip },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(4f / 3f)
+                    .background(MaterialTheme.colorScheme.surface)
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
 private fun PrecipitationGraphDarkPreview() {
     val now = remember { LocalDateTime.parse("1970-01-01T08:00") }
     AppTheme(darkTheme = true) {
         PrecipitationGraph(
-            state = PrecipitationGraph(
-                day = LocalDate.parse("1970-01-01"),
-                points = List(24) {
-                    PrecipitationGraphPoint(
-                        time = GraphTime(
-                            hour = LocalDateTime.parse("1970-01-01T00:00")
-                                .plus(it.toLong(), ChronoUnit.HOURS),
-                            now = now
-                        ),
-                        precip = MixedPrecipitation.fromMillimeters(
-                            rain = Rain.fromMillimeters(Random.nextDouble(until = 5.0)),
-                            showers = Showers.fromMillimeters(0.0),
-                            snow = Snow.fromMillimeters(Random.nextDouble(until = 5.0))
-                        ),
-                        cond = Condition(
-                            wmoCode = Random.nextInt(0, 3),
-                            isDay = Random.nextBoolean()
-                        )
-                    )
-                }
-            ),
+            state = previewState,
             args = GraphArgs.rememberPrecipitationArgs(),
-            max = MixedPrecipitation.fromMillimeters(
-                Rain.fromMillimeters(15.0),
-                Showers.Zero,
-                Snow.Zero
-            ).convertTo(Precipitation.Unit.Inches),
+            max = previewState.points.maxOf { it.precip },
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(4f / 3f)
@@ -278,3 +249,25 @@ private fun PrecipitationGraphDarkPreview() {
         )
     }
 }
+
+private val previewState = PrecipitationGraph(
+    day = LocalDate.parse("1970-01-01"),
+    points = List(24) {
+        PrecipitationGraphPoint(
+            time = GraphTime(
+                hour = LocalDateTime.parse("1970-01-01T00:00")
+                    .plus(it.toLong(), ChronoUnit.HOURS),
+                now = LocalDateTime.parse("1970-01-01T08:00")
+            ),
+            precip = MixedPrecipitation.fromMillimeters(
+                rain = Rain.fromMillimeters(Random.nextDouble(until = 5.0)),
+                showers = Showers.fromMillimeters(Random.nextDouble(until = 5.0)),
+                snow = Snow.fromMillimeters(Random.nextDouble(until = 5.0))
+            ),
+            cond = Condition(
+                wmoCode = Random.nextInt(0, 3),
+                isDay = Random.nextBoolean()
+            )
+        )
+    }
+)
