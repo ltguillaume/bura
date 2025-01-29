@@ -75,6 +75,7 @@ fun TemperatureGraph(
     val context = LocalContext.current
     val measurer = rememberTextMeasurer()
     val plotColors = AppTheme.colors.temperatureColors(minCelsius, maxCelsius)
+    val layoutDirection = LocalLayoutDirection.current
     Canvas(modifier) {
         drawTempAxis(
             unit = absMinTemp.unit,
@@ -91,6 +92,7 @@ fun TemperatureGraph(
             context = context,
             measurer = measurer,
             plotColors = plotColors,
+            layoutDirection = layoutDirection,
             args = args
         )
     }
@@ -103,6 +105,7 @@ private fun DrawScope.drawHorizontalAxisAndPlot(
     maxCelsius: Double,
     context: Context,
     measurer: TextMeasurer,
+    layoutDirection: LayoutDirection,
     args: GraphArgs
 ) {
     val iconSize = 24.dp.toPx()
@@ -125,6 +128,7 @@ private fun DrawScope.drawHorizontalAxisAndPlot(
 
     drawTimeAxis(
         measurer = measurer,
+        layoutDirection = layoutDirection,
         args = args
     ) { i, x ->
         // Temperature line

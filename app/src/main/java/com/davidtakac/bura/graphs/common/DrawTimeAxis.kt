@@ -17,15 +17,20 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.drawText
+import androidx.compose.ui.unit.LayoutDirection
 import java.time.LocalTime
 
 fun DrawScope.drawTimeAxis(
     measurer: TextMeasurer,
     args: GraphArgs,
+    layoutDirection: LayoutDirection = LayoutDirection.Ltr,
     onStepDrawn: (index: Int, x: Float) -> Unit
 ) {
     for (i in 0..24) {
-        val x = ((i.toFloat() / 24) * (size.width - args.endGutter - args.startGutter)) + args.startGutter
+        val xPercent = if (layoutDirection == LayoutDirection.Ltr) i / 24f else 1 - (i / 24f)
+        val xOffset = if (layoutDirection == LayoutDirection.Ltr) args.startGutter else args.endGutter - args.startGutter
+        val plotWidth = size.width - args.endGutter - args.startGutter
+        val x = xPercent * plotWidth + xOffset
         fun drawTimeHelperLine(onEdge: Boolean) {
             drawLine(
                 color = args.axisColor,
@@ -43,13 +48,22 @@ fun DrawScope.drawTimeAxis(
             )
             drawTimeHelperLine(onEdge = i == 0 || i == 24)
             if (i != 24) {
+                val textTopLeftX =
+                    if (layoutDirection == LayoutDirection.Ltr) x + args.bottomAxisTextPaddingStart
+                    else x - label.size.width - args.bottomAxisTextPaddingStart
+                val textTopLeftXMin =
+                    if (layoutDirection == LayoutDirection.Ltr) args.startGutter + args.textPaddingMinHorizontal
+                    else args.endGutter + args.textPaddingMinHorizontal
+                val textTopLeftXMax =
+                    if (layoutDirection == LayoutDirection.Ltr) size.width - args.endGutter - label.size.width - args.textPaddingMinHorizontal
+                    else size.width - args.startGutter - label.size.width - args.textPaddingMinHorizontal
                 drawText(
                     textLayoutResult = label,
                     color = args.axisColor,
                     topLeft = Offset(
-                        x = (x + args.bottomAxisTextPaddingLeft).coerceIn(
-                            minimumValue = args.startGutter + args.textPaddingMinHorizontal,
-                            maximumValue = size.width - args.endGutter - label.size.width - args.textPaddingMinHorizontal
+                        x = textTopLeftX.coerceIn(
+                            minimumValue = textTopLeftXMin,
+                            maximumValue = textTopLeftXMax
                         ),
                         y = size.height - args.bottomGutter + args.bottomAxisTextPaddingTop
                     )
