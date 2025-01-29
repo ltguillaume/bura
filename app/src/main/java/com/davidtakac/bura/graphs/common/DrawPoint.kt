@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.drawText
+import androidx.compose.ui.unit.LayoutDirection
 
 fun DrawScope.drawPoint(
     center: Offset,
@@ -62,12 +63,21 @@ private fun DrawScope.drawPointLabel(
     args: GraphArgs,
 ) {
     val labelMeasured = measurer.measure(text, args.axisTextStyle.copy(color = args.pointLabelColor))
+    val textTopLeftX =
+        if (layoutDirection == LayoutDirection.Ltr) pointCenter.x + args.textPaddingMinHorizontal
+        else pointCenter.x - labelMeasured.size.width - args.textPaddingMinHorizontal
+    val textTopLeftXMin =
+        if (layoutDirection == LayoutDirection.Ltr) args.startGutter + args.textPaddingMinHorizontal
+        else args.endGutter + args.textPaddingMinHorizontal
+    val textTopLeftXMax =
+        if (layoutDirection == LayoutDirection.Ltr) size.width - args.endGutter - labelMeasured.size.width - args.textPaddingMinHorizontal
+        else size.width - args.startGutter - labelMeasured.size.width - args.textPaddingMinHorizontal
     drawText(
         textLayoutResult = labelMeasured,
         topLeft = Offset(
-            x = (pointCenter.x - (labelMeasured.size.width / 2)).coerceIn(
-                minimumValue = args.startGutter + args.textPaddingMinHorizontal,
-                maximumValue = size.width - args.endGutter - labelMeasured.size.width - args.textPaddingMinHorizontal
+            x = textTopLeftX.coerceIn(
+                minimumValue = textTopLeftXMin,
+                maximumValue = textTopLeftXMax
             ),
             y = pointCenter.y - (labelMeasured.size.height) - args.pointTextPaddingBottom
         )

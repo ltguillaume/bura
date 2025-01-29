@@ -48,14 +48,14 @@ fun DrawScope.drawTimeAxis(
             drawTimeHelperLine(onEdge = i == 0 || i == 24)
             if (i != 24) {
                 val textTopLeftX =
-                    if (layoutDirection == LayoutDirection.Ltr) x + args.bottomAxisTextPaddingStart
-                    else x - label.size.width - args.bottomAxisTextPaddingStart
+                    if (layoutDirection == LayoutDirection.Ltr) x + args.bottomAxisTextPaddingHorizontal
+                    else x - label.size.width - args.bottomAxisTextPaddingHorizontal
                 val textTopLeftXMin =
-                    if (layoutDirection == LayoutDirection.Ltr) args.startGutter + args.textPaddingMinHorizontal
-                    else args.endGutter + args.textPaddingMinHorizontal
+                    if (layoutDirection == LayoutDirection.Ltr) args.startGutter + args.bottomAxisTextPaddingHorizontal
+                    else args.endGutter + args.bottomAxisTextPaddingHorizontal
                 val textTopLeftXMax =
-                    if (layoutDirection == LayoutDirection.Ltr) size.width - args.endGutter - label.size.width - args.textPaddingMinHorizontal
-                    else size.width - args.startGutter - label.size.width - args.textPaddingMinHorizontal
+                    if (layoutDirection == LayoutDirection.Ltr) size.width - args.endGutter - label.size.width - args.bottomAxisTextPaddingHorizontal
+                    else size.width - args.startGutter - label.size.width - args.bottomAxisTextPaddingHorizontal
                 drawText(
                     textLayoutResult = label,
                     color = args.axisColor,
