@@ -29,7 +29,6 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextMeasurer
-import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
@@ -185,24 +184,16 @@ private fun DrawScope.drawPrecipAxis(
     args: GraphArgs
 ) {
     val range = max.convertTo(Precipitation.Unit.Millimeters).value
+    val steps = 7
     drawVerticalAxis(
-        steps = 7,
-        args = args
-    ) { frac, endX, y ->
+        steps = steps,
+        args = args,
+        measurer = measurer,
+    ) { step ->
+        val frac = step / steps.toDouble()
         val rain = Rain.fromMillimeters(value = range * frac).convertTo(max.unit)
         val valueString = rain.valueString(args.numberFormat)
-        val labelString = measurer.measure(
-            text = if (frac == 0f) rain.string(context, args.numberFormat) else valueString,
-            style = args.axisTextStyle
-        )
-        drawText(
-            textLayoutResult = labelString,
-            color = args.axisColor,
-            topLeft = Offset(
-                x = endX + args.endAxisTextPaddingStart,
-                y = y - (labelString.size.height / 2)
-            )
-        )
+        if (frac == 0.0) rain.string(context, args.numberFormat) else valueString
     }
 }
 

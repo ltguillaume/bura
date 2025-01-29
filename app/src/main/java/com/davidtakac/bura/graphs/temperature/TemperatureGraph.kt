@@ -230,28 +230,16 @@ private fun DrawScope.drawTempAxis(
     args: GraphArgs
 ) {
     val rangeC = maxTempC - minTempC
+    val steps = 7
     drawVerticalAxis(
-        steps = 7,
-        args = args
-    ) { stepFraction, lineX, stepY ->
-        val temp = measurer.measure(
-            text = Temperature
-                .fromDegreesCelsius(value = (rangeC * stepFraction) + minTempC)
-                .convertTo(unit)
-                .string(context, args.numberFormat),
-            style = args.axisTextStyle
-        )
-        val textTopLeftX =
-            if (layoutDirection == LayoutDirection.Ltr) lineX + args.endAxisTextPaddingStart
-            else lineX - args.endAxisTextPaddingStart - temp.size.width
-        drawText(
-            textLayoutResult = temp,
-            color = args.axisColor,
-            topLeft = Offset(
-                x = textTopLeftX,
-                y = stepY - (temp.size.height / 2)
-            )
-        )
+        steps = steps,
+        args = args,
+        measurer = measurer,
+    ) { step ->
+        Temperature
+            .fromDegreesCelsius(value = (rangeC * step / steps.toDouble()) + minTempC)
+            .convertTo(unit)
+            .string(context, args.numberFormat)
     }
 }
 

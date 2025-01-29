@@ -34,7 +34,6 @@ import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.TextMeasurer
-import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
@@ -161,23 +160,13 @@ private fun DrawScope.drawVerticalAxis(
     measurer: TextMeasurer,
     args: GraphArgs
 ) {
+    val steps = 5
     drawVerticalAxis(
-        steps = 5,
-        args = args
-    ) { frac, endX, y ->
-        val pop = Pop(frac * 100.0)
-        val popMeasured = measurer.measure(
-            text = pop.string(context, args.numberFormat),
-            style = args.axisTextStyle
-        )
-        drawText(
-            textLayoutResult = popMeasured,
-            color = args.axisColor,
-            topLeft = Offset(
-                x = endX + args.endAxisTextPaddingStart,
-                y = y - (popMeasured.size.height / 2)
-            )
-        )
+        steps = steps,
+        args = args,
+        measurer = measurer,
+    ) { step ->
+        Pop((step / steps.toDouble()) * 100).string(context, args.numberFormat)
     }
 }
 
