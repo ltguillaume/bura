@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
@@ -31,10 +32,12 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.davidtakac.bura.common.AppTheme
 import com.davidtakac.bura.graphs.common.GraphArgs
@@ -149,7 +152,7 @@ private fun DrawScope.drawHorizontalAxisAndPlot(
         )
     }
     nowCenter?.let {
-        drawPastOverlayWithPoint(nowCenter = it, args = args)
+        drawPastOverlayWithPoint(it, args)
     }
 }
 
@@ -194,6 +197,22 @@ private fun PopGraphPreview() {
 
 @Preview
 @Composable
+private fun PopGraphRtlPreview() {
+    AppTheme(darkTheme = false) {
+        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl)  {
+            PopGraph(
+                state = previewState, modifier = Modifier
+                    .height(300.dp)
+                    .width(400.dp)
+                    .background(MaterialTheme.colorScheme.background),
+                args = GraphArgs.rememberPopArgs()
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
 private fun PopGraphNowStartPreview() {
     AppTheme {
         PopGraph(
@@ -216,7 +235,7 @@ private fun PopGraphNowStartPreview() {
 
 @Preview
 @Composable
-private fun ConditionGraphNowEndPreview() {
+private fun PopGraphNowEndPreview() {
     AppTheme {
         PopGraph(
             state = previewState.copy(points = previewState.points.mapIndexed { idx, pt ->

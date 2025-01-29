@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.LayoutDirection
 fun DrawScope.drawVerticalAxis(
     steps: Int,
     args: GraphArgs,
-    layoutDirection: LayoutDirection = LayoutDirection.Ltr,
     onStepDrawn: (stepFraction: Float, lineX: Float, stepY: Float) -> Unit
 ) {
     val lineX =

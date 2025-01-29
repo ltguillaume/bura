@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.LayoutDirection
 
 fun DrawScope.drawPastOverlay(
     nowX: Float,
-    layoutDirection: LayoutDirection = LayoutDirection.Ltr,
     args: GraphArgs
 ) {
     drawLine(
@@ -39,9 +38,8 @@ fun DrawScope.drawPastOverlay(
 
 fun DrawScope.drawPastOverlayWithPoint(
     nowCenter: Offset,
-    layoutDirection: LayoutDirection = LayoutDirection.Ltr,
     args: GraphArgs
 ) {
-    drawPastOverlay(nowCenter.x, layoutDirection, args)
+    drawPastOverlay(nowCenter.x, args)
     drawPoint(nowCenter, args)
 }

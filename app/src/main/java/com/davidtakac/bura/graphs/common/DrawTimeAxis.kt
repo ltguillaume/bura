@@ -23,7 +23,6 @@ import java.time.LocalTime
 fun DrawScope.drawTimeAxis(
     measurer: TextMeasurer,
     args: GraphArgs,
-    layoutDirection: LayoutDirection = LayoutDirection.Ltr,
     onStepDrawn: (index: Int, x: Float) -> Unit
 ) {
     for (i in 0..24) {

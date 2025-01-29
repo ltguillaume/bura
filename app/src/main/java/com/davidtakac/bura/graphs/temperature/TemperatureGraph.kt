@@ -83,7 +83,6 @@ fun TemperatureGraph(
             maxTempC = maxCelsius,
             context = context,
             measurer = measurer,
-            layoutDirection = layoutDirection,
             args = args
         )
         drawHorizontalAxisAndPlot(
@@ -93,7 +92,6 @@ fun TemperatureGraph(
             context = context,
             measurer = measurer,
             plotColors = plotColors,
-            layoutDirection = layoutDirection,
             args = args
         )
     }
@@ -106,7 +104,6 @@ private fun DrawScope.drawHorizontalAxisAndPlot(
     maxCelsius: Double,
     context: Context,
     measurer: TextMeasurer,
-    layoutDirection: LayoutDirection,
     args: GraphArgs
 ) {
     val iconSize = 24.dp.toPx()
@@ -129,7 +126,6 @@ private fun DrawScope.drawHorizontalAxisAndPlot(
 
     drawTimeAxis(
         measurer = measurer,
-        layoutDirection = layoutDirection,
         args = args
     ) { i, x ->
         // Temperature line
@@ -221,7 +217,7 @@ private fun DrawScope.drawHorizontalAxisAndPlot(
         )
     }
     nowCenter?.let {
-        drawPastOverlayWithPoint(it, layoutDirection, args)
+        drawPastOverlayWithPoint(it, args)
     }
 }
 
@@ -231,13 +227,11 @@ private fun DrawScope.drawTempAxis(
     minTempC: Double,
     context: Context,
     measurer: TextMeasurer,
-    layoutDirection: LayoutDirection,
     args: GraphArgs
 ) {
     val rangeC = maxTempC - minTempC
     drawVerticalAxis(
         steps = 7,
-        layoutDirection = layoutDirection,
         args = args
     ) { stepFraction, lineX, stepY ->
         val temp = measurer.measure(
