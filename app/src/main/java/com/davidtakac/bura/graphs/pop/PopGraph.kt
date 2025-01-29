@@ -41,8 +41,10 @@ import androidx.compose.ui.unit.dp
 import com.davidtakac.bura.common.AppTheme
 import com.davidtakac.bura.graphs.common.GraphArgs
 import com.davidtakac.bura.graphs.common.GraphTime
+import com.davidtakac.bura.graphs.common.closePlotFillPath
 import com.davidtakac.bura.graphs.common.drawLabeledPoint
 import com.davidtakac.bura.graphs.common.drawPastOverlayWithPoint
+import com.davidtakac.bura.graphs.common.drawPlotLinePath
 import com.davidtakac.bura.graphs.common.drawTimeAxis
 import com.davidtakac.bura.graphs.common.drawVerticalAxis
 import com.davidtakac.bura.pop.Pop
@@ -108,30 +110,7 @@ private fun DrawScope.drawHorizontalAxisAndPlot(
         if (point.time.meta == GraphTime.Meta.Present) nowCenter = Offset(x, y)
     }
 
-    // Draw the plot line and fill under it
-    // todo: extract this so future graphs can use it
-    val plotBottom = size.height - args.bottomGutter
-    plotFillPath.lineTo(x = lastX, y = plotBottom)
-    plotFillPath.lineTo(x = if (layoutDirection == LayoutDirection.Ltr) args.startGutter else size.width - args.startGutter, y = plotBottom)
-    plotFillPath.close()
-    // Clip path makes sure the plot ends are within graph bounds
-    clipPath(
-        // todo: extract this so future graphs can use it
-        path = Path().apply {
-            val rectStartX =
-                if (layoutDirection == LayoutDirection.Ltr) args.startGutter
-                else args.endGutter
-            addRect(
-                Rect(
-                    offset = Offset(x = rectStartX, y = args.topGutter),
-                    size = Size(
-                        width = size.width - args.startGutter - args.endGutter,
-                        height = size.height - args.topGutter - args.bottomGutter
-                    )
-                )
-            )
-        }
-    ) {
+    drawPlotLinePath(args) {
         drawPath(
             plotPath,
             color = plotColor,
@@ -142,11 +121,14 @@ private fun DrawScope.drawHorizontalAxisAndPlot(
             )
         )
     }
+
+    closePlotFillPath(plotFillPath, lastX, args)
     drawPath(
         plotFillPath,
         color = plotColor,
         alpha = args.plotFillAlpha
     )
+    
     maxCenter?.let { (offset, pop) ->
         drawLabeledPoint(
             label = pop.string(context, args.numberFormat),
