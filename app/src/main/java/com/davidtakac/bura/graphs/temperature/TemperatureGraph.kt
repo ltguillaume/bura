@@ -158,18 +158,24 @@ private fun DrawScope.drawHorizontalAxisAndPlot(
     }
     val plotBottom = size.height - args.bottomGutter
     plotFillPath.lineTo(x = lastX, y = plotBottom)
-    plotFillPath.lineTo(x = args.startGutter, y = plotBottom)
+    plotFillPath.lineTo(
+        x = if (layoutDirection == LayoutDirection.Ltr) args.startGutter else size.width - args.startGutter,
+        y = plotBottom
+    )
     plotFillPath.close()
     val gradientStart = size.height - args.bottomGutter
     val gradientEnd = args.topGutter
     // Clip path makes sure the plot ends are within graph bounds
     clipPath(
         path = Path().apply {
+            val rectStartX =
+                if (layoutDirection == LayoutDirection.Ltr) args.startGutter
+                else args.endGutter
             addRect(
                 Rect(
-                    offset = Offset(x = args.startGutter, y = args.topGutter),
+                    offset = Offset(x = rectStartX, y = args.topGutter),
                     size = Size(
-                        width = lastX - args.startGutter,
+                        width = size.width - args.endGutter - args.startGutter,
                         height = size.height - args.topGutter - args.bottomGutter
                     )
                 )
