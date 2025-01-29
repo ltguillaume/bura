@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -35,12 +36,14 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import com.davidtakac.bura.common.AppTheme
@@ -256,6 +259,25 @@ private fun ConditionGraphNowMiddlePreview() {
                 .height(300.dp)
                 .background(MaterialTheme.colorScheme.background)
         )
+    }
+}
+
+@Preview
+@Composable
+private fun ConditionGraphNowMiddleRtlPreview() {
+    AppTheme {
+        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+            TemperatureGraph(
+                state = previewState,
+                absMinTemp = previewState.points.minOf { it.temperature.value },
+                absMaxTemp = previewState.points.maxOf { it.temperature.value },
+                args = GraphArgs.rememberTemperatureArgs(),
+                modifier = Modifier
+                    .width(400.dp)
+                    .height(300.dp)
+                    .background(MaterialTheme.colorScheme.background)
+            )
+        }
     }
 }
 
