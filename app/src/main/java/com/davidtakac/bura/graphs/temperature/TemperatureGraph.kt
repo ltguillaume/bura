@@ -83,6 +83,7 @@ fun TemperatureGraph(
             maxTempC = maxCelsius,
             context = context,
             measurer = measurer,
+            layoutDirection = layoutDirection,
             args = args
         )
         drawHorizontalAxisAndPlot(
@@ -224,26 +225,31 @@ private fun DrawScope.drawTempAxis(
     minTempC: Double,
     context: Context,
     measurer: TextMeasurer,
+    layoutDirection: LayoutDirection,
     args: GraphArgs
 ) {
     val rangeC = maxTempC - minTempC
     drawVerticalAxis(
         steps = 7,
+        layoutDirection = layoutDirection,
         args = args
-    ) { frac, endX, y ->
+    ) { stepFraction, lineX, stepY ->
         val temp = measurer.measure(
             text = Temperature
-                .fromDegreesCelsius(value = (rangeC * frac) + minTempC)
+                .fromDegreesCelsius(value = (rangeC * stepFraction) + minTempC)
                 .convertTo(unit)
                 .string(context, args.numberFormat),
             style = args.axisTextStyle
         )
+        val textTopLeftX =
+            if (layoutDirection == LayoutDirection.Ltr) lineX + args.endAxisTextPaddingStart
+            else lineX - args.endAxisTextPaddingStart - temp.size.width
         drawText(
             textLayoutResult = temp,
             color = args.axisColor,
             topLeft = Offset(
-                x = endX + args.endAxisTextPaddingStart,
-                y = y - (temp.size.height / 2)
+                x = textTopLeftX,
+                y = stepY - (temp.size.height / 2)
             )
         )
     }

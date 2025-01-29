@@ -14,21 +14,30 @@ package com.davidtakac.bura.graphs.common
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.unit.LayoutDirection
 
 fun DrawScope.drawVerticalAxis(
     steps: Int,
     args: GraphArgs,
-    onStepDrawn: (frac: Float, endX: Float, y: Float) -> Unit
+    layoutDirection: LayoutDirection = LayoutDirection.Ltr,
+    onStepDrawn: (stepFraction: Float, lineX: Float, stepY: Float) -> Unit
 ) {
-    val x = size.width - args.endGutter
+    val lineX =
+        if (layoutDirection == LayoutDirection.Ltr) size.width - args.endGutter
+        else args.endGutter
     for (i in 0..steps) {
-        val frac = i / steps.toFloat()
-        val y = size.height - args.bottomGutter - ((size.height - args.topGutter - args.bottomGutter) * frac)
+        val stepFraction = i / steps.toFloat()
+        val plotBottom = size.height - args.bottomGutter
+        val plotHeight = size.height - args.topGutter - args.bottomGutter
+        val stepY = plotBottom - plotHeight * stepFraction
+        val horizontalLineStartX =
+            if (layoutDirection == LayoutDirection.Ltr) args.startGutter
+            else size.width - args.startGutter
         drawLine(
             color = args.axisColor,
-            start = Offset(args.startGutter, y),
-            end = Offset(x, y)
+            start = Offset(horizontalLineStartX, stepY),
+            end = Offset(lineX, stepY)
         )
-        onStepDrawn(frac, x, y)
+        onStepDrawn(stepFraction, lineX, stepY)
     }
 }
