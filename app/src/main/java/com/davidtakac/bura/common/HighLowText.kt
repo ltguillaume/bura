@@ -12,6 +12,8 @@
 
 package com.davidtakac.bura.common
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
@@ -20,6 +22,7 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
@@ -29,6 +32,7 @@ import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.dp
 import com.davidtakac.bura.R
 
 @Composable
@@ -64,24 +68,39 @@ fun HighLowText(
             Icon(
                 painter = painterResource(id = R.drawable.arrow_up),
                 contentDescription = null,
-                modifier = Modifier.fillMaxSize().rotate(180f),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .rotate(180f),
                 tint = color
             )
         },
     )
-    val annotatedString = buildAnnotatedString {
+    val highString = buildAnnotatedString {
         withStyle(style.toSpanStyle()) {
             appendInlineContent(id = "high")
             append(high)
-            append(" ")
+        }
+    }
+    val lowString = buildAnnotatedString {
+        withStyle(style.toSpanStyle()) {
             appendInlineContent(id = "low")
             append(low)
         }
     }
-    Text(
-        text = annotatedString,
-        inlineContent = inlineContentMap,
-        color = color,
-        modifier = modifier
-    )
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(2.dp),
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = highString,
+            inlineContent = inlineContentMap,
+            color = color,
+        )
+        Text(
+            text = lowString,
+            inlineContent = inlineContentMap,
+            color = color,
+        )
+    }
 }
