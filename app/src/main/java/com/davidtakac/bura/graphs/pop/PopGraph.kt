@@ -22,15 +22,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.TextMeasurer
@@ -95,13 +92,13 @@ private fun DrawScope.drawHorizontalAxisAndPlot(
     drawTimeAxis(
         measurer = measurer,
         args = args
-    ) { i, x ->
+    ) { i, x, calcY ->
         // Plot line
         val point = state.points.getOrNull(i) ?: return@drawTimeAxis
         val pop = point.pop.value
         val minY = args.topGutter + args.axisWidth + (args.plotWidth / 2)
         val maxY = size.height - args.bottomGutter - args.axisWidth - (args.plotWidth / 2)
-        val y = (((1 - (pop.value / range)) * (size.height - args.bottomGutter - args.topGutter)) + args.topGutter).toFloat().coerceIn(minY, maxY)
+        val y = calcY(pop.value / range).top.coerceIn(minY, maxY)
         movePlot(x, y)
         lastX = x
 

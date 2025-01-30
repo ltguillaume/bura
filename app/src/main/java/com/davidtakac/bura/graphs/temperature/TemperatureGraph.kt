@@ -124,12 +124,12 @@ private fun DrawScope.drawHorizontalAxisAndPlot(
     drawTimeAxis(
         measurer = measurer,
         args = args
-    ) { i, x ->
+    ) { i, x, calcY ->
         // Temperature line
         val point = state.points.getOrNull(i) ?: return@drawTimeAxis
         val temp = point.temperature
-        val tempC = temp.value.convertTo(Temperature.Unit.DegreesCelsius).value
-        val y = ((1 - ((tempC - minCelsius) / range)) * (size.height - args.topGutter - args.bottomGutter)).toFloat() + args.topGutter
+        val tempCelsius = temp.value.convertTo(Temperature.Unit.DegreesCelsius).value
+        val y = calcY((tempCelsius - minCelsius) / range).top
         movePlot(x, y)
         lastX = x
 

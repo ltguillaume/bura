@@ -23,7 +23,11 @@ import java.time.LocalTime
 fun DrawScope.drawTimeAxis(
     measurer: TextMeasurer,
     args: GraphArgs,
-    onStepDrawn: (index: Int, x: Float) -> Unit
+    onStepDrawn: (
+        i: Int,
+        x: Float,
+        calculateY: (percent: Double) -> YData,
+    ) -> Unit
 ) {
     for (i in 0..24) {
         val xPercent = if (layoutDirection == LayoutDirection.Ltr) i / 24f else 1 - (i / 24f)
@@ -69,6 +73,23 @@ fun DrawScope.drawTimeAxis(
                 )
             }
         }
-        onStepDrawn(i, x)
+        onStepDrawn(i, x,) { percent ->
+            // Flip is necessary because Canvas coordinate system is top to bottom, while real
+            // world graphs are bottom to top
+            val percentFromBottom = 1 - percent
+            val plotHeight = size.height - args.topGutter - args.bottomGutter
+            val yOffset = args.topGutter
+            YData(
+                top = ((percentFromBottom * plotHeight) + yOffset).toFloat(),
+                bot = size.height - args.bottomGutter
+            )
+        }
     }
+}
+
+data class YData(
+    val top: Float,
+    val bot: Float,
+) {
+    val height = bot - top
 }

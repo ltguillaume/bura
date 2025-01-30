@@ -118,7 +118,7 @@ private fun DrawScope.drawHorizontalAxisAndBars(
     drawTimeAxis(
         measurer = measurer,
         args = args
-    ) { i, x ->
+    ) { i, x , calcY ->
         val point = state.points.getOrNull(i) ?: return@drawTimeAxis
         if (point.time.meta == GraphTime.Meta.Present) nowX = x
 
@@ -126,26 +126,25 @@ private fun DrawScope.drawHorizontalAxisAndBars(
         val rain = precip.rain.convertTo(max.unit)
         val showers = precip.showers.convertTo(max.unit)
         val snow = precip.snow.convertTo(max.unit)
-        val rainHeight = ((rain.value / range) * (size.height - args.topGutter - args.bottomGutter)).toFloat()
-        val showersHeight = ((showers.value / range) * (size.height - args.topGutter - args.bottomGutter)).toFloat()
-        val snowHeight = ((snow.liquidValue / range) * (size.height - args.topGutter - args.bottomGutter)).toFloat()
+
+        val rainY = calcY(rain.value / range)
+        val showersY = calcY(showers.value / range)
+        val snowY = calcY(snow.liquidValue / range)
 
         val barSpacing = 1.dp.toPx()
         val desiredBarWidth = 8.dp.toPx()
-        val bottomOfGraph = size.height - args.bottomGutter
-        val topOfRain = bottomOfGraph - rainHeight
 
         val barX = if (i == 0) x + desiredBarWidth / 4 else x
         val barWidth = if (i == 0) desiredBarWidth / 2 else desiredBarWidth
         drawLine(
             brush = SolidColor(rainColor),
-            start = Offset(barX, bottomOfGraph),
-            end = Offset(barX, topOfRain),
+            start = Offset(barX, rainY.bot),
+            end = Offset(barX, rainY.top),
             strokeWidth = barWidth
         )
 
-        val bottomOfShowers = topOfRain - if (rainHeight > 0) barSpacing else 0f
-        val topOfShowers = bottomOfShowers - showersHeight
+        val bottomOfShowers = rainY.top - if (rainY.height > 0) barSpacing else 0f
+        val topOfShowers = bottomOfShowers - showersY.height
         drawLine(
             brush = SolidColor(showersColor),
             start = Offset(barX, bottomOfShowers),
@@ -153,8 +152,8 @@ private fun DrawScope.drawHorizontalAxisAndBars(
             strokeWidth = barWidth
         )
 
-        val bottomOfSnow = topOfShowers - if (rainHeight > 0 || showersHeight > 0) barSpacing else 0f
-        val topOfSnow = bottomOfSnow - snowHeight
+        val bottomOfSnow = topOfShowers - if (rainY.height > 0 || showersY.height > 0) barSpacing else 0f
+        val topOfSnow = bottomOfSnow - snowY.height
         drawLine(
             brush = SolidColor(snowColor),
             start = Offset(barX, bottomOfSnow),
