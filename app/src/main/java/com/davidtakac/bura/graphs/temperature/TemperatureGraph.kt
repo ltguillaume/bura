@@ -57,6 +57,7 @@ import com.davidtakac.bura.temperature.Temperature
 import com.davidtakac.bura.temperature.string
 import java.time.LocalDate
 import java.time.LocalTime
+import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
 @Composable
@@ -67,9 +68,11 @@ fun TemperatureGraph(
     absMaxTemp: Temperature,
     modifier: Modifier = Modifier
 ) {
-    val paddingC = 3.0
-    val maxCelsius = remember(absMaxTemp) { absMaxTemp.convertTo(Temperature.Unit.DegreesCelsius).value + paddingC }
-    val minCelsius = remember(absMinTemp) { absMinTemp.convertTo(Temperature.Unit.DegreesCelsius).value - paddingC }
+    val absMinTempC = absMinTemp.convertTo(Temperature.Unit.DegreesCelsius).value
+    val absMaxTempC = absMaxTemp.convertTo(Temperature.Unit.DegreesCelsius).value
+    val range = absMinTempC.absoluteValue + absMaxTempC.absoluteValue
+    val maxCelsius = remember(absMaxTemp) { absMaxTempC + range * 0.2 }
+    val minCelsius = remember(absMinTemp) { absMinTempC - range * 0.2 }
     val context = LocalContext.current
     val measurer = rememberTextMeasurer()
     val plotColors = AppTheme.colors.temperatureColors(minCelsius, maxCelsius)
