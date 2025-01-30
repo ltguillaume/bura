@@ -1,0 +1,6 @@
+### Fixed
+- Dutch (#81)
+- Graph end padding (#82)
+
+### Added
+- Arabic (#83)
