@@ -96,7 +96,7 @@ fun Bottom(future: FuturePrecipitation) {
                     is Snow -> R.string.precip_value_snow_in_next_hours
                 },
                 future.total.string(),
-                future.inHours
+                rememberNumberFormat().format(future.inHours)
             )
 
             is FuturePrecipitation.OnDay -> stringResource(
@@ -112,7 +112,7 @@ fun Bottom(future: FuturePrecipitation) {
 
             is FuturePrecipitation.None -> stringResource (
                 R.string.precip_value_none_in_next_days,
-                future.inDays
+                rememberNumberFormat().format(future.inDays)
             )
         }
     )
