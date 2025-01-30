@@ -55,8 +55,11 @@ fun AppleUvIndexScale(uvIndexNow: UvIndex, modifier: Modifier = Modifier) {
             else 1 - uvIndexNow.value / 11.0
         val nowStart = (nowPerc.coerceIn(0.0, 1.0) * size.width).toFloat()
         val nowRadius = size.height / 2
+        val nowOffset =
+            if (this.layoutDirection == LayoutDirection.Ltr) -nowRadius
+            else nowRadius
         val nowCenter = Offset(
-            x = (nowStart - nowRadius).coerceIn(
+            x = (nowStart + nowOffset).coerceIn(
                 minimumValue = nowRadius,
                 maximumValue = size.width - nowRadius
             ),
@@ -80,7 +83,7 @@ fun AppleUvIndexScale(uvIndexNow: UvIndex, modifier: Modifier = Modifier) {
 @Composable
 private fun AppleUvIndexPreview() {
     AppTheme {
-        AppleUvIndexScale(uvIndexNow = UvIndex(4), modifier = Modifier.width(200.dp))
+        AppleUvIndexScale(uvIndexNow = UvIndex(1), modifier = Modifier.width(200.dp))
     }
 }
 
@@ -89,7 +92,7 @@ private fun AppleUvIndexPreview() {
 private fun AppleUvIndexRtlPreview() {
     AppTheme {
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-            AppleUvIndexScale(uvIndexNow = UvIndex(4), modifier = Modifier.width(200.dp))
+            AppleUvIndexScale(uvIndexNow = UvIndex(1), modifier = Modifier.width(200.dp))
         }
     }
 }
