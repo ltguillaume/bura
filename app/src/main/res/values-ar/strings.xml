@@ -103,7 +103,8 @@
     <string name="precip_unit_in">″</string>
     <string name="precip_value_in">%s″</string>
 
-    <string name="pop_value_percent">%s٪</string>
+    <!-- \u200f (rtl mark) required so pop does not break -->
+    <string name="pop_value_percent">\u200f%s٪</string>
 
     <string name="pressure">الضغط</string>
     <string name="pressure_trend_falling">هبوط</string>
