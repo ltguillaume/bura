@@ -20,17 +20,20 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.unit.LayoutDirection
 
-fun DrawScope.drawPlotLinePath(args: GraphArgs, block: DrawScope.() -> Unit) {
+fun DrawScope.drawPlotLinePath(lastX: Float, args: GraphArgs, block: DrawScope.() -> Unit) {
     clipPath(
         path = Path().apply {
             val rectStartX =
                 if (layoutDirection == LayoutDirection.Ltr) args.startGutter
-                else args.endGutter
+                else lastX
+            val rectWidth =
+                if (layoutDirection == LayoutDirection.Ltr) lastX - args.startGutter
+                else size.width - args.startGutter
             addRect(
                 Rect(
                     offset = Offset(x = rectStartX, y = args.topGutter),
                     size = Size(
-                        width = size.width - args.startGutter - args.endGutter,
+                        width = rectWidth,
                         height = size.height - args.topGutter - args.bottomGutter
                     )
                 )

@@ -152,7 +152,7 @@ private fun DrawScope.drawHorizontalAxisAndPlot(
 
     val gradientStart = size.height - args.bottomGutter
     val gradientEnd = args.topGutter
-    drawPlotLinePath(args) {
+    drawPlotLinePath(lastX, args) {
         drawPath(
             plotPath,
             brush = Brush.verticalGradient(

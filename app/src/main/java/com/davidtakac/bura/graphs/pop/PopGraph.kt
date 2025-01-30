@@ -107,7 +107,7 @@ private fun DrawScope.drawHorizontalAxisAndPlot(
         if (point.time.meta == GraphTime.Meta.Present) nowCenter = Offset(x, y)
     }
 
-    drawPlotLinePath(args) {
+    drawPlotLinePath(lastX, args) {
         drawPath(
             plotPath,
             color = plotColor,
