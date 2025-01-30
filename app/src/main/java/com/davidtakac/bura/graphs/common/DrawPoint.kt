@@ -63,15 +63,13 @@ private fun DrawScope.drawPointLabel(
     args: GraphArgs,
 ) {
     val labelMeasured = measurer.measure(text, args.axisTextStyle.copy(color = args.pointLabelColor))
-    val textTopLeftX =
-        if (layoutDirection == LayoutDirection.Ltr) pointCenter.x + args.textPaddingMinHorizontal
-        else pointCenter.x - labelMeasured.size.width - args.textPaddingMinHorizontal
+    val textTopLeftX = pointCenter.x - labelMeasured.size.width / 2
     val textTopLeftXMin =
         if (layoutDirection == LayoutDirection.Ltr) args.startGutter + args.textPaddingMinHorizontal
         else args.endGutter + args.textPaddingMinHorizontal
     val textTopLeftXMax =
-        if (layoutDirection == LayoutDirection.Ltr) size.width - args.endGutter - labelMeasured.size.width - args.textPaddingMinHorizontal
-        else size.width - args.startGutter - labelMeasured.size.width - args.textPaddingMinHorizontal
+        if (layoutDirection == LayoutDirection.Ltr) size.width - labelMeasured.size.width - args.endGutter - args.textPaddingMinHorizontal
+        else size.width - labelMeasured.size.width - args.startGutter - args.textPaddingMinHorizontal
     drawText(
         textLayoutResult = labelMeasured,
         topLeft = Offset(
