@@ -134,7 +134,8 @@ private fun DrawScope.drawHorizontalAxisAndBars(
         val barSpacing = 1.dp.toPx()
         val desiredBarWidth = 8.dp.toPx()
 
-        val barX = if (i == 0) x + desiredBarWidth / 4 else x
+        val barXOffset = (if (layoutDirection == LayoutDirection.Ltr) desiredBarWidth else -desiredBarWidth) / 4
+        val barX = if (i == 0) x + barXOffset else x
         val barWidth = if (i == 0) desiredBarWidth / 2 else desiredBarWidth
         drawLine(
             brush = SolidColor(rainColor),
