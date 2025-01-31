@@ -307,6 +307,32 @@ private fun ConditionGraphNowEndPreview() {
     }
 }
 
+// TODO: make flat state have distinct steps, this currently has multiple same step values
+@Preview
+@Composable
+private fun ConditionGraphFlatPreview() {
+    AppTheme {
+        val flatState = previewState.points.map {
+            it.copy(
+                temperature = previewState.points.first().temperature
+            )
+        }
+        TemperatureGraph(
+            state = TemperatureGraph(
+                day = previewState.day,
+                points = flatState
+            ),
+            absMinTemp = flatState.minOf { it.temperature.value },
+            absMaxTemp = flatState.maxOf { it.temperature.value },
+            args = GraphArgs.rememberTemperatureArgs(),
+            modifier = Modifier
+                .width(400.dp)
+                .height(300.dp)
+                .background(MaterialTheme.colorScheme.background)
+        )
+    }
+}
+
 private val previewState = TemperatureGraph(
     day = LocalDate.parse("2023-01-01"),
     points = listOf(
