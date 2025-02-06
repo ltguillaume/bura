@@ -197,7 +197,7 @@
 
     <string name="wmo_0">Helder</string>
     <string name="wmo_1">Overwegend helder</string>
-    <string name="wmo_2">Gedeeltelijk bewolkt</string>
+    <string name="wmo_2">Deels bewolkt</string>
     <string name="wmo_3">Bewolkt</string>
     <string name="wmo_45">Mist</string>
     <string name="wmo_48">Afzetting van vorstnevel</string>
